@@ -1,0 +1,13 @@
+---
+description: PresuFactura SaaS — convenciones permanentes
+alwaysApply: true
+---
+# PresuFactura
+Micro-SaaS: presupuesto → factura → recordatorios cobro. Autónomos España.
+Stack: PHP 8.3, Laravel 11, MySQL, HTML/CSS/jQuery, Dompdf, SMTP.
+UI es-ES. Sin Verifactu v1. Proforma + disclaimer.
+Minimal diff. Sin refactors no pedidos. Implementa sin explicaciones largas.
+Estados factura: draft, sent, expired, paid. Presupuesto: draft, sent, accepted, expired.
+Free: 3 docs/mes. Pro: €12/mes (Stripe fase 4).
+Dominio presufactura.es. Nunca commitear .env.
+F1: Laravel+migraciones+auth+layout | F2: clientes+facturas+PDF | F3: emails+cron+dashboard | F4: presupuestos+Stripe+landing

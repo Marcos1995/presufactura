@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'business_name',
+        'tax_id',
+        'address',
+        'city',
+        'postal_code',
+        'country',
+        'phone',
+        'iban',
+        'logo_path',
+        'default_vat_rate',
+        'invoice_prefix',
+        'quote_prefix',
+        'invoice_counter',
+        'quote_counter',
+        'default_due_days',
+        'reminder_day_1',
+        'reminder_day_2',
+        'reminder_day_3',
+        'owner_reminder_day',
+        'plan',
+        'stripe_customer_id',
+        'stripe_subscription_id',
+        'plan_expires_at',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'plan_expires_at' => 'datetime',
+            'password' => 'hashed',
+            'default_vat_rate' => 'decimal:2',
+        ];
+    }
+
+    public function clients(): HasMany
+    {
+        return $this->hasMany(Client::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    public function isPro(): bool
+    {
+        return $this->plan === 'pro';
+    }
+}
