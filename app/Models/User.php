@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
@@ -92,7 +93,14 @@ class User extends Authenticatable
 
     public function isProfileComplete(): bool
     {
-        return $this->onboarding_completed_at !== null;
+        if (self::hasOnboardingColumn()) {
+            return $this->onboarding_completed_at !== null;
+        }
+
+        return filled($this->business_name)
+            && filled($this->tax_id)
+            && filled($this->iban)
+            && session('onboarding_step3_done', false);
     }
 
     public function onboardingStep(): int
@@ -105,10 +113,17 @@ class User extends Authenticatable
             return 2;
         }
 
-        if (! $this->onboarding_completed_at) {
-            return 3;
+        if (self::hasOnboardingColumn()) {
+            return $this->onboarding_completed_at ? 0 : 3;
         }
 
-        return 0;
+        return session('onboarding_step3_done', false) ? 0 : 3;
+    }
+
+    protected static function hasOnboardingColumn(): bool
+    {
+        static $hasColumn;
+
+        return $hasColumn ??= Schema::hasColumn('users', 'onboarding_completed_at');
     }
 }

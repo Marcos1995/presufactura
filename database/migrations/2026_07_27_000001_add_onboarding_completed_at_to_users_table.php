@@ -9,9 +9,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('onboarding_completed_at')->nullable()->after('plan_expires_at');
-        });
+        if (! Schema::hasColumn('users', 'onboarding_completed_at')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->timestamp('onboarding_completed_at')->nullable();
+            });
+        }
 
         DB::table('users')->whereNull('onboarding_completed_at')->update([
             'onboarding_completed_at' => now(),

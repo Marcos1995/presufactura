@@ -42,27 +42,31 @@
             </div>
         </div>
 
-        <details class="onboarding-details">
-            <summary>Recordatorios automáticos (plan Pro)</summary>
+        <div class="onboarding-reminders">
+            <h2 class="form-section-title">Recordatorios automáticos (plan Pro)</h2>
             <div class="form-row form-row-4">
                 <div class="form-group">
-                    <label for="reminder_day_1">Cliente +</label>
+                    <label for="reminder_day_1">Cliente día +</label>
                     <input type="number" id="reminder_day_1" name="reminder_day_1" min="1" max="90" value="{{ old('reminder_day_1', $user->reminder_day_1) }}" required>
+                    @error('reminder_day_1')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
                 <div class="form-group">
-                    <label for="reminder_day_2">Cliente +</label>
+                    <label for="reminder_day_2">Cliente día +</label>
                     <input type="number" id="reminder_day_2" name="reminder_day_2" min="1" max="90" value="{{ old('reminder_day_2', $user->reminder_day_2) }}" required>
+                    @error('reminder_day_2')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
                 <div class="form-group">
-                    <label for="reminder_day_3">Cliente +</label>
+                    <label for="reminder_day_3">Cliente día +</label>
                     <input type="number" id="reminder_day_3" name="reminder_day_3" min="1" max="90" value="{{ old('reminder_day_3', $user->reminder_day_3) }}" required>
+                    @error('reminder_day_3')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
                 <div class="form-group">
-                    <label for="owner_reminder_day">Autónomo +</label>
+                    <label for="owner_reminder_day">Autónomo día +</label>
                     <input type="number" id="owner_reminder_day" name="owner_reminder_day" min="1" max="90" value="{{ old('owner_reminder_day', $user->owner_reminder_day) }}" required>
+                    @error('owner_reminder_day')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
             </div>
-        </details>
+        </div>
 
         <button type="submit" class="btn btn-primary btn-block">Finalizar configuración</button>
     </form>

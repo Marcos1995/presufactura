@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -85,7 +86,7 @@ class OnboardingController extends Controller
 
     private function storeStep3(Request $request, $user): void
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'default_vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'invoice_prefix' => ['required', 'string', 'max:20'],
             'quote_prefix' => ['required', 'string', 'max:20'],
@@ -94,9 +95,30 @@ class OnboardingController extends Controller
             'reminder_day_2' => ['required', 'integer', 'min:1', 'max:90'],
             'reminder_day_3' => ['required', 'integer', 'min:1', 'max:90'],
             'owner_reminder_day' => ['required', 'integer', 'min:1', 'max:90'],
+        ], [
+            'reminder_day_1.required' => 'Indica el día del primer recordatorio al cliente.',
+            'reminder_day_2.required' => 'Indica el día del segundo recordatorio al cliente.',
+            'reminder_day_3.required' => 'Indica el día del tercer recordatorio al cliente.',
+            'owner_reminder_day.required' => 'Indica el día del recordatorio al autónomo.',
         ]);
 
+        $data = [
+            'default_vat_rate' => $validated['default_vat_rate'],
+            'invoice_prefix' => $validated['invoice_prefix'],
+            'quote_prefix' => $validated['quote_prefix'],
+            'default_due_days' => (int) $validated['default_due_days'],
+            'reminder_day_1' => (int) $validated['reminder_day_1'],
+            'reminder_day_2' => (int) $validated['reminder_day_2'],
+            'reminder_day_3' => (int) $validated['reminder_day_3'],
+            'owner_reminder_day' => (int) $validated['owner_reminder_day'],
+        ];
+
+        if (Schema::hasColumn('users', 'onboarding_completed_at')) {
+            $data['onboarding_completed_at'] = now();
+        } else {
+            $request->session()->put('onboarding_step3_done', true);
+        }
+
         $user->update($data);
-        $user->update(['onboarding_completed_at' => now()]);
     }
 }
