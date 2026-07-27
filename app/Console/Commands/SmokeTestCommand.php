@@ -83,9 +83,23 @@ class SmokeTestCommand extends Command
         $secret = config('services.stripe.secret');
         $key = config('services.stripe.key');
         $priceId = config('services.stripe.price_id');
+        $ok = true;
 
-        if (empty($secret) || empty($key) || empty($priceId)) {
-            $this->error('✗ Stripe: faltan STRIPE_KEY, STRIPE_SECRET o STRIPE_PRICE_ID en .env');
+        if (empty($key)) {
+            $this->error('✗ Stripe: STRIPE_KEY vacío en .env');
+            $ok = false;
+        }
+        if (empty($secret)) {
+            $this->error('✗ Stripe: STRIPE_SECRET vacío en .env');
+            $ok = false;
+        }
+        if (empty($priceId)) {
+            $this->error('✗ Stripe: STRIPE_PRICE_ID vacío en .env');
+            $ok = false;
+        }
+
+        if (! $ok) {
+            $this->line('  → Edita laravel/.env y ejecuta: php artisan config:cache');
 
             return false;
         }
