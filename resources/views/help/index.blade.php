@@ -6,8 +6,10 @@
 
 @section('content')
 <section class="help-page">
-    <h1>Centro de ayuda</h1>
-    <p class="section-sub">Respuestas claras sobre PresuFactura, planes, Verifactu y tus datos.</p>
+    <div class="help-intro">
+        <h1>Centro de ayuda</h1>
+        <p class="section-sub">Respuestas claras sobre PresuFactura, planes, Verifactu y tus datos.</p>
+    </div>
 
     @include('partials.faq-list', ['faqs' => $faqs])
 

@@ -26,17 +26,19 @@
 </head>
 <body class="landing-body">
     <header class="landing-header">
-        <a href="{{ route('landing') }}" class="logo">{{ config('app.name') }}</a>
-        <nav class="landing-nav">
-            <a href="{{ route('pricing') }}">Precios</a>
-            <a href="{{ route('help') }}">Ayuda</a>
-            @if (auth()->check())
-                <a href="{{ route('dashboard') }}" class="btn btn-secondary">Panel</a>
-            @else
-                <a href="{{ route('login') }}">Entrar</a>
-                <a href="{{ route('register') }}" class="btn btn-primary">Registrarse</a>
-            @endif
-        </nav>
+        <div class="landing-header-inner">
+            <a href="{{ route('landing') }}" class="logo">{{ config('app.name') }}</a>
+            <nav class="landing-nav">
+                <a href="{{ route('pricing') }}">Precios</a>
+                <a href="{{ route('help') }}">Ayuda</a>
+                @if (auth()->check())
+                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">Panel</a>
+                @else
+                    <a href="{{ route('login') }}">Entrar</a>
+                    <a href="{{ route('register') }}" class="btn btn-primary">Registrarse</a>
+                @endif
+            </nav>
+        </div>
     </header>
 
     @yield('content')

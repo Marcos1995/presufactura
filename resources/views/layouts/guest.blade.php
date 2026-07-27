@@ -6,12 +6,12 @@
     <title>@yield('title', config('app.name'))</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body class="guest-body">
+<body class="guest-body {{ ($mainClass ?? '') === 'guest-main-wide' ? 'guest-body-top' : '' }}">
     <div class="guest-container">
         <header class="guest-header">
             <a href="{{ url('/') }}" class="logo">{{ config('app.name') }}</a>
         </header>
-        <main class="guest-main">
+        <main class="guest-main {{ $mainClass ?? '' }}">
             @if (session('status'))
                 <div class="alert alert-success">{{ session('status') }}</div>
             @endif

@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.guest', ['mainClass' => 'guest-main-wide'])
 
 @section('title', 'Política de cookies — ' . config('app.name'))
 
