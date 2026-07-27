@@ -146,7 +146,7 @@ class InvoiceController extends Controller
                 'message' => $e->getMessage(),
             ]);
 
-            return back()->with('error', 'No se pudo enviar el email. Revisa la configuración SMTP en .env (MAIL_*).');
+            return back()->with('error', 'No se pudo enviar el email. Revisa MAIL_* en .env: password entre comillas si contiene #, FROM = USERNAME, y ejecuta php artisan config:clear.');
         }
 
         $invoice->update([
