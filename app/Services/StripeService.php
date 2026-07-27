@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\User;
+use RuntimeException;
 use Stripe\BillingPortal\Session as PortalSession;
 use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 use Stripe\Webhook;
 
@@ -13,12 +15,12 @@ class StripeService
     public function __construct(
         private EmailService $emailService,
     ) {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $this->bootApi();
     }
 
     public function createCheckoutSession(User $user): Session
     {
-        $customerId = $user->stripe_customer_id;
+        $this->assertConfigured();
 
         $params = [
             'mode' => 'subscription',
@@ -32,19 +34,42 @@ class StripeService
             'subscription_data' => [
                 'metadata' => ['user_id' => (string) $user->id],
             ],
+            'allow_promotion_codes' => false,
         ];
 
-        if ($customerId) {
-            $params['customer'] = $customerId;
+        if ($user->stripe_customer_id) {
+            $params['customer'] = $user->stripe_customer_id;
         } else {
             $params['customer_email'] = $user->email;
         }
 
-        return Session::create($params);
+        try {
+            return Session::create($params);
+        } catch (ApiErrorException $e) {
+            if ($user->stripe_customer_id && $this->isCustomerError($e)) {
+                $user->update([
+                    'stripe_customer_id' => null,
+                    'stripe_subscription_id' => null,
+                ]);
+
+                unset($params['customer']);
+                $params['customer_email'] = $user->email;
+
+                return Session::create($params);
+            }
+
+            throw $e;
+        }
     }
 
     public function createPortalSession(User $user): PortalSession
     {
+        $this->assertConfigured();
+
+        if (! $user->stripe_customer_id) {
+            throw new RuntimeException('Sin cliente Stripe.');
+        }
+
         return PortalSession::create([
             'customer' => $user->stripe_customer_id,
             'return_url' => route('subscription.index'),
@@ -65,6 +90,40 @@ class StripeService
             'invoice.payment_failed' => $this->handleInvoicePaymentFailed($event->data->object),
             default => null,
         };
+    }
+
+    private function bootApi(): void
+    {
+        $secret = config('services.stripe.secret');
+        if ($secret) {
+            Stripe::setApiKey($secret);
+        }
+    }
+
+    private function assertConfigured(): void
+    {
+        $secret = config('services.stripe.secret');
+        $priceId = config('services.stripe.price_id');
+
+        if (empty($secret)) {
+            throw new RuntimeException('STRIPE_SECRET no configurado. Ejecuta php artisan config:cache tras editar .env');
+        }
+
+        if (empty($priceId) || ! str_starts_with($priceId, 'price_')) {
+            throw new RuntimeException('STRIPE_PRICE_ID inválido. Debe ser un price_… de modo live en Stripe Dashboard');
+        }
+
+        if (app()->environment('production') && str_starts_with($secret, 'sk_test_')) {
+            throw new RuntimeException('STRIPE_SECRET es de test en producción. Usa sk_live_…');
+        }
+    }
+
+    private function isCustomerError(ApiErrorException $e): bool
+    {
+        $code = $e->getStripeCode() ?? '';
+
+        return in_array($code, ['resource_missing', 'invalid_request'], true)
+            || str_contains(strtolower($e->getMessage()), 'customer');
     }
 
     private function handleCheckoutCompleted(object $session): void

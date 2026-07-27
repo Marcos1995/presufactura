@@ -111,8 +111,10 @@ Manual: `php artisan presufactura:process-reminders`
 
 ## 6. Stripe
 
-1. **Checkout** — producto Pro 12 €/mes, copia `price_…` → `STRIPE_PRICE_ID`
-2. **Webhook** — URL: `https://presufactura.es/stripe/webhook`  
+1. **Checkout** — producto Pro 12 €/mes **recurrente**, copia `price_…` **live** → `STRIPE_PRICE_ID`
+2. Claves **live** en `.env`: `sk_live_…`, `pk_live_…` (no test en producción)
+3. Tras editar `.env`: `php artisan config:cache` (si no, Stripe devuelve error / 500)
+4. **Webhook** — URL: `https://presufactura.es/stripe/webhook`  
    Eventos: `checkout.session.completed`, `customer.subscription.deleted`, `invoice.payment_failed`
 3. **Customer Portal** — Dashboard → Settings → Billing → Customer portal → Activar  
    Los usuarios Pro gestionan suscripción en `/suscripcion`

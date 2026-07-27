@@ -6,7 +6,10 @@ use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Stripe\Exception\ApiErrorException;
+use Throwable;
 
 class StripeController extends Controller
 {
@@ -19,12 +22,22 @@ class StripeController extends Controller
         $user = auth()->user();
 
         if ($user->isPro()) {
-            return redirect()->route('settings.index')->with('status', 'Ya tienes el plan Pro.');
+            return redirect()->route('subscription.index')->with('status', 'Ya tienes el plan Pro.');
         }
 
-        $session = $this->stripe->createCheckoutSession($user);
+        try {
+            $session = $this->stripe->createCheckoutSession($user);
 
-        return redirect($session->url);
+            return redirect($session->url);
+        } catch (Throwable $e) {
+            Log::error('Stripe checkout failed', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()->route('subscription.index')
+                ->with('error', $this->checkoutErrorMessage($e));
+        }
     }
 
     public function success(): View
@@ -44,10 +57,19 @@ class StripeController extends Controller
                 $request->getContent(),
                 $request->header('Stripe-Signature')
             );
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return response('Invalid payload', 400);
         }
 
         return response('OK', 200);
+    }
+
+    private function checkoutErrorMessage(Throwable $e): string
+    {
+        if ($e instanceof ApiErrorException) {
+            return 'Stripe: '.($e->getMessage() ?: 'error al crear la sesión de pago').'. Revisa STRIPE_PRICE_ID live (12 €/mes, recurrente).';
+        }
+
+        return $e->getMessage() ?: 'No se pudo iniciar el pago. Revisa la configuración Stripe en el servidor.';
     }
 }

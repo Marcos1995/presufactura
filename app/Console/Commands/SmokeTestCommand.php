@@ -19,6 +19,7 @@ class SmokeTestCommand extends Command
 
         $failed = ! $this->checkDatabase() || $failed;
         $failed = ! $this->checkMailConfig() || $failed;
+        $failed = ! $this->checkStripeConfig() || $failed;
         $failed = ! $this->checkStorageWritable() || $failed;
         $failed = ! $this->checkScheduleRegistered() || $failed;
 
@@ -73,6 +74,39 @@ class SmokeTestCommand extends Command
         }
 
         $this->line('✓ Mail config ('.$mailer.' @ '.$host.')');
+
+        return true;
+    }
+
+    private function checkStripeConfig(): bool
+    {
+        $secret = config('services.stripe.secret');
+        $key = config('services.stripe.key');
+        $priceId = config('services.stripe.price_id');
+
+        if (empty($secret) || empty($key) || empty($priceId)) {
+            $this->error('✗ Stripe: faltan STRIPE_KEY, STRIPE_SECRET o STRIPE_PRICE_ID en .env');
+
+            return false;
+        }
+
+        if (! str_starts_with($priceId, 'price_')) {
+            $this->error('✗ Stripe: STRIPE_PRICE_ID debe empezar por price_');
+
+            return false;
+        }
+
+        if (app()->environment('production') && str_starts_with($secret, 'sk_test_')) {
+            $this->error('✗ Stripe: sk_test_ en producción — usa claves live');
+
+            return false;
+        }
+
+        if (app()->environment('production') && str_starts_with($key, 'pk_test_')) {
+            $this->warn('⚠ Stripe: pk_test_ en producción');
+        }
+
+        $this->line('✓ Stripe config (price configurado)');
 
         return true;
     }
