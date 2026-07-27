@@ -32,6 +32,16 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | F3 | Emails, estados, cron recordatorios, dashboard |
 | F4 | Presupuestos, link público, Stripe Pro, landing |
 | F6 | Perfil editable, onboarding, legal, suscripción, producto usable |
+| F7 | DEPLOY.md, deploy.sh, smoke-test, Stripe payment_failed |
+
+## Producción
+
+Ver **[DEPLOY.md](DEPLOY.md)** — Hostinger Business, cron, `.env`, migrate, cache.
+
+```bash
+./deploy.sh
+php artisan presufactura:smoke-test
+```
 
 ## Rutas principales
 
@@ -57,7 +67,10 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 
 Webhook: `https://presufactura.es/stripe/webhook`
 
+Eventos: `checkout.session.completed`, `customer.subscription.deleted`, `invoice.payment_failed`
+
 Activa Customer Portal en Stripe Dashboard → Settings → Billing → Customer portal.
+Usuarios Pro acceden desde `/suscripcion`.
 
 ## Cron producción
 

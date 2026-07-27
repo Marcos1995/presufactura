@@ -103,4 +103,17 @@ class EmailService
             'meta' => ['type' => $type],
         ]);
     }
+
+    public function sendPaymentFailed(\App\Models\User $user): void
+    {
+        $subscriptionUrl = route('subscription.index');
+
+        Mail::send('emails.payment-failed', [
+            'user' => $user,
+            'subscriptionUrl' => $subscriptionUrl,
+        ], function ($message) use ($user) {
+            $message->to($user->email, $user->name)
+                ->subject('Problema con el pago de tu suscripción Pro — PresuFactura');
+        });
+    }
 }

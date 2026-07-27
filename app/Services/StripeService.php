@@ -10,8 +10,9 @@ use Stripe\Webhook;
 
 class StripeService
 {
-    public function __construct()
-    {
+    public function __construct(
+        private EmailService $emailService,
+    ) {
         Stripe::setApiKey(config('services.stripe.secret'));
     }
 
@@ -61,6 +62,7 @@ class StripeService
         match ($event->type) {
             'checkout.session.completed' => $this->handleCheckoutCompleted($event->data->object),
             'customer.subscription.deleted' => $this->handleSubscriptionDeleted($event->data->object),
+            'invoice.payment_failed' => $this->handleInvoicePaymentFailed($event->data->object),
             default => null,
         };
     }
@@ -101,5 +103,24 @@ class StripeService
             'stripe_subscription_id' => null,
             'plan_expires_at' => now(),
         ]);
+    }
+
+    private function handleInvoicePaymentFailed(object $invoice): void
+    {
+        $customerId = $invoice->customer ?? null;
+        if (! $customerId) {
+            return;
+        }
+
+        $user = User::where('stripe_customer_id', $customerId)->first();
+        if (! $user) {
+            return;
+        }
+
+        try {
+            $this->emailService->sendPaymentFailed($user);
+        } catch (\Throwable) {
+            // no bloquear webhook
+        }
     }
 }
