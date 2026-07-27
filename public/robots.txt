@@ -1,2 +1,16 @@
 User-agent: *
-Disallow:
+Allow: /
+Allow: /precios
+Allow: /ayuda
+Allow: /registro
+Allow: /login
+Disallow: /dashboard
+Disallow: /configuracion
+Disallow: /clientes
+Disallow: /facturas
+Disallow: /presupuestos
+Disallow: /onboarding
+Disallow: /suscripcion
+Disallow: /stripe/
+
+Sitemap: https://presufactura.es/sitemap.xml

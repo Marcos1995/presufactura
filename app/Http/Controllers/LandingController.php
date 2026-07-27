@@ -9,10 +9,11 @@ class LandingController extends Controller
 {
     public function index(): View
     {
-        if (Auth::check()) {
-            return view('landing.index', ['loggedIn' => true]);
-        }
+        $landingFaqs = collect(config('faq'))->where('landing', true)->values()->all();
 
-        return view('landing.index', ['loggedIn' => false]);
+        return view('landing.index', [
+            'loggedIn' => Auth::check(),
+            'landingFaqs' => $landingFaqs,
+        ]);
     }
 }

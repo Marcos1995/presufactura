@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="es">
-<body style="font-family: sans-serif; color: #111; line-height: 1.5;">
-    <p>Hola {{ $user->name }},</p>
-    <p>No hemos podido cobrar tu suscripción <strong>Pro</strong> de PresuFactura (12 €/mes).</p>
-    <p>Stripe reintentará el cargo automáticamente. Si el problema persiste, tu plan Pro podría cancelarse.</p>
-    <p>Actualiza tu método de pago aquí:</p>
-    <p><a href="{{ $subscriptionUrl }}">{{ $subscriptionUrl }}</a></p>
-    <p style="font-size: 12px; color: #666;">PresuFactura — facturas@presufactura.es</p>
-</body>
-</html>
+@extends('emails.layout')
+
+@section('content')
+    <p style="margin:0 0 16px;">Hola {{ $user->name }},</p>
+    <p style="margin:0 0 16px;">No hemos podido cobrar tu suscripción <strong>Pro</strong> de PresuFactura (12 €/mes).</p>
+    <p style="margin:0 0 16px;">Stripe reintentará el cargo automáticamente. Si el problema persiste, tu plan Pro podría cancelarse.</p>
+    <p style="margin:0;">
+        <a href="{{ $subscriptionUrl }}" style="display:inline-block;padding:12px 24px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:600;">Actualizar método de pago</a>
+    </p>
+@endsection

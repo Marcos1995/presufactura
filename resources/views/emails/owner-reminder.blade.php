@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<body style="font-family: sans-serif; color: #111; line-height: 1.5;">
-    <p>Hola {{ $document->user->name }},</p>
-    <p>La factura <strong>{{ $document->number }}</strong> para <strong>{{ $document->client->name }}</strong>
+@extends('emails.layout')
+
+@section('content')
+    <p style="margin:0 0 16px;">Hola {{ $document->user->name }},</p>
+    <p style="margin:0 0 16px;">La factura <strong>{{ $document->number }}</strong> para <strong>{{ $document->client->name }}</strong>
         venció hace {{ $daysOverdue }} días ({{ number_format($document->total, 2, ',', '.') }} €).</p>
-    <p><strong>¿Ya la cobraste?</strong></p>
-    <p>
-        <a href="{{ $confirmUrl }}" style="display:inline-block;padding:10px 20px;background:#16a34a;color:#fff;text-decoration:none;border-radius:6px;">Sí, marcar como cobrada</a>
+    <p style="margin:0 0 16px;"><strong>¿Ya la cobraste?</strong></p>
+    <p style="margin:0 0 16px;">
+        <a href="{{ $confirmUrl }}" style="display:inline-block;padding:12px 24px;background:#16a34a;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:600;">Sí, marcar como cobrada</a>
     </p>
-    <p><a href="{{ $panelUrl }}">Ver factura en PresuFactura</a></p>
-</body>
-</html>
+    <p style="margin:0;"><a href="{{ $panelUrl }}" style="color:#2563eb;">Ver factura en PresuFactura</a></p>
+@endsection

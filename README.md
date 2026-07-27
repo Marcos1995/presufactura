@@ -33,6 +33,7 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | F4 | Presupuestos, link público, Stripe Pro, landing |
 | F6 | Perfil editable, onboarding, legal, suscripción, producto usable |
 | F7 | DEPLOY.md, deploy.sh, smoke-test, Stripe payment_failed |
+| F8 | Landing comercial, /ayuda, WelcomeMail, emails branded, SEO |
 
 ## Producción
 

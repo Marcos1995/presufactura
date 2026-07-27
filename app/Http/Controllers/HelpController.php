@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\View\View;
+
+class HelpController extends Controller
+{
+    public function index(): View
+    {
+        return view('help.index', [
+            'faqs' => config('faq'),
+        ]);
+    }
+}
