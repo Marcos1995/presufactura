@@ -6,9 +6,9 @@
 @section('content')
 <div class="page-toolbar">
     @if ($quote->canSend())
-    <form method="POST" action="{{ route('quotes.send', $quote) }}" class="inline-form" onsubmit="return confirm('¿Publicar presupuesto? Se generará enlace público.')">
+    <form method="POST" action="{{ route('quotes.send', $quote) }}" class="inline-form" onsubmit="return confirm('¿Enviar presupuesto por email al cliente?')">
         @csrf
-        <button type="submit" class="btn btn-primary">Publicar</button>
+        <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
     @endif
     @if ($quote->canConvert())
@@ -27,10 +27,11 @@
     @endif
 </div>
 
-@if (in_array($quote->status, ['sent', 'accepted', 'expired']))
+    @if (in_array($quote->status, ['sent', 'accepted', 'expired']))
 <div class="card card-narrow public-link-box">
     <strong>Enlace público:</strong>
     <input type="text" readonly value="{{ $quote->publicUrl() }}" class="public-link-input" onclick="this.select()">
+    <a href="{{ route('quotes.pdf', $quote) }}" class="btn btn-secondary btn-sm">Descargar PDF</a>
 </div>
 @endif
 

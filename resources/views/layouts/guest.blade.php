@@ -18,7 +18,7 @@
             @yield('content')
         </main>
         <footer class="guest-footer">
-            <p>Documentos generados a efectos informativos. El usuario es responsable de cumplir la normativa fiscal aplicable.</p>
+            @include('layouts.partials.legal-footer')
         </footer>
     </div>
 </body>

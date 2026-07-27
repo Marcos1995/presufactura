@@ -2,7 +2,7 @@
 
 Micro-SaaS para autónomos: presupuesto → factura → recordatorios de cobro.
 
-**Stack:** PHP 8.3, Laravel 11, MySQL, HTML/CSS/jQuery.
+**Stack:** PHP 8.3, Laravel 11, MySQL, HTML/CSS/jQuery, Dompdf, SMTP, Stripe.
 
 ## Requisitos
 
@@ -12,92 +12,54 @@ Micro-SaaS para autónomos: presupuesto → factura → recordatorios de cobro.
 
 ## Setup local
 
-### 1. Clonar e instalar dependencias
-
 ```bash
-cd presufactura
 composer install
-```
-
-### 2. Configurar entorno
-
-```bash
 cp .env.example .env
 php artisan key:generate
-```
-
-Edita `.env` con tus credenciales MySQL:
-
-```env
-APP_NAME=PresuFactura
-APP_URL=http://localhost:8000
-DB_DATABASE=presufactura
-DB_USERNAME=root
-DB_PASSWORD=tu_password
-```
-
-### 3. Crear base de datos
-
-```sql
-CREATE DATABASE presufactura CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-### 4. Migraciones
-
-```bash
 php artisan migrate
-```
-
-### 5. Servidor de desarrollo
-
-```bash
+php artisan storage:link
 php artisan serve
 ```
 
 Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 
-## Estructura Fase 1
+## Fases completadas
 
-| Componente | Estado |
-|------------|--------|
-| Migraciones (users, clients, documents, line_items, reminders, document_events) | ✅ |
-| Models + relaciones Eloquent | ✅ |
-| Auth email/password (registro, login, logout) | ✅ |
-| Layout panel con sidebar | ✅ |
-| Dashboard, Clientes, Facturas, Presupuestos, Configuración (placeholders) | ✅ |
+| Fase | Contenido |
+|------|-----------|
+| F1 | Laravel, migraciones, auth, layout panel |
+| F2 | CRUD clientes + facturas, PDF, límite Free |
+| F3 | Emails, estados, cron recordatorios, dashboard |
+| F4 | Presupuestos, link público, Stripe Pro, landing |
+| F6 | Perfil editable, onboarding, legal, suscripción, producto usable |
 
-## Fase 2
-
-| Componente | Estado |
-|------------|--------|
-| CRUD clientes | ✅ |
-| CRUD facturas draft + líneas jQuery | ✅ |
-| DocumentCalculatorService | ✅ |
-| PdfGeneratorService (Dompdf) | ✅ |
-| Middleware límite Free 3 docs/mes | ✅ |
-
-### Rutas Fase 2
+## Rutas principales
 
 | Ruta | Descripción |
 |------|-------------|
-| `/clientes` | Listado y CRUD clientes |
-| `/facturas/nueva` | Crear factura |
-| `/facturas/{id}` | Detalle / editar draft |
-| `/facturas/{id}/pdf` | Descargar PDF proforma |
+| `/` | Landing |
+| `/precios` | Página de precios |
+| `/registro`, `/login` | Auth |
+| `/onboarding/{1-3}` | Wizard configuración inicial |
+| `/dashboard` | Panel KPIs |
+| `/configuracion` | Editar perfil fiscal y preferencias |
+| `/suscripcion` | Plan actual + Stripe Customer Portal |
+| `/clientes` | CRUD clientes |
+| `/facturas`, `/presupuestos` | CRUD documentos |
+| `/facturas/{id}/pdf`, `/presupuestos/{id}/pdf` | Descargar PDF |
+| `/p/{token}` | Vista pública presupuesto o factura |
+| `/p/{token}/he-pagado` | Cliente indica pago |
+| `/terminos`, `/privacidad`, `/cookies` | Páginas legales RGPD |
 
-## Fase 3
+## Stripe
 
-| Componente | Estado |
-|------------|--------|
-| Estados draft → sent → expired → paid | ✅ |
-| DocumentNumberService (FAC-2026-001) | ✅ |
-| Enviar factura SMTP + PDF adjunto | ✅ |
-| EmailService + templates emails/ | ✅ |
-| Recordatorios cron (Pro: +3/+7/+14, autónomo +10) | ✅ |
-| Marcar como pagada | ✅ |
-| Dashboard KPIs + últimos 10 docs | ✅ |
+`.env`: `STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID`
 
-### Cron producción
+Webhook: `https://presufactura.es/stripe/webhook`
+
+Activa Customer Portal en Stripe Dashboard → Settings → Billing → Customer portal.
+
+## Cron producción
 
 ```bash
 * * * * * cd /ruta/al/proyecto && php artisan schedule:run >> /dev/null 2>&1
@@ -105,47 +67,24 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 
 Manual: `php artisan presufactura:process-reminders`
 
-## Fase 4
-
-| Componente | Estado |
-|------------|--------|
-| CRUD presupuestos + valid_until | ✅ |
-| Link público `/p/{token}` + aceptar | ✅ |
-| Convertir presupuesto → factura | ✅ |
-| Landing `/` hero + pricing | ✅ |
-| Stripe Checkout Pro €12/mes + webhook | ✅ |
-| Middleware límite Free 3 docs/mes | ✅ |
-
-### Stripe
-
-Configura en `.env`: `STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID`
-
-Webhook URL: `https://presufactura.es/stripe/webhook`
-
-## Rutas panel
-
-| Ruta | Descripción |
-|------|-------------|
-| `/dashboard` | Dashboard |
-| `/clientes` | Clientes |
-| `/facturas` | Facturas |
-| `/presupuestos` | Presupuestos |
-| `/configuracion` | Configuración |
-
-## Próximas fases
-
-- **F2:** CRUD clientes, facturas draft, line items jQuery, PDF Dompdf
-- **F3:** Emails SMTP, estados, cron recordatorios, dashboard KPIs
-- **F4:** Presupuestos, link público, Stripe Pro, landing
-
 ## Notas
 
 - Documentos **proforma** — sin Verifactu v1.
-- Plan Free: 3 docs/mes (límite en F4).
+- Plan Free: 3 docs/mes. Pro: 12 €/mes, documentos ilimitados.
 - **Nunca** commitear `.env`.
 
-## Cron (producción, Fase 3+)
+## Checklist tests manuales (Fase 6)
 
-```bash
-* * * * * cd /ruta/al/proyecto && php artisan schedule:run >> /dev/null 2>&1
-```
+<!-- Ejecutar tras deploy o en local con mail/log driver -->
+
+- [ ] Registro nuevo → redirige a onboarding paso 1 → completar 3 pasos → dashboard
+- [ ] `/configuracion` PUT: guardar business_name, NIF, IBAN, logo, prefijos, recordatorios
+- [ ] Crear presupuesto → Publicar → email cliente con PDF + enlace `/p/{token}`
+- [ ] `/presupuestos/{id}/pdf` descarga PDF presupuesto
+- [ ] Cliente abre `/p/{token}` presupuesto → Aceptar → estado accepted
+- [ ] Enviar factura → cliente abre mismo `/p/{token}` → ve IBAN → «He pagado»
+- [ ] «He pagado» → estado payment_pending + email al autónomo
+- [ ] Free: crear 4º doc/mes → modal upgrade (no redirect error)
+- [ ] `/precios`, `/suscripcion`, Stripe Portal (usuario Pro)
+- [ ] Footer links legales en landing, panel y guest
+- [ ] `/terminos`, `/privacidad`, `/cookies` cargan contenido español

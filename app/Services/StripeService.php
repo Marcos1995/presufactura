@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Stripe\BillingPortal\Session as PortalSession;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\Webhook;
@@ -39,6 +40,14 @@ class StripeService
         }
 
         return Session::create($params);
+    }
+
+    public function createPortalSession(User $user): PortalSession
+    {
+        return PortalSession::create([
+            'customer' => $user->stripe_customer_id,
+            'return_url' => route('subscription.index'),
+        ]);
     }
 
     public function handleWebhook(string $payload, ?string $signature): void

@@ -38,6 +38,12 @@
         'lineItems' => $invoice->lineItems,
     ])
 @else
+    @if (in_array($invoice->status, ['sent', 'expired', 'payment_pending', 'paid']))
+    <div class="card card-narrow public-link-box">
+        <strong>Enlace público:</strong>
+        <input type="text" readonly value="{{ $invoice->publicUrl() }}" class="public-link-input" onclick="this.select()">
+    </div>
+    @endif
     <div class="card">
         <div class="invoice-meta">
             <div>

@@ -101,7 +101,11 @@ class Document extends Model
 
     public function canMarkPaid(): bool
     {
-        return in_array($this->status, [self::STATUS_SENT, self::STATUS_EXPIRED], true);
+        return in_array($this->status, [
+            self::STATUS_SENT,
+            self::STATUS_EXPIRED,
+            self::STATUS_PAYMENT_PENDING,
+        ], true);
     }
 
     public function canAccept(): bool
@@ -117,6 +121,12 @@ class Document extends Model
         return $this->isQuote()
             && $this->status === self::STATUS_ACCEPTED
             && ! Document::where('converted_from_id', $this->id)->exists();
+    }
+
+    public function canClaimPaid(): bool
+    {
+        return $this->isInvoice()
+            && in_array($this->status, [self::STATUS_SENT, self::STATUS_EXPIRED], true);
     }
 
     public function publicUrl(): string

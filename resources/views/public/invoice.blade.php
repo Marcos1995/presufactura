@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Presupuesto {{ $quote->number }}</title>
+    <title>Factura {{ $invoice->number }}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="guest-body">
     <div class="guest-container public-quote-page">
         <header class="guest-header">
-            <span class="logo">{{ $quote->user->business_name ?: $quote->user->name }}</span>
+            <span class="logo">{{ $invoice->user->business_name ?: $invoice->user->name }}</span>
         </header>
 
         <main class="guest-main public-quote-main">
@@ -21,17 +21,17 @@
             @endif
 
             <div class="auth-card public-quote-card">
-                <h1>Presupuesto {{ $quote->number }}</h1>
+                <h1>Factura {{ $invoice->number }}</h1>
                 <p class="proforma-tag">Documento proforma — sin validez fiscal</p>
 
                 <div class="invoice-meta">
                     <div>
-                        <strong>Para:</strong> {{ $quote->client->name }}<br>
-                        <strong>Estado:</strong> {{ $quote->statusLabel() }}
+                        <strong>Para:</strong> {{ $invoice->client->name }}<br>
+                        <strong>Estado:</strong> {{ $invoice->statusLabel() }}
                     </div>
                     <div>
-                        <strong>Emisión:</strong> {{ $quote->issue_date->format('d/m/Y') }}<br>
-                        <strong>Válido hasta:</strong> {{ $quote->valid_until?->format('d/m/Y') }}
+                        <strong>Emisión:</strong> {{ $invoice->issue_date->format('d/m/Y') }}<br>
+                        <strong>Vencimiento:</strong> {{ $invoice->due_date?->format('d/m/Y') }}
                     </div>
                 </div>
 
@@ -45,7 +45,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($quote->lineItems as $item)
+                        @foreach ($invoice->lineItems as $item)
                         <tr>
                             <td>{{ $item->description }}</td>
                             <td class="text-right">{{ number_format($item->quantity, 2, ',', '.') }}</td>
@@ -57,20 +57,29 @@
                     <tfoot>
                         <tr>
                             <td colspan="3" class="text-right"><strong>Total</strong></td>
-                            <td class="text-right"><strong>{{ number_format($quote->total, 2, ',', '.') }} €</strong></td>
+                            <td class="text-right"><strong>{{ number_format($invoice->total, 2, ',', '.') }} €</strong></td>
                         </tr>
                     </tfoot>
                 </table>
 
-                @if ($quote->canAccept())
-                <form method="POST" action="{{ route('quotes.public.accept', $quote->public_token) }}" class="accept-form">
+                @if ($invoice->user->iban)
+                <div class="iban-box">
+                    <strong>IBAN para transferencia:</strong><br>
+                    {{ $invoice->user->iban }}
+                </div>
+                @endif
+
+                @if ($invoice->canClaimPaid())
+                <form method="POST" action="{{ route('invoices.public.claim-paid', $invoice->public_token) }}" class="accept-form" onsubmit="return confirm('¿Confirmas que has realizado el pago?')">
                     @csrf
-                    <button type="submit" class="btn btn-primary btn-block">Aceptar presupuesto</button>
+                    <button type="submit" class="btn btn-primary btn-block">He pagado</button>
                 </form>
-                @elseif ($quote->status === 'accepted')
-                    <p class="text-muted text-center">Presupuesto aceptado. Gracias.</p>
-                @elseif ($quote->status === 'expired')
-                    <p class="text-muted text-center">Este presupuesto ha caducado.</p>
+                @elseif ($invoice->status === 'payment_pending')
+                    <p class="text-muted text-center">Hemos recibido tu aviso de pago. El emisor lo revisará.</p>
+                @elseif ($invoice->status === 'paid')
+                    <p class="text-muted text-center">Factura pagada. Gracias.</p>
+                @elseif ($invoice->status === 'expired')
+                    <p class="text-muted text-center">Esta factura está vencida. Contacta con el emisor.</p>
                 @endif
             </div>
         </main>

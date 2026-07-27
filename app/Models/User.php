@@ -39,6 +39,7 @@ class User extends Authenticatable
         'stripe_customer_id',
         'stripe_subscription_id',
         'plan_expires_at',
+        'onboarding_completed_at',
     ];
 
     protected $hidden = [
@@ -51,6 +52,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'plan_expires_at' => 'datetime',
+            'onboarding_completed_at' => 'datetime',
             'password' => 'hashed',
             'default_vat_rate' => 'decimal:2',
         ];
@@ -86,5 +88,27 @@ class User extends Authenticatable
         }
 
         return $this->documentsThisMonthCount() < 3;
+    }
+
+    public function isProfileComplete(): bool
+    {
+        return $this->onboarding_completed_at !== null;
+    }
+
+    public function onboardingStep(): int
+    {
+        if (! filled($this->business_name) || ! filled($this->tax_id)) {
+            return 1;
+        }
+
+        if (! filled($this->iban)) {
+            return 2;
+        }
+
+        if (! $this->onboarding_completed_at) {
+            return 3;
+        }
+
+        return 0;
     }
 }

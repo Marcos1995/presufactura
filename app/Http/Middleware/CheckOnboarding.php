@@ -6,16 +6,16 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckDocumentLimit
+class CheckOnboarding
 {
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
 
-        if ($user && ! $user->canCreateDocument()) {
-            return redirect()
-                ->back()
-                ->with('show_upgrade_modal', true);
+        if ($user && ! $user->isProfileComplete()) {
+            $step = $user->onboardingStep();
+
+            return redirect()->route('onboarding.step', ['step' => max(1, $step)]);
         }
 
         return $next($request);

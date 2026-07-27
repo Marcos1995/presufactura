@@ -26,7 +26,7 @@ class DocumentActionController extends Controller
             ]);
         }
 
-        if (! in_array($document->status, [Document::STATUS_SENT, Document::STATUS_EXPIRED], true)) {
+        if (! in_array($document->status, [Document::STATUS_SENT, Document::STATUS_EXPIRED, Document::STATUS_PAYMENT_PENDING], true)) {
             return view('public.action-result', [
                 'title' => 'Acción no disponible',
                 'message' => 'Esta factura no puede marcarse como pagada en su estado actual.',

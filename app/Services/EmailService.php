@@ -27,6 +27,35 @@ class EmailService
         });
     }
 
+    public function sendQuote(Document $document): void
+    {
+        $document->load(['user', 'client', 'lineItems']);
+        $pdf = $this->pdfGenerator->generateQuotePdf($document);
+        $filename = 'presupuesto-'.$document->number.'.pdf';
+
+        Mail::send('emails.quote-sent', ['document' => $document], function ($message) use ($document, $pdf, $filename) {
+            $message->from(config('mail.from.address'), config('mail.from.name'))
+                ->to($document->client->email, $document->client->name)
+                ->subject('Presupuesto '.$document->number.' — '.($document->user->business_name ?: $document->user->name))
+                ->attachData($pdf, $filename, ['mime' => 'application/pdf']);
+        });
+    }
+
+    public function sendClientClaimedPaid(Document $document): void
+    {
+        $document->load(['user', 'client']);
+
+        $panelUrl = url('/facturas/'.$document->id);
+
+        Mail::send('emails.client-claimed-paid', [
+            'document' => $document,
+            'panelUrl' => $panelUrl,
+        ], function ($message) use ($document) {
+            $message->to($document->user->email, $document->user->name)
+                ->subject('Tu cliente indica que ha pagado — Factura '.$document->number);
+        });
+    }
+
     public function sendClientReminder(Document $document, int $daysOverdue): void
     {
         $document->load(['user', 'client']);

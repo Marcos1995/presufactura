@@ -3,14 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name') }} — Presupuestos y facturas para autónomos</title>
+    <title>Precios — {{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="landing-body">
     <header class="landing-header">
         <a href="{{ route('landing') }}" class="logo">{{ config('app.name') }}</a>
         <nav class="landing-nav">
-            <a href="{{ route('pricing') }}">Precios</a>
             @if ($loggedIn)
                 <a href="{{ route('dashboard') }}" class="btn btn-secondary">Panel</a>
             @else
@@ -20,43 +19,9 @@
         </nav>
     </header>
 
-    <section class="landing-hero">
-        <h1>Presupuestos y facturas proforma en minutos</h1>
-        <p class="hero-sub">Para autónomos en España. Crea, envía, cobra. Sin complicaciones.</p>
-        <div class="hero-actions">
-            @if ($loggedIn)
-                <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
-            @else
-                <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Empezar gratis</a>
-                <a href="{{ route('login') }}" class="btn btn-secondary btn-lg">Iniciar sesión</a>
-            @endif
-        </div>
-    </section>
-
-    <section class="landing-features">
-        <h2>Todo lo que necesitas</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>Presupuestos con enlace público</h3>
-                <p>Comparte con tu cliente. Aceptación online con un click.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Facturas proforma + PDF</h3>
-                <p>Genera y envía por email con PDF adjunto.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Recordatorios de cobro</h3>
-                <p>Automáticos al cliente y aviso al autónomo (plan Pro).</p>
-            </div>
-            <div class="feature-card">
-                <h3>Dashboard de cobros</h3>
-                <p>Por cobrar, vencido y cobrado del mes en un vistazo.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="landing-pricing" id="precios">
-        <h2>Precios</h2>
+    <section class="landing-pricing landing-pricing-page">
+        <h1>Precios simples, sin sorpresas</h1>
+        <p class="hero-sub">Empieza gratis. Actualiza cuando lo necesites.</p>
         <div class="pricing-grid">
             <div class="pricing-card">
                 <h3>Free</h3>
@@ -65,10 +30,11 @@
                     <li>3 documentos al mes</li>
                     <li>Clientes ilimitados</li>
                     <li>PDF proforma</li>
-                    <li>Enlace público presupuestos</li>
+                    <li>Enlace público presupuestos y facturas</li>
+                    <li>Email al enviar documentos</li>
                 </ul>
                 @if (!$loggedIn)
-                    <a href="{{ route('register') }}" class="btn btn-secondary btn-block">Empezar</a>
+                    <a href="{{ route('register') }}" class="btn btn-secondary btn-block">Empezar gratis</a>
                 @endif
             </div>
             <div class="pricing-card pricing-pro">
@@ -76,8 +42,9 @@
                 <p class="price">12 €<span>/mes</span></p>
                 <ul>
                     <li>Documentos ilimitados</li>
-                    <li>Recordatorios automáticos al cliente</li>
+                    <li>Recordatorios automáticos al cliente (+3/+7/+14 días)</li>
                     <li>Email «¿cobraste?» día +10</li>
+                    <li>Botón «He pagado» para clientes</li>
                     <li>Todo lo del plan Free</li>
                 </ul>
                 @if ($loggedIn && !auth()->user()->isPro())
@@ -86,7 +53,7 @@
                         <button type="submit" class="btn btn-primary btn-block">Actualizar a Pro</button>
                     </form>
                 @elseif ($loggedIn)
-                    <span class="badge badge-paid">Plan activo</span>
+                    <a href="{{ route('subscription.index') }}" class="btn btn-secondary btn-block">Gestionar suscripción</a>
                 @else
                     <a href="{{ route('register') }}" class="btn btn-primary btn-block">Registrarse</a>
                 @endif

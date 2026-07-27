@@ -6,8 +6,11 @@ use App\Models\Document;
 use App\Models\DocumentEvent;
 use App\Services\DocumentCalculatorService;
 use App\Services\DocumentNumberService;
+use App\Services\EmailService;
+use App\Services\PdfGeneratorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -17,6 +20,8 @@ class QuoteController extends Controller
     public function __construct(
         private DocumentCalculatorService $calculator,
         private DocumentNumberService $numberService,
+        private EmailService $emailService,
+        private PdfGeneratorService $pdfGenerator,
     ) {}
 
     public function index(): View
@@ -133,7 +138,26 @@ class QuoteController extends Controller
 
         $quote->events()->create(['event_type' => DocumentEvent::SENT]);
 
-        return back()->with('status', 'Presupuesto publicado. Comparte el enlace con tu cliente.');
+        try {
+            $this->emailService->sendQuote($quote);
+        } catch (\Throwable) {
+            return back()->with('status', 'Presupuesto publicado. No se pudo enviar el email al cliente.');
+        }
+
+        return back()->with('status', 'Presupuesto enviado al cliente por email.');
+    }
+
+    public function pdf(Document $quote): Response
+    {
+        $this->authorizeQuote($quote);
+
+        $pdf = $this->pdfGenerator->generateQuotePdf($quote);
+        $filename = 'presupuesto-'.$quote->number.'.pdf';
+
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
     }
 
     public function convert(Document $quote): RedirectResponse

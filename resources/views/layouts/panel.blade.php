@@ -30,6 +30,9 @@
                 <a href="{{ route('settings.index') }}" class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                     Configuración
                 </a>
+                <a href="{{ route('subscription.index') }}" class="nav-link {{ request()->routeIs('subscription.*') ? 'active' : '' }}">
+                    Suscripción
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <span class="user-name">{{ auth()->user()->name }}</span>
@@ -53,10 +56,29 @@
                 @yield('content')
             </main>
             <footer class="panel-footer">
-                <p>Documentos proforma. Sin Verifactu v1.</p>
+                @include('layouts.partials.legal-footer')
             </footer>
         </div>
     </div>
+    @include('layouts.partials.upgrade-modal')
+    @if (session('show_upgrade_modal'))
+    <script>
+        $(function() {
+            $('#upgrade-modal').show();
+            $('#upgrade-modal-close, #upgrade-modal').on('click', function(e) {
+                if (e.target === this) $('#upgrade-modal').hide();
+            });
+        });
+    </script>
+    @else
+    <script>
+        $(function() {
+            $('#upgrade-modal-close, #upgrade-modal').on('click', function(e) {
+                if (e.target === this) $('#upgrade-modal').hide();
+            });
+        });
+    </script>
+    @endif
     @stack('scripts')
 </body>
 </html>
