@@ -104,6 +104,26 @@ class Document extends Model
         return in_array($this->status, [self::STATUS_SENT, self::STATUS_EXPIRED], true);
     }
 
+    public function canAccept(): bool
+    {
+        return $this->isQuote()
+            && $this->status === self::STATUS_SENT
+            && $this->valid_until
+            && $this->valid_until->copy()->startOfDay()->gte(now()->startOfDay());
+    }
+
+    public function canConvert(): bool
+    {
+        return $this->isQuote()
+            && $this->status === self::STATUS_ACCEPTED
+            && ! Document::where('converted_from_id', $this->id)->exists();
+    }
+
+    public function publicUrl(): string
+    {
+        return url('/p/'.$this->public_token);
+    }
+
     public function statusLabel(): string
     {
         return match ($this->status) {

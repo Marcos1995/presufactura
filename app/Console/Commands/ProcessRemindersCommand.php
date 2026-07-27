@@ -36,6 +36,12 @@ class ProcessRemindersCommand extends Command
             ->where('status', Document::STATUS_SENT)
             ->whereDate('due_date', '<', now()->startOfDay())
             ->update(['status' => Document::STATUS_EXPIRED]);
+
+        Document::query()
+            ->where('type', Document::TYPE_QUOTE)
+            ->where('status', Document::STATUS_SENT)
+            ->whereDate('valid_until', '<', now()->startOfDay())
+            ->update(['status' => Document::STATUS_EXPIRED]);
     }
 
     private function sendReminders(): void

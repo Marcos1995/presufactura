@@ -48,6 +48,8 @@
                 <td class="table-actions">
                     @if ($doc->isInvoice())
                         <a href="{{ route('invoices.show', $doc) }}">Ver</a>
+                    @else
+                        <a href="{{ route('quotes.show', $doc) }}">Ver</a>
                     @endif
                 </td>
             </tr>

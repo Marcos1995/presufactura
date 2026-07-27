@@ -105,6 +105,23 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 
 Manual: `php artisan presufactura:process-reminders`
 
+## Fase 4
+
+| Componente | Estado |
+|------------|--------|
+| CRUD presupuestos + valid_until | ✅ |
+| Link público `/p/{token}` + aceptar | ✅ |
+| Convertir presupuesto → factura | ✅ |
+| Landing `/` hero + pricing | ✅ |
+| Stripe Checkout Pro €12/mes + webhook | ✅ |
+| Middleware límite Free 3 docs/mes | ✅ |
+
+### Stripe
+
+Configura en `.env`: `STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID`
+
+Webhook URL: `https://presufactura.es/stripe/webhook`
+
 ## Rutas panel
 
 | Ruta | Descripción |

@@ -24,6 +24,23 @@ class DocumentNumberService
             $sequence = (int) $matches[1] + 1;
         }
 
+    public function nextQuoteNumber(User $user): string
+    {
+        $year = now()->year;
+        $prefix = $user->quote_prefix;
+
+        $lastNumber = Document::query()
+            ->where('user_id', $user->id)
+            ->where('type', Document::TYPE_QUOTE)
+            ->where('number', 'like', "{$prefix}-{$year}-%")
+            ->orderByDesc('number')
+            ->value('number');
+
+        $sequence = 1;
+        if ($lastNumber && preg_match('/-(\d+)$/', $lastNumber, $matches)) {
+            $sequence = (int) $matches[1] + 1;
+        }
+
         return sprintf('%s-%d-%03d', $prefix, $year, $sequence);
     }
 }

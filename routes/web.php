@@ -5,20 +5,23 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentActionController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PublicQuoteController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SettingsController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
-});
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+
+Route::get('/p/{token}', [PublicQuoteController::class, 'show'])->name('quotes.public');
+Route::post('/p/{token}/aceptar', [PublicQuoteController::class, 'accept'])->name('quotes.public.accept');
 
 Route::get('/accion/{token}/cobrada', [DocumentActionController::class, 'confirmPaid'])
     ->name('documents.confirm-paid')
     ->middleware('signed');
+
+Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('stripe.webhook');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -32,7 +35,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/configuracion', [SettingsController::class, 'index'])->name('settings.index');
-    Route::get('/presupuestos', [QuoteController::class, 'index'])->name('quotes.index');
 
     Route::get('/clientes', [ClientController::class, 'index'])->name('clients.index');
     Route::get('/clientes/nuevo', [ClientController::class, 'create'])->name('clients.create');
@@ -50,4 +52,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/facturas/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
     Route::post('/facturas/{invoice}/enviar', [InvoiceController::class, 'send'])->name('invoices.send');
     Route::post('/facturas/{invoice}/pagada', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
+
+    Route::get('/presupuestos', [QuoteController::class, 'index'])->name('quotes.index');
+    Route::get('/presupuestos/nuevo', [QuoteController::class, 'create'])->middleware('doc.limit')->name('quotes.create');
+    Route::post('/presupuestos', [QuoteController::class, 'store'])->middleware('doc.limit')->name('quotes.store');
+    Route::get('/presupuestos/{quote}', [QuoteController::class, 'show'])->name('quotes.show');
+    Route::put('/presupuestos/{quote}', [QuoteController::class, 'update'])->name('quotes.update');
+    Route::delete('/presupuestos/{quote}', [QuoteController::class, 'destroy'])->name('quotes.destroy');
+    Route::post('/presupuestos/{quote}/enviar', [QuoteController::class, 'send'])->name('quotes.send');
+    Route::post('/presupuestos/{quote}/convertir', [QuoteController::class, 'convert'])->middleware('doc.limit')->name('quotes.convert');
+
+    Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
+    Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
+    Route::get('/stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
 });

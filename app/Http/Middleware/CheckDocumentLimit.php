@@ -14,7 +14,7 @@ class CheckDocumentLimit
 
         if ($user && ! $user->canCreateDocument()) {
             return redirect()
-                ->route('invoices.index')
+                ->back()
                 ->with('error', 'Has alcanzado el límite de 3 documentos al mes del plan Free. Actualiza a Pro para crear más.');
         }
 
