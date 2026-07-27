@@ -24,6 +24,9 @@ class DocumentNumberService
             $sequence = (int) $matches[1] + 1;
         }
 
+        return sprintf('%s-%d-%03d', $prefix, $year, $sequence);
+    }
+
     public function nextQuoteNumber(User $user): string
     {
         $year = now()->year;
