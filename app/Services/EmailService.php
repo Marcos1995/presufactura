@@ -20,7 +20,8 @@ class EmailService
         $filename = 'factura-'.$document->number.'.pdf';
 
         Mail::send('emails.invoice-sent', ['document' => $document], function ($message) use ($document, $pdf, $filename) {
-            $message->to($document->client->email, $document->client->name)
+            $message->from(config('mail.from.address'), config('mail.from.name'))
+                ->to($document->client->email, $document->client->name)
                 ->subject('Factura '.$document->number.' — '.($document->user->business_name ?: $document->user->name))
                 ->attachData($pdf, $filename, ['mime' => 'application/pdf']);
         });

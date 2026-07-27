@@ -15,10 +15,16 @@ class PdfGeneratorService
 
         $html = View::make('pdf.invoice', ['document' => $document])->render();
 
+        $tempDir = storage_path('framework/cache/dompdf');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
         $options = new Options;
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', false);
         $options->set('defaultFont', 'DejaVu Sans');
+        $options->set('tempDir', $tempDir);
 
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);

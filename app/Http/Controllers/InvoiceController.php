@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -137,7 +138,16 @@ class InvoiceController extends Controller
 
         $invoice->load(['user', 'client', 'lineItems']);
 
-        $this->emailService->sendInvoice($invoice);
+        try {
+            $this->emailService->sendInvoice($invoice);
+        } catch (\Throwable $e) {
+            Log::error('Error enviando factura', [
+                'invoice_id' => $invoice->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->with('error', 'No se pudo enviar el email. Revisa la configuración SMTP en .env (MAIL_*).');
+        }
 
         $invoice->update([
             'status' => Document::STATUS_SENT,
