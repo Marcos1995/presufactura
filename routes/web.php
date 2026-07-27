@@ -26,8 +26,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/clientes', [ClientController::class, 'index'])->name('clients.index');
-    Route::get('/facturas', [InvoiceController::class, 'index'])->name('invoices.index');
-    Route::get('/presupuestos', [QuoteController::class, 'index'])->name('quotes.index');
     Route::get('/configuracion', [SettingsController::class, 'index'])->name('settings.index');
+    Route::get('/presupuestos', [QuoteController::class, 'index'])->name('quotes.index');
+
+    Route::get('/clientes', [ClientController::class, 'index'])->name('clients.index');
+    Route::get('/clientes/nuevo', [ClientController::class, 'create'])->name('clients.create');
+    Route::post('/clientes', [ClientController::class, 'store'])->name('clients.store');
+    Route::get('/clientes/{client}/editar', [ClientController::class, 'edit'])->name('clients.edit');
+    Route::put('/clientes/{client}', [ClientController::class, 'update'])->name('clients.update');
+    Route::delete('/clientes/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+
+    Route::get('/facturas', [InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/facturas/nueva', [InvoiceController::class, 'create'])->middleware('doc.limit')->name('invoices.create');
+    Route::post('/facturas', [InvoiceController::class, 'store'])->middleware('doc.limit')->name('invoices.store');
+    Route::get('/facturas/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
+    Route::put('/facturas/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
+    Route::delete('/facturas/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
+    Route::get('/facturas/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
 });

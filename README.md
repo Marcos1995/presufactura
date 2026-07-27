@@ -66,6 +66,25 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | Layout panel con sidebar | ✅ |
 | Dashboard, Clientes, Facturas, Presupuestos, Configuración (placeholders) | ✅ |
 
+## Fase 2
+
+| Componente | Estado |
+|------------|--------|
+| CRUD clientes | ✅ |
+| CRUD facturas draft + líneas jQuery | ✅ |
+| DocumentCalculatorService | ✅ |
+| PdfGeneratorService (Dompdf) | ✅ |
+| Middleware límite Free 3 docs/mes | ✅ |
+
+### Rutas Fase 2
+
+| Ruta | Descripción |
+|------|-------------|
+| `/clientes` | Listado y CRUD clientes |
+| `/facturas/nueva` | Crear factura |
+| `/facturas/{id}` | Detalle / editar draft |
+| `/facturas/{id}/pdf` | Descargar PDF proforma |
+
 ## Rutas panel
 
 | Ruta | Descripción |

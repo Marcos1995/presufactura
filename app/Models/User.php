@@ -70,4 +70,21 @@ class User extends Authenticatable
     {
         return $this->plan === 'pro';
     }
+
+    public function documentsThisMonthCount(): int
+    {
+        return $this->documents()
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->count();
+    }
+
+    public function canCreateDocument(): bool
+    {
+        if ($this->isPro()) {
+            return true;
+        }
+
+        return $this->documentsThisMonthCount() < 3;
+    }
 }
