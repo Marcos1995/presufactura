@@ -43,9 +43,16 @@ Desde `~/domains/presufactura.es`:
 ```bash
 cp laravel/index.php public_html/index.php
 cp laravel/.htaccess public_html/.htaccess
-ln -sfn ../laravel/public/css public_html/css
-ln -sfn ../laravel/public/js public_html/js
+mkdir -p public_html/css public_html/js public_html/images
+cp -r laravel/public/css/. public_html/css/
+cp -r laravel/public/js/. public_html/js/
+cp -r laravel/public/images/. public_html/images/ 2>/dev/null || true
+ln -sfn ../laravel/public/storage public_html/storage
 ```
+
+O usa `./deploy.sh` — copia assets automáticamente.
+
+El `.htaccess` también sirve `/css`, `/js` e `/images` desde `laravel/public/` si faltan symlinks.
 
 ## 3. Composer y Laravel
 
@@ -152,7 +159,7 @@ Checklist manual: registro → onboarding → crear factura → PDF → enviar e
 | Problema | Solución |
 |----------|----------|
 | 500 en todas las rutas | Revisar `storage/logs/laravel.log`, permisos storage |
-| CSS/JS 404 | Symlinks `public_html/css` y `js` |
+| CSS/JS 404 | `cp laravel/.htaccess public_html/` y `cp -r laravel/public/css/. public_html/css/` |
 | Logos 404 | `php artisan storage:link` + symlink `public_html/storage` |
 | Emails no llegan | Verificar SMTP en `.env`, smoke-test mail |
 | Stripe webhook falla | URL HTTPS, secret correcto, CSRF except en `stripe/webhook` |
