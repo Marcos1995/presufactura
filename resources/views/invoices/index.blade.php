@@ -41,7 +41,7 @@
                     <td><a href="{{ route('invoices.show', $invoice) }}">{{ $invoice->number }}</a></td>
                     <td>{{ $invoice->client->name }}</td>
                     <td>{{ $invoice->issue_date->format('d/m/Y') }}</td>
-                    <td><span class="badge badge-{{ $invoice->status }}">{{ ucfirst($invoice->status) }}</span></td>
+                    <td><span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span></td>
                     <td class="text-right">{{ number_format($invoice->total, 2, ',', '.') }} €</td>
                     <td class="table-actions">
                         <a href="{{ route('invoices.show', $invoice) }}">Ver</a>

@@ -85,6 +85,26 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | `/facturas/{id}` | Detalle / editar draft |
 | `/facturas/{id}/pdf` | Descargar PDF proforma |
 
+## Fase 3
+
+| Componente | Estado |
+|------------|--------|
+| Estados draft → sent → expired → paid | ✅ |
+| DocumentNumberService (FAC-2026-001) | ✅ |
+| Enviar factura SMTP + PDF adjunto | ✅ |
+| EmailService + templates emails/ | ✅ |
+| Recordatorios cron (Pro: +3/+7/+14, autónomo +10) | ✅ |
+| Marcar como pagada | ✅ |
+| Dashboard KPIs + últimos 10 docs | ✅ |
+
+### Cron producción
+
+```bash
+* * * * * cd /ruta/al/proyecto && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Manual: `php artisan presufactura:process-reminders`
+
 ## Rutas panel
 
 | Ruta | Descripción |

@@ -93,4 +93,27 @@ class Document extends Model
     {
         return $this->type === self::TYPE_INVOICE;
     }
+
+    public function canSend(): bool
+    {
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    public function canMarkPaid(): bool
+    {
+        return in_array($this->status, [self::STATUS_SENT, self::STATUS_EXPIRED], true);
+    }
+
+    public function statusLabel(): string
+    {
+        return match ($this->status) {
+            self::STATUS_DRAFT => 'Borrador',
+            self::STATUS_SENT => 'Enviada',
+            self::STATUS_EXPIRED => 'Vencida',
+            self::STATUS_PAID => 'Pagada',
+            self::STATUS_ACCEPTED => 'Aceptada',
+            self::STATUS_PAYMENT_PENDING => 'Pago pendiente',
+            default => ucfirst($this->status),
+        };
+    }
 }

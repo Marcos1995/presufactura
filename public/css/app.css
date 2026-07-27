@@ -173,6 +173,11 @@ a:hover { text-decoration: underline; }
     color: #fff;
 }
 .btn-danger:hover { background: #b91c1c; color: #fff; text-decoration: none; }
+.btn-success {
+    background: var(--success);
+    color: #fff;
+}
+.btn-success:hover { background: #15803d; color: #fff; text-decoration: none; }
 .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
 .btn-danger-link { color: var(--danger); }
 .btn-danger-link:hover { color: #991b1b; }
@@ -303,6 +308,9 @@ a:hover { text-decoration: underline; }
     font-weight: 700;
     color: var(--gray-900);
 }
+.stat-success { color: var(--success); }
+.stat-danger { color: var(--danger); }
+.section-title { margin: 0 0 1rem; font-size: 1.1rem; }
 
 /* Empty state */
 .empty-state {

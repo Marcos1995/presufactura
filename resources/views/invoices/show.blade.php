@@ -6,6 +6,18 @@
 @section('content')
 <div class="page-toolbar">
     <a href="{{ route('invoices.pdf', $invoice) }}" class="btn btn-secondary">Descargar PDF</a>
+    @if ($invoice->canSend())
+    <form method="POST" action="{{ route('invoices.send', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Enviar factura por email al cliente?')">
+        @csrf
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+    @endif
+    @if ($invoice->canMarkPaid())
+    <form method="POST" action="{{ route('invoices.mark-paid', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Marcar como pagada?')">
+        @csrf
+        <button type="submit" class="btn btn-success">Marcar como pagada</button>
+    </form>
+    @endif
     <a href="{{ route('invoices.index') }}" class="btn btn-secondary">Volver</a>
     @if ($invoice->status === 'draft')
     <form method="POST" action="{{ route('invoices.destroy', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Eliminar esta factura?')">
@@ -31,7 +43,13 @@
             <div>
                 <strong>Cliente:</strong> {{ $invoice->client->name }}<br>
                 <strong>Email:</strong> {{ $invoice->client->email }}<br>
-                <strong>Estado:</strong> <span class="badge badge-{{ $invoice->status }}">{{ ucfirst($invoice->status) }}</span>
+                <strong>Estado:</strong> <span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span>
+                @if ($invoice->paid_at)
+                    <br><strong>Pagada:</strong> {{ $invoice->paid_at->format('d/m/Y H:i') }}
+                @endif
+                @if ($invoice->sent_at)
+                    <br><strong>Enviada:</strong> {{ $invoice->sent_at->format('d/m/Y H:i') }}
+                @endif
             </div>
             <div>
                 <strong>Emisión:</strong> {{ $invoice->issue_date->format('d/m/Y') }}<br>

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use App\Models\DocumentEvent;
-use App\Models\User;
 use App\Services\DocumentCalculatorService;
+use App\Services\DocumentNumberService;
+use App\Services\EmailService;
 use App\Services\PdfGeneratorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,8 @@ class InvoiceController extends Controller
     public function __construct(
         private DocumentCalculatorService $calculator,
         private PdfGeneratorService $pdfGenerator,
+        private DocumentNumberService $numberService,
+        private EmailService $emailService,
     ) {}
 
     public function index(): View
@@ -52,16 +55,12 @@ class InvoiceController extends Controller
         $totals = $this->calculator->calculateDocument($lines);
 
         $invoice = DB::transaction(function () use ($data, $lines, $totals) {
-            $user = User::where('id', auth()->id())->lockForUpdate()->firstOrFail();
-            $user->increment('invoice_counter');
-            $user->refresh();
-
-            $number = $user->invoice_prefix.'-'.str_pad((string) $user->invoice_counter, 4, '0', STR_PAD_LEFT);
+            $user = auth()->user();
 
             $invoice = $user->documents()->create([
                 'client_id' => $data['client_id'],
                 'type' => Document::TYPE_INVOICE,
-                'number' => $number,
+                'number' => $this->numberService->nextInvoiceNumber($user),
                 'status' => Document::STATUS_DRAFT,
                 'issue_date' => $data['issue_date'],
                 'due_date' => $data['due_date'],
@@ -129,6 +128,45 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return redirect()->route('invoices.index')->with('status', 'Factura eliminada.');
+    }
+
+    public function send(Document $invoice): RedirectResponse
+    {
+        $this->authorizeInvoice($invoice);
+        abort_unless($invoice->status === Document::STATUS_DRAFT, 403);
+
+        $invoice->load(['user', 'client', 'lineItems']);
+
+        $this->emailService->sendInvoice($invoice);
+
+        $invoice->update([
+            'status' => Document::STATUS_SENT,
+            'sent_at' => now(),
+        ]);
+
+        $invoice->events()->create([
+            'event_type' => DocumentEvent::SENT,
+        ]);
+
+        return back()->with('status', 'Factura enviada por email al cliente.');
+    }
+
+    public function markPaid(Document $invoice): RedirectResponse
+    {
+        $this->authorizeInvoice($invoice);
+        abort_unless($invoice->canMarkPaid(), 403);
+
+        $invoice->update([
+            'status' => Document::STATUS_PAID,
+            'paid_at' => now(),
+        ]);
+
+        $invoice->events()->create([
+            'event_type' => DocumentEvent::MARKED_PAID,
+            'meta' => ['source' => 'panel'],
+        ]);
+
+        return back()->with('status', 'Factura marcada como pagada.');
     }
 
     public function pdf(Document $invoice): Response
