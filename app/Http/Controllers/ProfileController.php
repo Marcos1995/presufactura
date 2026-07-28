@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AccountDeletedMail;
+use App\Services\DataExportService;
+use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProfileController extends Controller
 {
@@ -52,5 +61,86 @@ class ProfileController extends Controller
         $user->update($data);
 
         return redirect()->route('settings.index')->with('status', 'Configuración guardada.');
+    }
+
+    public function export(Request $request, DataExportService $exporter): RedirectResponse|BinaryFileResponse
+    {
+        $user = $request->user();
+        $cacheKey = 'data-export:user:'.$user->id;
+
+        if (Cache::has($cacheKey)) {
+            return redirect()->route('settings.index')->with('error', 'Solo puedes exportar tus datos una vez cada 24 horas.');
+        }
+
+        try {
+            $zipPath = $exporter->createZip($user);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->route('settings.index')->with('error', 'No se pudo preparar la exportación. Inténtalo más tarde.');
+        }
+
+        Cache::put($cacheKey, true, now()->addDay());
+
+        Log::info('RGPD data export', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+        ]);
+
+        return response()->download($zipPath, $exporter->filename(), [
+            'Content-Type' => 'application/zip',
+        ])->deleteFileAfterSend(true);
+    }
+
+    public function destroy(Request $request, StripeService $stripe): RedirectResponse
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'confirmation' => ['required', 'string'],
+        ], [
+            'confirmation.required' => 'Debes confirmar escribiendo tu email o ELIMINAR.',
+        ]);
+
+        $confirmation = trim($request->confirmation);
+        if ($confirmation !== $user->email && strtoupper($confirmation) !== 'ELIMINAR') {
+            return back()->withErrors([
+                'confirmation' => 'Escribe tu email o ELIMINAR para confirmar.',
+            ]);
+        }
+
+        $email = $user->email;
+        $name = $user->name;
+
+        if ($user->isPro()) {
+            try {
+                $stripe->cancelSubscription($user);
+            } catch (\Throwable) {
+                // la baja RGPD no debe bloquearse por un fallo de Stripe
+            }
+        }
+
+        if ($user->logo_path) {
+            Storage::disk('public')->delete($user->logo_path);
+        }
+
+        DB::transaction(function () use ($user): void {
+            $user->documents()->delete();
+            $user->clients()->delete();
+            DB::table('password_reset_tokens')->where('email', $user->email)->delete();
+            $user->delete();
+        });
+
+        try {
+            Mail::to($email)->send(new AccountDeletedMail($name));
+        } catch (\Throwable) {
+            // no bloquear la baja si el email falla
+        }
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('landing')->with('status', 'Cuenta eliminada.');
     }
 }

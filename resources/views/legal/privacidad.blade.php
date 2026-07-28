@@ -23,7 +23,7 @@
     <p>Tratamos tus datos para prestarte el servicio (ejecución del contrato, art. 6.1.b RGPD) y cumplir obligaciones legales. Los emails transaccionales (facturas, recordatorios) son necesarios para el servicio.</p>
 
     <h2>4. Conservación</h2>
-    <p>Conservamos los datos mientras mantengas tu cuenta activa. Tras la baja, se eliminarán en un plazo máximo de 30 días, salvo obligación legal de conservación.</p>
+    <p>Conservamos los datos mientras mantengas tu cuenta activa. Tras la baja, se eliminarán en un plazo máximo de 30 días, salvo obligación legal de conservación. También puedes eliminar tu cuenta de forma inmediata desde <strong>Configuración</strong> en el panel.</p>
 
     <h2>5. Destinatarios</h2>
     <ul>

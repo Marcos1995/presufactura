@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -79,6 +80,7 @@
         });
     </script>
     @endif
+    @include('layouts.partials.cookie-banner')
     @stack('scripts')
 </body>
 </html>

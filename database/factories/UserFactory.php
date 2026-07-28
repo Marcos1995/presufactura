@@ -41,4 +41,14 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function onboarded(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'business_name' => 'Empresa Test SL',
+            'tax_id' => 'B12345678',
+            'iban' => 'ES9121000418450200051332',
+            'onboarding_completed_at' => now(),
+        ]);
+    }
 }

@@ -25,6 +25,8 @@
             @enderror
         </div>
 
+        <p class="auth-switch"><a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a></p>
+
         <div class="form-group form-check">
             <label>
                 <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>

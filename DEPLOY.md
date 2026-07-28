@@ -50,6 +50,7 @@ Crea **`public_html/.htaccess`**:
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
     # Assets desde laravel/public/ (no copiar css/js a public_html/)
+    RewriteRule ^favicon\.ico$ laravel/public/favicon.ico [L]
     RewriteRule ^css/(.*)$ laravel/public/css/$1 [L]
     RewriteRule ^js/(.*)$ laravel/public/js/$1 [L]
     RewriteRule ^images/(.*)$ laravel/public/images/$1 [L]
@@ -143,6 +144,14 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_PRICE_ID=price_...
 ```
 
+Recomendado en producción:
+
+```env
+LOG_STACK=daily
+LOG_LEVEL=warning
+SENTRY_LARAVEL_DSN=
+```
+
 ## 5. Cron (recordatorios)
 
 ```bash
@@ -169,6 +178,72 @@ cd ~/domains/presufactura.es/public_html/laravel
 ```bash
 chmod -R ug+rwx storage bootstrap/cache
 ```
+
+## 9. Logs y monitorización
+
+### Revisar logs
+
+Los logs de Laravel están en **`laravel/storage/logs/`**:
+
+| Modo | Fichero |
+|------|---------|
+| `LOG_STACK=single` (local) | `laravel.log` |
+| `LOG_STACK=daily` (producción) | `laravel-YYYY-MM-DD.log` |
+
+Por SSH:
+
+```bash
+cd ~/domains/presufactura.es/public_html/laravel
+tail -f storage/logs/laravel.log
+# o el daily del día:
+tail -f storage/logs/laravel-$(date +%Y-%m-%d).log
+```
+
+Errores 500, emails fallidos y excepciones del cron aparecen ahí.
+
+### Rotación (Hostinger)
+
+Hostinger **no rota** los logs de la app por ti. Con `LOG_STACK=daily`, Laravel crea un fichero por día y conserva **`LOG_DAILY_DAYS`** (por defecto 14). No hace falta logrotate del sistema salvo que quieras archivar logs antiguos manualmente.
+
+Tras cambiar `LOG_*` en `.env`:
+
+```bash
+php artisan config:cache
+```
+
+### Health check (cron / uptime)
+
+Comando ligero para comprobar DB, storage y cola. **Exit 0 = OK, exit 1 = fallo.**
+
+```bash
+php artisan presufactura:health-check
+```
+
+Ejemplo cron cada 15 min (alerta si falla — revisa el log o configura un monitor externo):
+
+```bash
+*/15 * * * * cd /home/USUARIO/domains/presufactura.es/public_html/laravel && php artisan presufactura:health-check >> storage/logs/health-check.log 2>&1 || true
+```
+
+También puedes usar [UptimeRobot](https://uptimerobot.com) u otro servicio contra `https://presufactura.es/up` (health de Laravel) **y** ejecutar este comando por SSH/cron para validar DB y disco.
+
+### Smoke test (post-deploy)
+
+Tras cada deploy, además del health check:
+
+```bash
+php artisan presufactura:smoke-test
+```
+
+### Sentry (opcional, sin coste obligatorio)
+
+1. Deja `SENTRY_LARAVEL_DSN=` vacío si no lo usas.
+2. Para activarlo: `composer require sentry/sentry-laravel`, crea proyecto en Sentry, pega el DSN en `.env` y `php artisan config:cache`.
+3. Sin el paquete instalado, la app ignora el DSN (hook preparado en `AppServiceProvider`).
+
+### Alertas de recordatorios
+
+Si falla `presufactura:process-reminders` (cron horario), se envía un email a **`MAIL_FROM_ADDRESS`** (`facturas@presufactura.es`) y el error queda en el log.
 
 ## Troubleshooting
 

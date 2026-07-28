@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentActionController;
 use App\Http\Controllers\HelpController;
@@ -41,18 +42,33 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/registro', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/registro', [AuthController::class, 'register']);
+    Route::get('/password/olvidada', [AuthController::class, 'showForgotPassword'])->name('password.request');
+    Route::post('/password/olvidada', [AuthController::class, 'sendResetLinkEmail'])->middleware('throttle:6,1')->name('password.email');
+    Route::get('/password/restablecer/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
+    Route::post('/password/restablecer/{token}', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1')->name('password.update');
 });
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/onboarding/{step}', [OnboardingController::class, 'show'])->name('onboarding.step');
-    Route::post('/onboarding/{step}', [OnboardingController::class, 'store'])->name('onboarding.store');
+    Route::get('/email/verificar', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/email/verificar/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+    Route::post('/email/verificacion-reenviar', [EmailVerificationController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 
-    Route::middleware('onboarding')->group(function () {
+    Route::middleware('verified')->group(function () {
+        Route::get('/onboarding/{step}', [OnboardingController::class, 'show'])->name('onboarding.step');
+        Route::post('/onboarding/{step}', [OnboardingController::class, 'store'])->name('onboarding.store');
+
+        Route::middleware('onboarding')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/configuracion', [ProfileController::class, 'edit'])->name('settings.index');
         Route::put('/configuracion', [ProfileController::class, 'update'])->name('settings.update');
+        Route::post('/configuracion/exportar', [ProfileController::class, 'export'])->name('settings.export');
+        Route::post('/configuracion/eliminar-cuenta', [ProfileController::class, 'destroy'])->name('settings.destroy');
         Route::get('/suscripcion', [SubscriptionController::class, 'index'])->name('subscription.index');
         Route::post('/suscripcion/portal', [SubscriptionController::class, 'portal'])->name('subscription.portal');
 
@@ -86,5 +102,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
         Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
         Route::get('/stripe/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
+        });
     });
 });

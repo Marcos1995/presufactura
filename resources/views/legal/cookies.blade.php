@@ -11,6 +11,7 @@
     <p>Las cookies son pequeños archivos que se almacenan en tu dispositivo al visitar un sitio web.</p>
 
     <h2>2. Cookies que utilizamos</h2>
+    <p>PresuFactura no utiliza cookies de analítica ni publicidad de terceros. Solo empleamos cookies técnicas propias de Laravel:</p>
     <table class="data-table">
         <thead>
             <tr>
@@ -46,7 +47,8 @@
     <p>Stripe puede establecer cookies durante el proceso de pago. Consulta la <a href="https://stripe.com/es/privacy">política de privacidad de Stripe</a>.</p>
 
     <h2>4. Gestión</h2>
-    <p>Puedes configurar tu navegador para bloquear cookies, aunque el servicio podría dejar de funcionar correctamente (especialmente la sesión).</p>
+    <p>Al visitar el sitio verás un banner donde puedes elegir <strong>Aceptar</strong> o <strong>Solo necesarias</strong>. Guardamos tu elección en el almacenamiento local del navegador (<code>localStorage</code>, clave <code>cookie_consent</code>). En ambos casos el servicio funciona con normalidad; no bloqueamos el acceso si no aceptas cookies opcionales.</p>
+    <p>También puedes configurar tu navegador para bloquear cookies, aunque el servicio podría dejar de funcionar correctamente (especialmente la sesión y la protección CSRF).</p>
 
     <h2>5. Contacto</h2>
     <p><a href="mailto:facturas@presufactura.es">facturas@presufactura.es</a></p>

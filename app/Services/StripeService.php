@@ -8,6 +8,7 @@ use Stripe\BillingPortal\Session as PortalSession;
 use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
+use Stripe\Subscription;
 use Stripe\Webhook;
 
 class StripeService
@@ -59,6 +60,23 @@ class StripeService
             }
 
             throw $e;
+        }
+    }
+
+    public function cancelSubscription(User $user): void
+    {
+        if (! $user->isPro() || ! $user->stripe_subscription_id) {
+            return;
+        }
+
+        $this->bootApi();
+
+        try {
+            Subscription::cancel($user->stripe_subscription_id);
+        } catch (ApiErrorException $e) {
+            if (! $this->isSubscriptionMissing($e)) {
+                throw $e;
+            }
         }
     }
 
@@ -124,6 +142,14 @@ class StripeService
 
         return in_array($code, ['resource_missing', 'invalid_request'], true)
             || str_contains(strtolower($e->getMessage()), 'customer');
+    }
+
+    private function isSubscriptionMissing(ApiErrorException $e): bool
+    {
+        $code = $e->getStripeCode() ?? '';
+
+        return $code === 'resource_missing'
+            || str_contains(strtolower($e->getMessage()), 'subscription');
     }
 
     private function handleCheckoutCompleted(object $session): void

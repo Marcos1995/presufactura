@@ -42,4 +42,8 @@ return [
         'price_id' => env('STRIPE_PRICE_ID'),
     ],
 
+    'sentry' => [
+        'dsn' => env('SENTRY_LARAVEL_DSN'),
+    ],
+
 ];

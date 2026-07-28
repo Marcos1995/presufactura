@@ -708,6 +708,17 @@ a:hover { text-decoration: underline; }
 .form-row-4 .form-group { min-width: 100px; }
 .logo-preview { margin-bottom: 0.5rem; }
 .settings-plan-box { margin: 1.5rem 0; padding: 1rem; background: var(--gray-50); border-radius: var(--radius); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.settings-export-box { margin-top: 1.5rem; }
+.settings-export-box .form-section-title { border-top: none; margin-top: 0; }
+.settings-export-box p { color: var(--gray-700); margin-bottom: 0.75rem; }
+.danger-zone {
+    margin-top: 1.5rem;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+}
+.danger-zone .form-section-title { border-top: none; color: var(--danger); margin-top: 0; }
+.danger-zone p { color: var(--gray-700); margin-bottom: 0.75rem; }
+.landing-flash { max-width: 960px; margin: 1rem auto 0; padding: 0 2rem; }
 .subscription-actions { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
 .iban-box { margin: 1.5rem 0; padding: 1rem; background: var(--gray-50); border-radius: var(--radius); font-family: monospace; }
 
@@ -741,6 +752,43 @@ a:hover { text-decoration: underline; }
 }
 .modal-card h2 { margin-bottom: 0.75rem; }
 .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end; flex-wrap: wrap; }
+
+/* Cookie banner */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+    background: #fff;
+    border-top: 1px solid var(--gray-200);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+    padding: 1rem 1.25rem;
+}
+.cookie-banner[hidden] { display: none !important; }
+.cookie-banner-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.cookie-banner p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    line-height: 1.5;
+    flex: 1;
+    min-width: 220px;
+}
+.cookie-banner-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
 
 /* Responsive */
 @media (max-width: 768px) {

@@ -128,4 +128,66 @@
         </div>
     </form>
 </div>
+
+<div class="card card-narrow settings-export-box">
+    <h2 class="form-section-title">Tus datos (RGPD)</h2>
+    <p>Descarga una copia de tu perfil, clientes y documentos en JSON (sin PDFs). Máximo una exportación cada 24 horas.</p>
+    <form method="POST" action="{{ route('settings.export') }}" id="export-data-form">
+        @csrf
+        <button type="submit" class="btn btn-secondary" id="export-data-btn">Descargar mis datos</button>
+        <p class="text-muted" id="export-status" hidden>Preparando exportación…</p>
+    </form>
+</div>
+
+<div class="card card-narrow danger-zone">
+    <h2 class="form-section-title">Zona peligrosa</h2>
+    <p>Eliminar tu cuenta borra de forma <strong>inmediata</strong> todos tus datos: clientes, documentos, recordatorios y configuración fiscal. Esta acción es irreversible.</p>
+    <p class="text-muted">Según nuestra política de privacidad, también puedes solicitar la baja por email; desde aquí la eliminación es al instante.</p>
+    <button type="button" class="btn btn-danger" id="delete-account-open">Eliminar mi cuenta</button>
+</div>
+
+<div class="modal-overlay" id="delete-account-modal" style="display:none">
+    <div class="modal-card">
+        <h2>Eliminar cuenta</h2>
+        <p>Se cancelará tu suscripción Pro si la tienes activa. Escribe tu email (<strong>{{ $user->email }}</strong>) o <strong>ELIMINAR</strong> para confirmar.</p>
+        <form method="POST" action="{{ route('settings.destroy') }}" id="delete-account-form" class="form">
+            @csrf
+            <div class="form-group">
+                <label for="confirmation">Confirmación</label>
+                <input type="text" id="confirmation" name="confirmation" value="{{ old('confirmation') }}" autocomplete="off" required>
+                @error('confirmation')<span class="form-error">{{ $message }}</span>@enderror
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="delete-account-cancel">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+$(function() {
+    @if ($errors->has('confirmation'))
+        $('#delete-account-modal').show();
+    @endif
+
+    $('#delete-account-open').on('click', function() {
+        $('#delete-account-modal').show();
+        $('#confirmation').trigger('focus');
+    });
+
+    $('#delete-account-cancel, #delete-account-modal').on('click', function(e) {
+        if (e.target === this) {
+            $('#delete-account-modal').hide();
+        }
+    });
+
+    $('#export-data-form').on('submit', function() {
+        $('#export-data-btn').prop('disabled', true);
+        $('#export-status').prop('hidden', false);
+    });
+});
+</script>
+@endpush

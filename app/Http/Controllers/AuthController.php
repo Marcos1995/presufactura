@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\WelcomeMail;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -68,13 +69,9 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        try {
-            Mail::to($user)->send(new WelcomeMail($user));
-        } catch (\Throwable) {
-            // registro no debe fallar si el email no se envía
-        }
+        $user->sendEmailVerificationNotification();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('verification.notice');
     }
 
     public function logout(Request $request): RedirectResponse
@@ -85,5 +82,77 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    public function showForgotPassword(): View
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetLinkEmail(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ], [
+            'email.required' => 'El email es obligatorio.',
+            'email.email' => 'Introduce un email válido.',
+        ]);
+
+        Password::sendResetLink($request->only('email'));
+
+        return back()->with('status', 'Si existe una cuenta con ese email, recibirás un enlace para restablecer la contraseña.');
+    }
+
+    public function showResetPassword(Request $request, string $token): View
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
+    }
+
+    public function resetPassword(Request $request, string $token): RedirectResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'email.required' => 'El email es obligatorio.',
+            'email.email' => 'Introduce un email válido.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+        ]);
+
+        $status = Password::reset(
+            [
+                'email' => $request->email,
+                'password' => $request->password,
+                'password_confirmation' => $request->password_confirmation,
+                'token' => $token,
+            ],
+            function (User $user, string $password): void {
+                $user->forceFill([
+                    'password' => $password,
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', 'Tu contraseña se ha restablecido. Ya puedes iniciar sesión.');
+        }
+
+        $messages = [
+            Password::INVALID_TOKEN => 'El enlace de restablecimiento no es válido o ha expirado.',
+            Password::INVALID_USER => 'No encontramos ninguna cuenta con ese email.',
+            Password::RESET_THROTTLED => 'Espera un momento antes de volver a intentarlo.',
+        ];
+
+        return back()->withInput($request->only('email'))
+            ->withErrors(['email' => $messages[$status] ?? 'No se pudo restablecer la contraseña.']);
     }
 }

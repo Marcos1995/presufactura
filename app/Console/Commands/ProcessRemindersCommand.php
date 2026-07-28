@@ -6,6 +6,8 @@ use App\Models\Document;
 use App\Models\Reminder;
 use App\Services\EmailService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ProcessRemindersCommand extends Command
 {
@@ -21,12 +23,39 @@ class ProcessRemindersCommand extends Command
 
     public function handle(): int
     {
-        $this->expireOverdueDocuments();
-        $this->sendReminders();
+        try {
+            $this->expireOverdueDocuments();
+            $this->sendReminders();
 
-        $this->info('Recordatorios procesados.');
+            $this->info('Recordatorios procesados.');
 
-        return self::SUCCESS;
+            return self::SUCCESS;
+        } catch (\Throwable $e) {
+            report($e);
+            $this->error('Error procesando recordatorios: '.$e->getMessage());
+            $this->notifyAdmin($e);
+
+            return self::FAILURE;
+        }
+    }
+
+    private function notifyAdmin(\Throwable $e): void
+    {
+        $to = config('mail.from.address');
+        if (! filled($to)) {
+            return;
+        }
+
+        try {
+            Mail::raw(
+                'Falló presufactura:process-reminders en '.config('app.url')."\n\n".$e->getMessage(),
+                fn ($message) => $message->to($to)->subject('PresuFactura: error en recordatorios')
+            );
+        } catch (\Throwable $mailError) {
+            Log::error('No se pudo enviar alerta admin de recordatorios', [
+                'error' => $mailError->getMessage(),
+            ]);
+        }
     }
 
     private function expireOverdueDocuments(): void

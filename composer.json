@@ -69,5 +69,8 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "suggest": {
+        "sentry/sentry-laravel": "Monitorización de errores en producción (opcional; configurar SENTRY_LARAVEL_DSN)"
+    }
 }

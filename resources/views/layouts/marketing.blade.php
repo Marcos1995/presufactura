@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
     <meta name="description" content="@yield('meta_description', 'PresuFactura: presupuestos y facturas proforma para autónomos y pequeñas empresas en España. Envía PDF, cobra más rápido.')">
     <meta name="robots" content="index, follow">
@@ -41,12 +42,19 @@
         </div>
     </header>
 
+    @if (session('status'))
+        <div class="landing-flash">
+            <div class="alert alert-success">{{ session('status') }}</div>
+        </div>
+    @endif
+
     @yield('content')
 
     <footer class="landing-footer">
         <p><strong>{{ config('app.name') }}</strong> — Presupuestos y facturas proforma para autónomos</p>
         @include('layouts.partials.legal-footer')
     </footer>
+    @include('layouts.partials.cookie-banner')
     @stack('scripts')
 </body>
 </html>
