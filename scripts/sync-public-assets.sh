@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
-# Copia assets estáticos a public_html (Hostinger). Ejecutar desde laravel/
+# Copia CSS/JS a public_html (padre). Ejecutar desde laravel/ en el servidor.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-PUBLIC_HTML="${1:-../public_html}"
 
-if [ ! -d "$PUBLIC_HTML" ]; then
-    echo "ERROR: no existe $PUBLIC_HTML"
-    echo "Uso: ./scripts/sync-public-assets.sh [ruta/public_html]"
+if [ -n "${1:-}" ]; then
+    WEB_ROOT="$1"
+elif [ -f "../index.php" ] && [ ! -f "../artisan" ]; then
+    WEB_ROOT=".."
+else
+    echo "ERROR: no se detectó public_html."
+    echo "Uso: ./scripts/sync-public-assets.sh [ruta/a/public_html]"
     exit 1
 fi
 
-echo "→ Sync a $PUBLIC_HTML"
-cp index.php .htaccess "$PUBLIC_HTML/"
-mkdir -p "$PUBLIC_HTML/css" "$PUBLIC_HTML/js" "$PUBLIC_HTML/images"
-cp -r public/css/. "$PUBLIC_HTML/css/"
-cp -r public/js/. "$PUBLIC_HTML/js/"
-[ -d public/images ] && cp -r public/images/. "$PUBLIC_HTML/images/" || true
-ln -sfn ../laravel/public/storage "$PUBLIC_HTML/storage" 2>/dev/null || true
-echo "✓ CSS: $(wc -c < public/css/app.css) bytes → $PUBLIC_HTML/css/app.css"
+echo "→ Sync assets → $WEB_ROOT"
+mkdir -p "$WEB_ROOT/css" "$WEB_ROOT/js" "$WEB_ROOT/images"
+cp -r public/css/. "$WEB_ROOT/css/"
+cp -r public/js/. "$WEB_ROOT/js/"
+[ -d public/images ] && cp -r public/images/. "$WEB_ROOT/images/" || true
+STORAGE_SRC="$(pwd)/public/storage"
+ln -sfn "$STORAGE_SRC" "$WEB_ROOT/storage" 2>/dev/null || true
+echo "✓ $WEB_ROOT/css/app.css ($(wc -c < public/css/app.css) bytes)"

@@ -15,11 +15,8 @@ php artisan migrate --force
 echo "→ storage:link"
 php artisan storage:link 2>/dev/null || true
 
-PUBLIC_HTML="../public_html"
-if [ -d "$PUBLIC_HTML" ]; then
-    echo "→ sync public_html assets"
-    bash scripts/sync-public-assets.sh "$PUBLIC_HTML"
-fi
+echo "→ sync assets web"
+bash scripts/sync-public-assets.sh
 
 echo "→ cache"
 php artisan config:cache

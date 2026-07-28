@@ -2,21 +2,63 @@
 
 ## Estructura en servidor
 
+El repo Git va en **`public_html/laravel/`**. `index.php` y `.htaccess` están en **`public_html/`** (fuera del repo, créalos a mano una vez).
+
 ```
-~/domains/presufactura.es/
-├── laravel/                 # Repo Git (composer, artisan, app…)
-│   ├── app/
-│   ├── public/
-│   │   ├── css/
-│   │   ├── js/
-│   │   └── storage/       # symlink → storage/app/public
-│   └── .env                 # NUNCA en Git
-└── public_html/             # Document root (dominio apunta aquí)
-    ├── index.php            # Copia/symlink desde repo index.php
-    ├── .htaccess            # Copia/symlink desde repo .htaccess
-    ├── css → ../laravel/public/css
-    ├── js  → ../laravel/public/js
-    └── storage → ../laravel/public/storage
+public_html/                 # Document root
+├── index.php                # NO en Git — ver plantilla abajo
+├── .htaccess                # NO en Git — ver plantilla abajo
+├── css/                     # sync desde laravel/public/css/
+├── js/
+├── images/
+├── storage → laravel/public/storage
+└── laravel/                 # git clone aquí
+    ├── app/
+    ├── public/css/app.css
+    └── .env
+```
+
+## Plantillas public_html (fuera del repo)
+
+Crea **`public_html/index.php`**:
+
+```php
+<?php
+
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+$laravel = __DIR__.'/laravel';
+
+if (file_exists($maintenance = $laravel.'/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+require $laravel.'/vendor/autoload.php';
+
+(require_once $laravel.'/bootstrap/app.php')
+    ->handleRequest(Request::capture());
+```
+
+Crea **`public_html/.htaccess`**:
+
+```apache
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+Options -Indexes
 ```
 
 ## Requisitos Hostinger
@@ -30,29 +72,21 @@
 ## 1. Clonar / actualizar código
 
 ```bash
-cd ~/domains/presufactura.es
+cd ~/domains/presufactura.es/public_html
 git clone <repo-url> laravel
 # o actualizar:
 cd laravel && ./deploy.sh
 ```
 
-## 2. Enlaces public_html
+## 2. Assets en public_html (CSS/JS)
 
-Desde `~/domains/presufactura.es`:
+Desde `public_html/laravel`:
 
 ```bash
-cp laravel/index.php public_html/index.php
-cp laravel/.htaccess public_html/.htaccess
-mkdir -p public_html/css public_html/js public_html/images
-cp -r laravel/public/css/. public_html/css/
-cp -r laravel/public/js/. public_html/js/
-cp -r laravel/public/images/. public_html/images/ 2>/dev/null || true
-ln -sfn ../laravel/public/storage public_html/storage
+bash scripts/sync-public-assets.sh
 ```
 
-O usa `./deploy.sh` o `./scripts/sync-public-assets.sh` — copia assets automáticamente.
-
-**Importante:** en Hostinger los CSS deben existir como ficheros en `public_html/css/`. No uses rewrite a `../laravel/` — Apache no lo sirve bien.
+Comprueba: `https://presufactura.es/css/app.css` debe mostrar CSS, no HTML.
 
 ## 3. Composer y Laravel
 
@@ -63,11 +97,12 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Edita `.env` (ver sección variables). **No commitear `.env`.**
+Edita `laravel/.env`. **No commitear `.env`.**
 
 ```bash
 php artisan migrate --force
 php artisan storage:link
+bash scripts/sync-public-assets.sh
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -106,38 +141,23 @@ STRIPE_PRICE_ID=price_...
 
 ## 5. Cron (recordatorios)
 
-hPanel → Cron → cada minuto:
-
 ```bash
-* * * * * cd /home/USUARIO/domains/presufactura.es/laravel && php artisan schedule:run >> /dev/null 2>&1
+* * * * * cd /home/USUARIO/domains/presufactura.es/public_html/laravel && php artisan schedule:run >> /dev/null 2>&1
 ```
-
-Ajusta la ruta `USUARIO` a tu cuenta Hostinger.
-
-Manual: `php artisan presufactura:process-reminders`
 
 ## 6. Stripe
 
-1. **Checkout** — producto Pro 12 €/mes **recurrente**, copia `price_…` **live** → `STRIPE_PRICE_ID`
-2. Claves **live** en `.env`: `sk_live_…`, `pk_live_…` (no test en producción)
-3. Tras editar `.env`: `php artisan config:cache` (si no, Stripe devuelve error / 500)
-4. **Webhook** — URL: `https://presufactura.es/stripe/webhook`  
-   Eventos: `checkout.session.completed`, `customer.subscription.deleted`, `invoice.payment_failed`
-3. **Customer Portal** — Dashboard → Settings → Billing → Customer portal → Activar  
-   Los usuarios Pro gestionan suscripción en `/suscripcion`
+1. **Checkout** — Pro 12 €/mes recurrente → `STRIPE_PRICE_ID`
+2. Claves **live** en `.env`
+3. Tras editar `.env`: `php artisan config:cache`
+4. **Webhook** — `https://presufactura.es/stripe/webhook`
+5. **Customer Portal** activo en Stripe
 
 ## 7. Deploy rutinario
 
 ```bash
-cd ~/domains/presufactura.es/laravel
+cd ~/domains/presufactura.es/public_html/laravel
 ./deploy.sh
-```
-
-Tras cambiar `.env`:
-
-```bash
-php artisan config:cache
-php artisan presufactura:smoke-test
 ```
 
 ## 8. Permisos
@@ -146,20 +166,11 @@ php artisan presufactura:smoke-test
 chmod -R ug+rwx storage bootstrap/cache
 ```
 
-## 9. Verificación post-deploy
-
-```bash
-php artisan presufactura:smoke-test
-```
-
-Checklist manual: registro → onboarding → crear factura → PDF → enviar email.
-
 ## Troubleshooting
 
 | Problema | Solución |
 |----------|----------|
-| 500 en todas las rutas | Revisar `storage/logs/laravel.log`, permisos storage |
-| CSS/JS 404 | `cp laravel/.htaccess public_html/` y `cp -r laravel/public/css/. public_html/css/` |
-| Logos 404 | `php artisan storage:link` + symlink `public_html/storage` |
-| Emails no llegan | Verificar SMTP en `.env`, smoke-test mail |
-| Stripe webhook falla | URL HTTPS, secret correcto, CSRF except en `stripe/webhook` |
+| 500 en todas las rutas | `laravel/storage/logs/laravel.log`, permisos storage |
+| CSS/JS 404 | `bash scripts/sync-public-assets.sh` desde laravel/ |
+| Logos 404 | `php artisan storage:link` + sync |
+| Emails no llegan | SMTP en `.env` |

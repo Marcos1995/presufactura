@@ -22,6 +22,7 @@ class SmokeTestCommand extends Command
         $failed = ! $this->checkStripeConfig() || $failed;
         $failed = ! $this->checkStorageWritable() || $failed;
         $failed = ! $this->checkScheduleRegistered() || $failed;
+        $failed = ! $this->checkWebAssets() || $failed;
 
         if ($failed) {
             $this->error('Smoke test FALLIDO.');
@@ -99,7 +100,7 @@ class SmokeTestCommand extends Command
         }
 
         if (! $ok) {
-            $this->line('  → Edita laravel/.env y ejecuta: php artisan config:cache');
+            $this->line('  → Edita .env y ejecuta: php artisan config:cache');
 
             return false;
         }
@@ -173,6 +174,28 @@ class SmokeTestCommand extends Command
         }
 
         $this->line('✓ Schedule: presufactura:process-reminders');
+
+        return true;
+    }
+
+    private function checkWebAssets(): bool
+    {
+        $source = public_path('css/app.css');
+
+        if (! File::isFile($source) || File::size($source) < 100) {
+            $this->error('✗ Assets: falta public/css/app.css');
+
+            return false;
+        }
+
+        $webCss = base_path('../css/app.css');
+        if (File::isFile(base_path('../index.php')) && ! File::isFile($webCss)) {
+            $this->error('✗ Assets web: falta ../css/app.css — ejecuta scripts/sync-public-assets.sh');
+
+            return false;
+        }
+
+        $this->line('✓ Assets web');
 
         return true;
     }
