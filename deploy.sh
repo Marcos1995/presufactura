@@ -17,15 +17,8 @@ php artisan storage:link 2>/dev/null || true
 
 PUBLIC_HTML="../public_html"
 if [ -d "$PUBLIC_HTML" ]; then
-    echo "→ public_html (index, htaccess, assets)"
-    cp index.php .htaccess "$PUBLIC_HTML/"
-    mkdir -p "$PUBLIC_HTML/css" "$PUBLIC_HTML/js" "$PUBLIC_HTML/images"
-    cp -r public/css/. "$PUBLIC_HTML/css/"
-    cp -r public/js/. "$PUBLIC_HTML/js/"
-    if [ -d public/images ]; then
-        cp -r public/images/. "$PUBLIC_HTML/images/"
-    fi
-    ln -sfn ../laravel/public/storage "$PUBLIC_HTML/storage" 2>/dev/null || true
+    echo "→ sync public_html assets"
+    bash scripts/sync-public-assets.sh "$PUBLIC_HTML"
 fi
 
 echo "→ cache"

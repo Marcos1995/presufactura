@@ -50,9 +50,9 @@ cp -r laravel/public/images/. public_html/images/ 2>/dev/null || true
 ln -sfn ../laravel/public/storage public_html/storage
 ```
 
-O usa `./deploy.sh` — copia assets automáticamente.
+O usa `./deploy.sh` o `./scripts/sync-public-assets.sh` — copia assets automáticamente.
 
-El `.htaccess` también sirve `/css`, `/js` e `/images` desde `laravel/public/` si faltan symlinks.
+**Importante:** en Hostinger los CSS deben existir como ficheros en `public_html/css/`. No uses rewrite a `../laravel/` — Apache no lo sirve bien.
 
 ## 3. Composer y Laravel
 
