@@ -22,3 +22,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Hostinger: fuera del repo (plantillas en DEPLOY.md)
+/index.php
+/.htaccess

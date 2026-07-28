@@ -15,9 +15,6 @@ php artisan migrate --force
 echo "→ storage:link"
 php artisan storage:link 2>/dev/null || true
 
-echo "→ sync assets web"
-bash scripts/sync-public-assets.sh
-
 echo "→ cache"
 php artisan config:cache
 php artisan route:cache

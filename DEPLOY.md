@@ -7,14 +7,10 @@ El repo Git va en **`public_html/laravel/`**. `index.php` y `.htaccess` están e
 ```
 public_html/                 # Document root
 ├── index.php                # NO en Git — ver plantilla abajo
-├── .htaccess                # NO en Git — ver plantilla abajo
-├── css/                     # sync desde laravel/public/css/
-├── js/
-├── images/
-├── storage → laravel/public/storage
+├── .htaccess                # NO en Git — sirve css/js desde laravel/public/
 └── laravel/                 # git clone aquí
     ├── app/
-    ├── public/css/app.css
+    ├── public/css/app.css   # servido en /css/app.css vía .htaccess
     └── .env
 ```
 
@@ -53,6 +49,12 @@ Crea **`public_html/.htaccess`**:
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
+    # Assets desde laravel/public/ (no copiar css/js a public_html/)
+    RewriteRule ^css/(.*)$ laravel/public/css/$1 [L]
+    RewriteRule ^js/(.*)$ laravel/public/js/$1 [L]
+    RewriteRule ^images/(.*)$ laravel/public/images/$1 [L]
+    RewriteRule ^storage/(.*)$ laravel/public/storage/$1 [L]
+
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
@@ -78,12 +80,15 @@ git clone <repo-url> laravel
 cd laravel && ./deploy.sh
 ```
 
-## 2. Assets en public_html (CSS/JS)
+## 2. Assets (CSS/JS)
 
-Desde `public_html/laravel`:
+El `.htaccess` de arriba sirve `/css/`, `/js/`, `/images/` y `/storage/` desde `laravel/public/`. **No hace falta copiar ficheros.**
+
+Tras el primer deploy:
 
 ```bash
-bash scripts/sync-public-assets.sh
+cd laravel
+php artisan storage:link
 ```
 
 Comprueba: `https://presufactura.es/css/app.css` debe mostrar CSS, no HTML.
@@ -102,7 +107,6 @@ Edita `laravel/.env`. **No commitear `.env`.**
 ```bash
 php artisan migrate --force
 php artisan storage:link
-bash scripts/sync-public-assets.sh
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -171,6 +175,6 @@ chmod -R ug+rwx storage bootstrap/cache
 | Problema | Solución |
 |----------|----------|
 | 500 en todas las rutas | `laravel/storage/logs/laravel.log`, permisos storage |
-| CSS/JS 404 | `bash scripts/sync-public-assets.sh` desde laravel/ |
-| Logos 404 | `php artisan storage:link` + sync |
+| CSS/JS 404 | Actualiza `public_html/.htaccess` (reglas css/js arriba) |
+| Logos 404 | `php artisan storage:link` en laravel/ |
 | Emails no llegan | SMTP en `.env` |
