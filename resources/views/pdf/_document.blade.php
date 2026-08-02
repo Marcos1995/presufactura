@@ -5,37 +5,43 @@
     @include('pdf._styles')
 </head>
 <body>
-    <div class="accent-bar"></div>
+<table class="page-frame" cellpadding="0" cellspacing="0">
+<tr class="spacer-top"><td colspan="3">&nbsp;</td></tr>
+<tr>
+    <td class="page-gutter">&nbsp;</td>
+    <td class="page-content">
 
-    <table class="doc-header">
+    <table class="header-table" cellpadding="0" cellspacing="0">
         <tr>
-            <td class="brand-cell">
+            <td class="header-left">
                 @if (!empty($logoDataUri))
-                    <div class="logo-wrap">
-                        <img src="{{ $logoDataUri }}" alt="">
-                    </div>
+                    <div class="logo"><img src="{{ $logoDataUri }}" alt=""></div>
                 @endif
-                <div class="brand-name">{{ $document->user->business_name ?: $document->user->name }}</div>
-                <div class="brand-meta">
-                    @if ($document->user->tax_id)NIF: {{ $document->user->tax_id }} · @endif
-                    {{ $document->user->email }}
-                    @if ($document->user->phone) · {{ $document->user->phone }}@endif
+                <div class="issuer-name">{{ $document->user->business_name ?: $document->user->name }}</div>
+                <div class="issuer-line">
+                    @if ($document->user->tax_id)NIF {{ $document->user->tax_id }}<br>@endif
+                    @if ($document->user->address){{ $document->user->address }}<br>@endif
+                    @if ($document->user->city){{ $document->user->postal_code }} {{ $document->user->city }}<br>@endif
+                    {{ $document->user->email }}@if ($document->user->phone) · {{ $document->user->phone }}@endif
                 </div>
             </td>
-            <td class="doc-title-cell">
-                <div class="doc-type">{{ $docTitle }}</div>
+            <td class="header-right">
+                <div class="doc-kicker">Documento proforma</div>
+                <div class="doc-title">{{ $docTitle }}</div>
                 <div class="doc-number">{{ $document->number }}</div>
-                <span class="proforma-badge">{{ $proformaBadge }}</span>
+                <span class="badge">{{ $proformaBadge }}</span>
             </td>
         </tr>
     </table>
 
-    <table class="parties">
+    <table class="spacer-row-lg" width="100%"><tr><td>&nbsp;</td></tr></table>
+
+    <table class="parties-table" cellpadding="0" cellspacing="0">
         <tr>
-            <td class="party-box">
-                <div class="party-label">Emisor</div>
-                <div class="party-name">{{ $document->user->business_name ?: $document->user->name }}</div>
-                <div class="party-details">
+            <td>
+                <div class="box-label">Emisor</div>
+                <div class="box-name">{{ $document->user->business_name ?: $document->user->name }}</div>
+                <div class="box-text">
                     @if ($document->user->tax_id)NIF: {{ $document->user->tax_id }}<br>@endif
                     @if ($document->user->address){{ $document->user->address }}<br>@endif
                     @if ($document->user->city){{ $document->user->postal_code }} {{ $document->user->city }}<br>@endif
@@ -43,11 +49,10 @@
                     @if ($document->user->phone)<br>{{ $document->user->phone }}@endif
                 </div>
             </td>
-            <td class="party-spacer"></td>
-            <td class="party-box">
-                <div class="party-label">Cliente</div>
-                <div class="party-name">{{ $document->client->name }}</div>
-                <div class="party-details">
+            <td>
+                <div class="box-label">Cliente</div>
+                <div class="box-name">{{ $document->client->name }}</div>
+                <div class="box-text">
                     @if ($document->client->tax_id)NIF: {{ $document->client->tax_id }}<br>@endif
                     @if ($document->client->address){{ $document->client->address }}<br>@endif
                     {{ $document->client->email }}
@@ -57,75 +62,86 @@
         </tr>
     </table>
 
-    <table class="meta-box">
+    <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
+
+    <table class="meta-table" cellpadding="0" cellspacing="0">
         <tr>
-            <td width="25%">
+            <td width="24%">
                 <span class="meta-label">Fecha emisión</span>
                 <span class="meta-value">{{ $document->issue_date->format('d/m/Y') }}</span>
             </td>
-            <td width="25%">
+            <td width="24%">
                 <span class="meta-label">Estado</span>
                 <span class="meta-value">{{ $document->statusLabel() }}</span>
             </td>
             @if (!empty($metaExtra))
-            <td width="25%">
+            <td width="24%">
                 <span class="meta-label">{{ $metaExtra['label'] }}</span>
                 <span class="meta-value">{{ $metaExtra['value'] }}</span>
             </td>
-            @endif
-            <td width="25%" style="text-align:right;">
-                <span class="meta-label">Total documento</span>
-                <span class="meta-value" style="color:#2563eb;font-size:12px;">{{ number_format($document->total, 2, ',', '.') }} €</span>
+            <td width="28%" style="text-align:right;">
+                <span class="meta-label">Importe total</span>
+                <span class="meta-total">{{ number_format($document->total, 2, ',', '.') }} €</span>
             </td>
+            @else
+            <td width="52%" colspan="2" style="text-align:right;">
+                <span class="meta-label">Importe total</span>
+                <span class="meta-total">{{ number_format($document->total, 2, ',', '.') }} €</span>
+            </td>
+            @endif
         </tr>
     </table>
 
-    <table class="lines">
+    <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
+
+    <table class="lines-table" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
-                <th style="width:42%;">Descripción</th>
-                <th class="num" style="width:12%;">Cant.</th>
-                <th class="num" style="width:16%;">Precio</th>
-                <th class="num" style="width:10%;">IVA</th>
-                <th class="num" style="width:20%;">Total</th>
+                <th style="width:44%;">Descripción</th>
+                <th class="r" style="width:11%;">Cant.</th>
+                <th class="r" style="width:15%;">Precio</th>
+                <th class="r" style="width:10%;">IVA</th>
+                <th class="r" style="width:20%;">Total</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($document->lineItems as $item)
-            <tr>
-                <td class="desc">{{ $item->description }}</td>
-                <td class="num">{{ number_format($item->quantity, 2, ',', '.') }}</td>
-                <td class="num">{{ number_format($item->unit_price, 2, ',', '.') }} €</td>
-                <td class="num">{{ number_format($item->vat_rate, 0) }}%</td>
-                <td class="num">{{ number_format($item->line_total, 2, ',', '.') }} €</td>
+            @foreach ($document->lineItems as $index => $item)
+            <tr class="{{ $index % 2 === 1 ? 'alt' : '' }}">
+                <td>{{ $item->description }}</td>
+                <td class="r">{{ number_format($item->quantity, 2, ',', '.') }}</td>
+                <td class="r">{{ number_format($item->unit_price, 2, ',', '.') }} €</td>
+                <td class="r">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="r">{{ number_format($item->line_total, 2, ',', '.') }} €</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
-    <table class="bottom-section">
+    <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
+
+    <table class="bottom-table" cellpadding="0" cellspacing="0">
         <tr>
-            <td class="notes-cell">
+            <td class="notes-area">
                 @if ($document->notes)
-                    <div class="notes-box">
+                    <div class="notes-inner">
                         <strong>Notas</strong>
                         {{ $document->notes }}
                     </div>
                 @endif
             </td>
-            <td class="totals-cell">
-                <table class="totals">
+            <td class="totals-area">
+                <table class="totals-table" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td class="label">Subtotal</td>
-                        <td class="value">{{ number_format($document->subtotal, 2, ',', '.') }} €</td>
+                        <td class="lbl">Subtotal</td>
+                        <td class="val">{{ number_format($document->subtotal, 2, ',', '.') }} €</td>
                     </tr>
                     <tr>
-                        <td class="label">IVA</td>
-                        <td class="value">{{ number_format($document->vat_amount, 2, ',', '.') }} €</td>
+                        <td class="lbl">IVA</td>
+                        <td class="val">{{ number_format($document->vat_amount, 2, ',', '.') }} €</td>
                     </tr>
                     <tr class="grand">
-                        <td class="label">Total</td>
-                        <td class="value">{{ number_format($document->total, 2, ',', '.') }} €</td>
+                        <td class="lbl">Total</td>
+                        <td class="val">{{ number_format($document->total, 2, ',', '.') }} €</td>
                     </tr>
                 </table>
             </td>
@@ -133,16 +149,25 @@
     </table>
 
     @if (!empty($showIban) && $document->user->iban)
-        <div class="iban-box">
-            <strong>Datos para transferencia</strong>
-            <span class="iban-value">{{ $document->user->iban }}</span>
+        <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
+        <div class="iban-inner">
+            <strong>Datos para transferencia bancaria</strong>
+            <span class="iban-code">{{ $document->user->iban }}</span>
         </div>
     @endif
 
-    <div class="disclaimer">
+    <table class="spacer-row-lg" width="100%"><tr><td>&nbsp;</td></tr></table>
+
+    <div class="footer">
         Documento proforma generado con PresuFactura. No válido como factura fiscal. Sin Verifactu v1.<br>
         El emisor es responsable de cumplir la normativa fiscal aplicable.
-        <div class="footer-brand">presufactura.es</div>
+        <div class="footer-site">presufactura.es</div>
     </div>
+
+    </td>
+    <td class="page-gutter">&nbsp;</td>
+</tr>
+<tr class="spacer-bottom"><td colspan="3">&nbsp;</td></tr>
+</table>
 </body>
 </html>

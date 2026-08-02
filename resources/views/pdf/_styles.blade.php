@@ -1,310 +1,338 @@
 <style>
     @page {
-        margin: 14mm 16mm 16mm 16mm;
+        margin: 18mm 0 20mm 0;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
+    html, body {
+        margin: 0;
+        padding: 0;
         font-family: DejaVu Sans, sans-serif;
-        font-size: 10.5px;
-        color: #1f2937;
-        line-height: 1.45;
-    }
-
-    .accent-bar {
-        height: 4px;
-        background: #2563eb;
-        margin-bottom: 18px;
-        border-radius: 2px;
-    }
-
-    .doc-header {
-        width: 100%;
-        margin-bottom: 22px;
-        border-collapse: collapse;
-    }
-
-    .doc-header td { vertical-align: top; }
-
-    .doc-header .brand-cell { width: 55%; padding-right: 12px; }
-
-    .logo-wrap {
-        margin-bottom: 8px;
-    }
-
-    .logo-wrap img {
-        max-height: 46px;
-        max-width: 160px;
-    }
-
-    .brand-name {
-        font-size: 15px;
-        font-weight: bold;
-        color: #111827;
-        margin-bottom: 2px;
-    }
-
-    .brand-meta {
-        font-size: 9.5px;
-        color: #6b7280;
+        font-size: 10px;
+        color: #1e293b;
         line-height: 1.5;
     }
 
-    .doc-title-cell { width: 45%; text-align: right; }
-
-    .doc-type {
-        font-size: 22px;
-        font-weight: bold;
-        color: #2563eb;
-        letter-spacing: -0.3px;
-        margin-bottom: 4px;
-    }
-
-    .doc-number {
-        font-size: 13px;
-        font-weight: bold;
-        color: #111827;
-        margin-bottom: 8px;
-    }
-
-    .proforma-badge {
-        display: inline-block;
-        background: #fef3c7;
-        color: #92400e;
-        padding: 4px 10px;
-        font-size: 8.5px;
-        font-weight: bold;
-        border-radius: 4px;
-        border: 1px solid #fde68a;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-    }
-
-    .parties {
+    .page-frame {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 18px;
     }
 
-    .parties td.party-box {
-        width: 50%;
-        vertical-align: top;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 12px 14px;
-    }
-
-    .parties td.party-spacer {
-        width: 12px;
+    .page-gutter {
+        width: 7%;
         padding: 0;
-        border: none;
-        background: transparent;
+        margin: 0;
+        font-size: 1px;
+        line-height: 1px;
     }
 
-    .party-label {
-        font-size: 8.5px;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: #2563eb;
+    .page-content {
+        width: 86%;
+        vertical-align: top;
+        padding: 10px 0 16px 0;
+    }
+
+    .spacer-row td {
+        height: 16px;
+        font-size: 1px;
+        line-height: 16px;
+    }
+
+    .spacer-row-lg td {
+        height: 22px;
+        font-size: 1px;
+        line-height: 22px;
+    }
+
+    .spacer-top td {
+        height: 28px;
+        font-size: 1px;
+        line-height: 28px;
+    }
+
+    .spacer-bottom td {
+        height: 20px;
+        font-size: 1px;
+        line-height: 20px;
+    }
+
+    /* Header */
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-bottom: 2px solid #2563eb;
+        padding-bottom: 14px;
+    }
+
+    .header-table td { vertical-align: top; }
+
+    .header-left { width: 58%; padding: 0 16px 14px 0; }
+
+    .header-right {
+        width: 42%;
+        text-align: right;
+        padding: 0 0 14px 0;
+    }
+
+    .logo img {
+        max-height: 42px;
+        max-width: 150px;
         margin-bottom: 8px;
-        padding-bottom: 6px;
-        border-bottom: 1px solid #dbeafe;
     }
 
-    .party-name {
-        font-size: 11.5px;
+    .issuer-name {
+        font-size: 14px;
         font-weight: bold;
-        color: #111827;
+        color: #0f172a;
+        margin-bottom: 3px;
+    }
+
+    .issuer-line {
+        font-size: 9px;
+        color: #64748b;
+        line-height: 1.55;
+    }
+
+    .doc-kicker {
+        font-size: 8px;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: bold;
         margin-bottom: 4px;
     }
 
-    .party-details {
-        font-size: 9.5px;
-        color: #4b5563;
-        line-height: 1.55;
-    }
-
-    .meta-box {
-        width: 100%;
-        background: #eff6ff;
-        border: 1px solid #dbeafe;
-        border-radius: 8px;
-        margin-bottom: 18px;
-        border-collapse: collapse;
-    }
-
-    .meta-box td {
-        padding: 10px 14px;
-        font-size: 9.5px;
-    }
-
-    .meta-box .meta-label {
-        color: #6b7280;
-        font-size: 8.5px;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        display: block;
-        margin-bottom: 2px;
-    }
-
-    .meta-box .meta-value {
+    .doc-title {
+        font-size: 24px;
         font-weight: bold;
-        color: #111827;
-    }
-
-    table.lines {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 14px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    table.lines thead th {
-        background: #2563eb;
-        color: #ffffff;
-        text-align: left;
-        padding: 9px 10px;
-        font-size: 9px;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-    }
-
-    table.lines thead th.num { text-align: right; }
-
-    table.lines tbody td {
-        padding: 8px 10px;
-        border-bottom: 1px solid #f3f4f6;
-        font-size: 10px;
-        vertical-align: top;
-    }
-
-    table.lines tbody tr:nth-child(even) td {
-        background: #fafafa;
-    }
-
-    table.lines tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    table.lines .num { text-align: right; white-space: nowrap; }
-
-    table.lines .desc { color: #374151; }
-
-    .bottom-section {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 4px;
-    }
-
-    .bottom-section td { vertical-align: top; }
-
-    .notes-cell {
-        width: 55%;
-        padding-right: 14px;
-    }
-
-    .notes-box {
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 12px 14px;
-        font-size: 9.5px;
-        color: #4b5563;
-        line-height: 1.55;
-    }
-
-    .notes-box strong {
-        display: block;
-        color: #111827;
-        font-size: 8.5px;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
+        color: #2563eb;
+        line-height: 1.1;
         margin-bottom: 6px;
     }
 
-    .totals-cell { width: 45%; }
-
-    table.totals {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    table.totals td {
-        padding: 7px 12px;
-        font-size: 10px;
-    }
-
-    table.totals .label {
-        text-align: left;
-        color: #6b7280;
-    }
-
-    table.totals .value {
-        text-align: right;
-        font-weight: bold;
-        color: #374151;
-    }
-
-    table.totals .grand td {
-        background: #2563eb;
-        color: #ffffff;
+    .doc-number {
         font-size: 12px;
         font-weight: bold;
-        padding: 10px 12px;
+        color: #0f172a;
+        margin-bottom: 10px;
     }
 
-    table.totals .grand .label { color: #dbeafe; }
+    .badge {
+        display: inline-block;
+        background: #fff7ed;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+        padding: 5px 10px;
+        font-size: 7.5px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
 
-    table.totals .grand .value { color: #ffffff; }
+    /* Parties */
+    .parties-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 12px 0;
+    }
 
-    .iban-box {
-        margin-top: 14px;
-        padding: 12px 14px;
-        background: #f0fdf4;
-        border: 1px dashed #86efac;
-        border-radius: 8px;
+    .parties-table td {
+        width: 50%;
+        vertical-align: top;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 14px 16px;
+    }
+
+    .box-label {
+        font-size: 7.5px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #2563eb;
+        margin-bottom: 8px;
+    }
+
+    .box-name {
+        font-size: 11px;
+        font-weight: bold;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+
+    .box-text {
+        font-size: 9px;
+        color: #475569;
+        line-height: 1.6;
+    }
+
+    /* Meta strip */
+    .meta-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+    }
+
+    .meta-table td {
+        padding: 12px 16px;
+        font-size: 9px;
+        vertical-align: top;
+    }
+
+    .meta-label {
+        display: block;
+        font-size: 7px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #64748b;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+
+    .meta-value {
         font-size: 10px;
+        font-weight: bold;
+        color: #0f172a;
+    }
+
+    .meta-total {
+        font-size: 13px;
+        font-weight: bold;
+        color: #2563eb;
+    }
+
+    /* Lines */
+    .lines-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #cbd5e1;
+    }
+
+    .lines-table thead th {
+        background: #1e40af;
+        color: #ffffff;
+        font-size: 8px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 10px 12px;
+        text-align: left;
+    }
+
+    .lines-table thead th.r { text-align: right; }
+
+    .lines-table tbody td {
+        padding: 10px 12px;
+        font-size: 9.5px;
+        border-bottom: 1px solid #e2e8f0;
+        vertical-align: top;
+    }
+
+    .lines-table tbody tr.alt td { background: #f8fafc; }
+
+    .lines-table tbody tr:last-child td { border-bottom: none; }
+
+    .lines-table .r { text-align: right; white-space: nowrap; }
+
+    /* Bottom */
+    .bottom-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .bottom-table td { vertical-align: top; }
+
+    .notes-area {
+        width: 54%;
+        padding-right: 18px;
+    }
+
+    .totals-area { width: 46%; }
+
+    .notes-inner {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 14px 16px;
+        font-size: 9px;
+        color: #475569;
+        line-height: 1.6;
+    }
+
+    .notes-inner strong {
+        display: block;
+        font-size: 7.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+
+    .totals-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #cbd5e1;
+    }
+
+    .totals-table td {
+        padding: 9px 14px;
+        font-size: 9.5px;
+    }
+
+    .totals-table .lbl { color: #64748b; }
+
+    .totals-table .val {
+        text-align: right;
+        font-weight: bold;
+        color: #334155;
+    }
+
+    .totals-table .grand td {
+        background: #2563eb;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 12px 14px;
+    }
+
+    .totals-table .grand .lbl { color: #dbeafe; }
+
+    .totals-table .grand .val { color: #ffffff; }
+
+    .iban-inner {
+        background: #f0fdf4;
+        border: 1px solid #86efac;
+        padding: 14px 16px;
+        font-size: 9px;
         color: #166534;
     }
 
-    .iban-box strong {
+    .iban-inner strong {
         display: block;
-        font-size: 8.5px;
+        font-size: 7.5px;
         text-transform: uppercase;
-        letter-spacing: 0.4px;
-        color: #15803d;
-        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
     }
 
-    .iban-value {
+    .iban-code {
         font-family: DejaVu Sans Mono, DejaVu Sans, monospace;
         font-size: 11px;
         font-weight: bold;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.4px;
     }
 
-    .disclaimer {
-        margin-top: 22px;
-        padding-top: 12px;
-        border-top: 1px solid #e5e7eb;
-        font-size: 8px;
-        color: #9ca3af;
+    .footer {
+        border-top: 1px solid #e2e8f0;
+        padding-top: 14px;
         text-align: center;
-        line-height: 1.5;
+        font-size: 7.5px;
+        color: #94a3b8;
+        line-height: 1.55;
     }
 
-    .footer-brand {
+    .footer-site {
         margin-top: 4px;
-        font-size: 7.5px;
-        color: #d1d5db;
+        color: #cbd5e1;
+        font-size: 7px;
     }
 </style>
