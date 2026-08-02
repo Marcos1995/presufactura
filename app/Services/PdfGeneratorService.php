@@ -11,9 +11,22 @@ class PdfGeneratorService
 {
     public function generateInvoicePdf(Document $document): string
     {
+        return $this->renderPdf('pdf.invoice', $document);
+    }
+
+    public function generateQuotePdf(Document $document): string
+    {
+        return $this->renderPdf('pdf.quote', $document);
+    }
+
+    private function renderPdf(string $view, Document $document): string
+    {
         $document->load(['user', 'client', 'lineItems']);
 
-        $html = View::make('pdf.invoice', ['document' => $document])->render();
+        $html = View::make($view, [
+            'document' => $document,
+            'logoDataUri' => $this->logoDataUri($document->user->logo_path),
+        ])->render();
 
         $tempDir = storage_path('framework/cache/dompdf');
         if (! is_dir($tempDir)) {
@@ -34,28 +47,19 @@ class PdfGeneratorService
         return $dompdf->output();
     }
 
-    public function generateQuotePdf(Document $document): string
+    private function logoDataUri(?string $logoPath): ?string
     {
-        $document->load(['user', 'client', 'lineItems']);
-
-        $html = View::make('pdf.quote', ['document' => $document])->render();
-
-        $tempDir = storage_path('framework/cache/dompdf');
-        if (! is_dir($tempDir)) {
-            mkdir($tempDir, 0755, true);
+        if (! $logoPath) {
+            return null;
         }
 
-        $options = new Options;
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', false);
-        $options->set('defaultFont', 'DejaVu Sans');
-        $options->set('tempDir', $tempDir);
+        $fullPath = storage_path('app/public/'.$logoPath);
+        if (! is_file($fullPath)) {
+            return null;
+        }
 
-        $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
+        $mime = mime_content_type($fullPath) ?: 'image/png';
 
-        return $dompdf->output();
+        return 'data:'.$mime.';base64,'.base64_encode((string) file_get_contents($fullPath));
     }
 }
