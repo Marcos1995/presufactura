@@ -4,7 +4,7 @@
 @section('meta_description', 'Planes Free y Pro de PresuFactura. Empieza gratis con 3 documentos al mes o Pro por 12 €/mes con recordatorios automáticos.')
 
 @section('content')
-<section class="landing-pricing landing-pricing-page">
+<section class="landing-pricing landing-pricing-page reveal">
     <h1>Precios simples, sin sorpresas</h1>
     <p class="hero-sub">Empieza gratis. Actualiza cuando lo necesites.</p>
     <div class="pricing-grid">
@@ -23,6 +23,7 @@
             @endif
         </div>
         <div class="pricing-card pricing-pro">
+            <span class="pricing-badge">Recomendado</span>
             <h3>Pro</h3>
             <p class="price">12 €<span>/mes</span></p>
             <ul>

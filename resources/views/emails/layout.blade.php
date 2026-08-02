@@ -6,14 +6,21 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <title>@yield('email_title', config('app.name'))</title>
 </head>
-<body style="margin:0;padding:0;background:#f3f4f6;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 16px;">
     <tr>
         <td align="center">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,0.08);">
                 <tr>
-                    <td style="background:#2563eb;padding:20px 28px;">
-                        <span style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">PresuFactura</span>
+                    <td style="background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 50%,#3b82f6 100%);padding:22px 28px;">
+                        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+                            <td style="padding-right:12px;vertical-align:middle;">
+                                <img src="{{ asset('images/logo-icon.svg') }}" alt="" width="36" height="36" style="display:block;border-radius:8px;">
+                            </td>
+                            <td style="vertical-align:middle;">
+                                <span style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;">PresuFactura</span>
+                            </td>
+                        </tr></table>
                     </td>
                 </tr>
                 <tr>

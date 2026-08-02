@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
+    @include('layouts.partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="guest-body {{ ($mainClass ?? '') === 'guest-main-wide' ? 'guest-body-top' : '' }}">
     <div class="guest-container">
         <header class="guest-header">
-            <a href="{{ url('/') }}" class="logo">{{ config('app.name') }}</a>
+            @include('layouts.partials.logo')
         </header>
         <main class="guest-main {{ $mainClass ?? '' }}">
             @if (session('status'))
@@ -23,5 +24,7 @@
         </footer>
     </div>
     @include('layouts.partials.cookie-banner')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

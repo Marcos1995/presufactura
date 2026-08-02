@@ -40,8 +40,11 @@
 @else
     @if (in_array($invoice->status, ['sent', 'expired', 'payment_pending', 'paid']))
     <div class="card card-narrow public-link-box">
-        <strong>Enlace público:</strong>
-        <input type="text" readonly value="{{ $invoice->publicUrl() }}" class="public-link-input" onclick="this.select()">
+        <strong>Enlace público</strong>
+        <div class="public-link-row">
+            <input type="text" readonly id="invoice-public-link" value="{{ $invoice->publicUrl() }}" class="public-link-input" onclick="this.select()">
+            <button type="button" class="btn btn-secondary btn-sm" data-copy="#invoice-public-link">Copiar</button>
+        </div>
     </div>
     @endif
     <div class="card">

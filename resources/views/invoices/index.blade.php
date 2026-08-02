@@ -14,8 +14,11 @@
 
 @if ($invoices->isEmpty())
     <div class="empty-state">
+        <div class="empty-state__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+        </div>
         <h2>Sin facturas</h2>
-        <p>Crea tu primera factura proforma.</p>
+        <p>Crea tu primera factura proforma y envíala a tu cliente por email.</p>
         @if (auth()->user()->canCreateDocument())
         <div class="empty-actions">
             <a href="{{ route('invoices.create') }}" class="btn btn-primary">Nueva factura</a>
@@ -37,7 +40,7 @@
             </thead>
             <tbody>
                 @foreach ($invoices as $invoice)
-                <tr>
+                <tr data-href="{{ route('invoices.show', $invoice) }}">
                     <td><a href="{{ route('invoices.show', $invoice) }}">{{ $invoice->number }}</a></td>
                     <td>{{ $invoice->client->name }}</td>
                     <td>{{ $invoice->issue_date->format('d/m/Y') }}</td>

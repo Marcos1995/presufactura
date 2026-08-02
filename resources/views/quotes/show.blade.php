@@ -29,9 +29,12 @@
 
     @if (in_array($quote->status, ['sent', 'accepted', 'expired']))
 <div class="card card-narrow public-link-box">
-    <strong>Enlace público:</strong>
-    <input type="text" readonly value="{{ $quote->publicUrl() }}" class="public-link-input" onclick="this.select()">
-    <a href="{{ route('quotes.pdf', $quote) }}" class="btn btn-secondary btn-sm">Descargar PDF</a>
+    <strong>Enlace público</strong>
+    <div class="public-link-row">
+        <input type="text" readonly id="quote-public-link" value="{{ $quote->publicUrl() }}" class="public-link-input" onclick="this.select()">
+        <button type="button" class="btn btn-secondary btn-sm" data-copy="#quote-public-link">Copiar</button>
+        <a href="{{ route('quotes.pdf', $quote) }}" class="btn btn-secondary btn-sm">PDF</a>
+    </div>
 </div>
 @endif
 

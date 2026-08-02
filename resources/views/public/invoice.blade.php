@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('layouts.partials.favicon')
     <title>Factura {{ $invoice->number }}</title>
+    @include('layouts.partials.fonts')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="guest-body">
     <div class="guest-container public-quote-page">
         <header class="guest-header">
-            <span class="logo">{{ $invoice->user->business_name ?: $invoice->user->name }}</span>
+            <span class="logo" style="color: var(--gray-900); font-weight: 800;">{{ $invoice->user->business_name ?: $invoice->user->name }}</span>
         </header>
 
         <main class="guest-main public-quote-main">
@@ -22,17 +23,21 @@
             @endif
 
             <div class="auth-card public-quote-card">
-                <h1>Factura {{ $invoice->number }}</h1>
-                <p class="proforma-tag">Documento proforma — sin validez fiscal</p>
+                <div class="public-doc-header">
+                    <div>
+                        <h1 style="margin:0 0 0.35rem;">Factura {{ $invoice->number }}</h1>
+                        <p class="proforma-tag">Documento proforma — sin validez fiscal</p>
+                    </div>
+                    <span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span>
+                </div>
 
                 <div class="invoice-meta">
                     <div>
                         <strong>Para:</strong> {{ $invoice->client->name }}<br>
-                        <strong>Estado:</strong> {{ $invoice->statusLabel() }}
+                        <strong>Emisión:</strong> {{ $invoice->issue_date->format('d/m/Y') }}
                     </div>
                     <div>
-                        <strong>Emisión:</strong> {{ $invoice->issue_date->format('d/m/Y') }}<br>
-                        <strong>Vencimiento:</strong> {{ $invoice->due_date?->format('d/m/Y') }}
+                        <strong>Vencimiento:</strong> {{ $invoice->due_date?->format('d/m/Y') ?? '—' }}
                     </div>
                 </div>
 
@@ -55,13 +60,12 @@
                         </tr>
                         @endforeach
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" class="text-right"><strong>Total</strong></td>
-                            <td class="text-right"><strong>{{ number_format($invoice->total, 2, ',', '.') }} €</strong></td>
-                        </tr>
-                    </tfoot>
                 </table>
+
+                <div class="public-doc-total">
+                    <span>Total factura</span>
+                    <strong>{{ number_format($invoice->total, 2, ',', '.') }} €</strong>
+                </div>
 
                 @if ($invoice->user->iban)
                 <div class="iban-box">
@@ -73,7 +77,7 @@
                 @if ($invoice->canClaimPaid())
                 <form method="POST" action="{{ route('invoices.public.claim-paid', $invoice->public_token) }}" class="accept-form" onsubmit="return confirm('¿Confirmas que has realizado el pago?')">
                     @csrf
-                    <button type="submit" class="btn btn-primary btn-block">He pagado</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">He pagado</button>
                 </form>
                 @elseif ($invoice->status === 'payment_pending')
                     <p class="text-muted text-center">Hemos recibido tu aviso de pago. El emisor lo revisará.</p>

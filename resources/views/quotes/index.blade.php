@@ -14,6 +14,9 @@
 
 @if ($quotes->isEmpty())
     <div class="empty-state">
+        <div class="empty-state__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        </div>
         <h2>Sin presupuestos</h2>
         <p>Crea presupuestos y conviértelos en facturas con un click.</p>
         @if (auth()->user()->canCreateDocument())
@@ -37,7 +40,7 @@
             </thead>
             <tbody>
                 @foreach ($quotes as $quote)
-                <tr>
+                <tr data-href="{{ route('quotes.show', $quote) }}">
                     <td><a href="{{ route('quotes.show', $quote) }}">{{ $quote->number }}</a></td>
                     <td>{{ $quote->client->name }}</td>
                     <td>{{ $quote->valid_until?->format('d/m/Y') ?? '—' }}</td>

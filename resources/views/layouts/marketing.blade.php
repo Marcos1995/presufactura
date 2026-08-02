@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
+    @include('layouts.partials.fonts')
     <meta name="description" content="@yield('meta_description', 'PresuFactura: presupuestos y facturas proforma para autónomos y pequeñas empresas en España. Envía PDF, cobra más rápido.')">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="@yield('canonical', url()->current())">
@@ -28,7 +29,8 @@
 <body class="landing-body">
     <header class="landing-header">
         <div class="landing-header-inner">
-            <a href="{{ route('landing') }}" class="logo">{{ config('app.name') }}</a>
+            @include('layouts.partials.logo', ['href' => route('landing')])
+            <button type="button" class="nav-toggle" aria-label="Menú" aria-expanded="false">☰</button>
             <nav class="landing-nav">
                 <a href="{{ route('pricing') }}">Precios</a>
                 <a href="{{ route('help') }}">Ayuda</a>
@@ -55,6 +57,8 @@
         @include('layouts.partials.legal-footer')
     </footer>
     @include('layouts.partials.cookie-banner')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
     @stack('scripts')
 </body>
 </html>
