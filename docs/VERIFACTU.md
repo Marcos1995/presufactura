@@ -1,6 +1,8 @@
 # Veri*Factu en Presufactura — Análisis y plan de implementación
 
-> **Estado del proyecto:** la aplicación Laravel ya gestiona presupuestos y facturas; la integración SIF/VERI*FACTU sigue pendiente. Este documento describe qué falta y cómo implementarlo.
+> **Estado del proyecto (auditoría 2026-08-04):** facturación proforma operativa (F1–F8 + v1.1 RGPD). **Módulo SIF/VERI*FACTU: 0 % implementado** — solo menciones en UI/legal y este documento. Prerrequisitos de datos y emisión listos; falta todo el núcleo técnico y legal.
+
+**Plan ejecutable por fases:** [`docs/PROMPTS-VERIFACTU.md`](PROMPTS-VERIFACTU.md)
 
 ## ¿Qué es Veri*Factu?
 
@@ -37,17 +39,33 @@ No sustituye la factura en sí: la factura sigue siendo PDF/papel/electrónica; 
 
 ---
 
-## Estado actual en PresuFactura (v1)
+## Estado actual en PresuFactura (v1) — verificado en código
 
 ### Ya existe (prerrequisitos cumplidos)
 
-| Capa | Qué hay hoy |
-|------|-------------|
-| **Datos fiscales** | `User`: NIF (`tax_id`), IBAN, dirección, IVA por defecto |
-| **Facturación** | CRUD facturas/presupuestos, líneas, totales, numeración (`DocumentNumberService`) |
-| **PDF** | `PdfGeneratorService` + plantillas Blade (`pdf/invoice.blade.php`) |
-| **Trazabilidad básica** | `DocumentEvent` (created, sent, paid…) — **no** eventos SIF |
-| **Multi-tenant** | Cada `User` es un emisor independiente |
+| Capa | Qué hay hoy | Archivos clave |
+|------|-------------|----------------|
+| **Datos fiscales** | NIF, IBAN, dirección, IVA por defecto, prefijos/contadores | `User`, `/configuracion`, onboarding |
+| **Clientes** | NIF, dirección, email | `Client`, `ClientController` |
+| **Facturación** | CRUD facturas/presupuestos, líneas, totales, numeración | `Document`, `InvoiceController`, `QuoteController`, `DocumentNumberService`, `DocumentCalculatorService` |
+| **Estados** | draft → sent → paid / payment_pending; presupuesto accepted | `Document::STATUS_*`, `DocumentActionController` |
+| **PDF** | Dompdf, plantilla compartida proforma | `PdfGeneratorService`, `resources/views/pdf/_document.blade.php` (L162: disclaimer sin Verifactu) |
+| **Trazabilidad básica** | `DocumentEvent` (created, sent, paid…) | `document_events` — **no** eventos SIF |
+| **Multi-tenant** | Cada `User` es un emisor con su cadena de numeración | `documents.user_id` unique `[user_id, number]` |
+| **Cola/jobs** | Tabla `jobs` migrada; sin jobs SIF | `0001_01_01_000002_create_jobs_table.php` |
+| **RGPD v1.1** | Export datos, baja cuenta, verificación email, cookies | según `PROMPTS-V1.1.md` |
+
+### Puntos de enganche para Veri*Factu (ya identificados)
+
+| Momento | Dónde enganchar |
+|---------|-----------------|
+| Emisión fiscal | `InvoiceController::send()` — tras `STATUS_SENT`, generar registro SIF + QR |
+| PDF | `PdfGeneratorService::generateInvoicePdf()` — pasar QR data URI a la vista |
+| Plantilla | `pdf/_document.blade.php` — sustituir badge «proforma» y footer |
+| Inmutabilidad | `InvoiceController::update()` / `destroy()` — hoy solo bloquean borrador; ampliar a enviadas |
+| Anulación | **No existe** — crear acción + registro encadenado |
+| Config tenant | `ProfileController` / `/configuracion` — certificado, modalidad VERI*FACTU |
+| Rectificativas | **No existe** — nuevo tipo documento o flag `is_rectificative` |
 
 ### Lo que falta (módulo SIF completo)
 

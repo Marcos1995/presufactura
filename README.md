@@ -81,9 +81,11 @@ Usuarios Pro acceden desde `/suscripcion`.
 
 Manual: `php artisan presufactura:process-reminders`
 
-## Notas
+## Veri*Factu (pendiente)
 
-- Documentos **proforma** — sin Verifactu v1.
+Documentos actuales son **proforma** (sin SIF). Análisis, auditoría y plan por fases: **[docs/VERIFACTU.md](docs/VERIFACTU.md)** · prompts ejecutables: **[docs/PROMPTS-VERIFACTU.md](docs/PROMPTS-VERIFACTU.md)**.
+
+## Notas
 - Plan Free: 3 docs/mes. Pro: 12 €/mes, documentos ilimitados.
 - **Nunca** commitear `.env`.
 
