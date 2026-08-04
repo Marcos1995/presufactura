@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AccountDeletedMail;
+use App\Models\UserSifConfig;
 use App\Services\DataExportService;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +21,10 @@ class ProfileController extends Controller
 {
     public function edit(): View
     {
-        return view('settings.index', ['user' => auth()->user()]);
+        $user = auth()->user();
+        $user->load('sifConfig');
+
+        return view('settings.index', ['user' => $user]);
     }
 
     public function update(Request $request): RedirectResponse
@@ -61,6 +65,52 @@ class ProfileController extends Controller
         $user->update($data);
 
         return redirect()->route('settings.index')->with('status', 'Configuración guardada.');
+    }
+
+    public function updateVerifactu(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+
+        $data = $request->validate([
+            'verifactu_enabled' => ['nullable', 'boolean'],
+            'verifactu_mode' => ['required', 'in:verifactu,no_verifactu'],
+            'cert_file' => ['nullable', 'file', 'max:5120'],
+            'cert_password' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $config = $user->sifConfig ?? new UserSifConfig(['user_id' => $user->id]);
+        $config->user_id = $user->id;
+        $config->enabled = $request->boolean('verifactu_enabled');
+        $config->mode = $data['verifactu_mode'];
+
+        if ($request->hasFile('cert_file') && filled($data['cert_password'])) {
+            $p12Content = file_get_contents($request->file('cert_file')->getRealPath());
+            $certs = [];
+
+            if (! openssl_pkcs12_read($p12Content, $certs, $data['cert_password'])) {
+                return back()->withErrors(['cert_password' => 'Contraseña incorrecta o certificado inválido.']);
+            }
+
+            $certInfo = openssl_x509_parse($certs['cert']);
+            $expiresAt = isset($certInfo['validTo_time_t'])
+                ? \Carbon\Carbon::createFromTimestamp($certInfo['validTo_time_t'])
+                : null;
+
+            if ($config->cert_path && Storage::disk('local')->exists($config->cert_path)) {
+                Storage::disk('local')->delete($config->cert_path);
+            }
+
+            $path = 'sif/certs/user_'.$user->id.'.p12.enc';
+            Storage::disk('local')->put($path, encrypt($p12Content));
+            $config->cert_path = $path;
+            $config->cert_expires_at = $expiresAt;
+
+            Cache::put("verifactu:cert_password:{$user->id}", $data['cert_password'], now()->addHours(24));
+        }
+
+        $config->save();
+
+        return redirect()->route('settings.index')->with('status', 'Configuración Veri*Factu guardada.');
     }
 
     public function export(Request $request, DataExportService $exporter): RedirectResponse|BinaryFileResponse

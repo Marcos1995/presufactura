@@ -8,10 +8,10 @@
     <p><em>Última actualización: julio 2026</em></p>
 
     <h2>1. Objeto</h2>
-    <p>PresuFactura es un servicio online dirigido a autónomos y pequeños negocios en España para crear presupuestos y facturas proforma, enviarlos por email y gestionar recordatorios de cobro.</p>
+    <p>PresuFactura es un servicio online dirigido a autónomos y pequeños negocios en España para crear presupuestos y facturas, enviarlos por email y gestionar recordatorios de cobro.</p>
 
     <h2>2. Naturaleza de los documentos</h2>
-    <p>Los documentos generados son <strong>proforma</strong> y no tienen validez fiscal. No sustituyen a facturas conforme a la normativa tributaria vigente (incluido Verifactu). El usuario es el único responsable del cumplimiento de sus obligaciones fiscales.</p>
+    <p>Con Veri*Factu activado y certificado válido, las facturas emitidas generan registros SIF conforme al RRSIF (Real Decreto 1007/2023), incluyen código QR verificable y se remiten a la AEAT. Sin Veri*Factu activado, los documentos son <strong>proforma</strong> y no tienen validez fiscal. El usuario es responsable de activar y mantener la configuración fiscal adecuada.</p>
 
     <h2>3. Registro y cuenta</h2>
     <p>Debes proporcionar datos veraces. Eres responsable de la confidencialidad de tu contraseña y de toda actividad en tu cuenta.</p>

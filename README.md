@@ -81,9 +81,13 @@ Usuarios Pro acceden desde `/suscripcion`.
 
 Manual: `php artisan presufactura:process-reminders`
 
-## Veri*Factu (pendiente)
+## Veri*Factu (F9–F14)
 
-Documentos actuales son **proforma** (sin SIF). Análisis, auditoría y plan por fases: **[docs/VERIFACTU.md](docs/VERIFACTU.md)** · prompts ejecutables: **[docs/PROMPTS-VERIFACTU.md](docs/PROMPTS-VERIFACTU.md)**.
+Módulo SIF implementado: registros encadenados, QR en PDF, envío AEAT, anulación e inmutabilidad.
+
+- Plan: **[docs/PLAN-VERIFACTU-IMPLEMENTACION.md](docs/PLAN-VERIFACTU-IMPLEMENTACION.md)**
+- Análisis: **[docs/VERIFACTU.md](docs/VERIFACTU.md)**
+- Comandos: `presufactura:verifactu-retry-failed`, `presufactura:verifactu-export {user}`
 
 ## Notas
 - Plan Free: 3 docs/mes. Pro: 12 €/mes, documentos ilimitados.

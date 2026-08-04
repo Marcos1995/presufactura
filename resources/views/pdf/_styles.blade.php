@@ -321,6 +321,29 @@
         letter-spacing: 0.4px;
     }
 
+    .qr-table {
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+    }
+
+    .qr-cell {
+        width: 90px;
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    .qr-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .qr-legend {
+        font-size: 8px;
+        color: #64748b;
+        vertical-align: middle;
+        padding: 8px 12px;
+    }
+
     .footer {
         border-top: 1px solid #e2e8f0;
         padding-top: 14px;

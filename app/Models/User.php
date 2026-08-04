@@ -82,6 +82,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Document::class);
     }
 
+    public function billingRecords(): HasMany
+    {
+        return $this->hasMany(BillingRecord::class);
+    }
+
+    public function sifEvents(): HasMany
+    {
+        return $this->hasMany(SifEvent::class);
+    }
+
+    public function sifConfig(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(UserSifConfig::class);
+    }
+
+    public function hasVerifactuEnabled(): bool
+    {
+        return $this->sifConfig?->enabled === true;
+    }
+
     public function isPro(): bool
     {
         return $this->plan === 'pro';

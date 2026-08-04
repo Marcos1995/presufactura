@@ -129,6 +129,52 @@
     </form>
 </div>
 
+<div class="card card-narrow">
+    <form method="POST" action="{{ route('settings.verifactu.update') }}" class="form" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <h2 class="form-section-title">Veri*Factu</h2>
+        <p class="text-muted">Activa la facturación fiscal conforme RRSIF. Requiere certificado electrónico .p12 del obligado tributario.</p>
+
+        @php $sif = $user->sifConfig; @endphp
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="verifactu_enabled" value="1" {{ old('verifactu_enabled', $sif?->enabled) ? 'checked' : '' }}>
+                Activar Veri*Factu
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="verifactu_mode">Modalidad</label>
+            <select id="verifactu_mode" name="verifactu_mode">
+                <option value="verifactu" {{ old('verifactu_mode', $sif?->mode ?? 'verifactu') === 'verifactu' ? 'selected' : '' }}>VERI*FACTU (envío AEAT)</option>
+                <option value="no_verifactu" {{ old('verifactu_mode', $sif?->mode) === 'no_verifactu' ? 'selected' : '' }}>NO VERI*FACTU (conservación)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="cert_file">Certificado .p12</label>
+            <input type="file" id="cert_file" name="cert_file" accept=".p12,.pfx">
+            @if ($sif?->cert_path)
+                <p class="text-muted">Certificado cargado. Caduca: {{ $sif->cert_expires_at?->format('d/m/Y') ?? '—' }}</p>
+            @endif
+            @error('cert_password')<span class="form-error">{{ $message }}</span>@enderror
+        </div>
+
+        <div class="form-group">
+            <label for="cert_password">Contraseña del certificado</label>
+            <input type="password" id="cert_password" name="cert_password" autocomplete="new-password">
+            <p class="text-muted">Solo se usa para validar y enviar a AEAT; no se almacena.</p>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar Veri*Factu</button>
+        </div>
+    </form>
+</div>
+
 <div class="card card-narrow settings-export-box">
     <h2 class="form-section-title">Tus datos (RGPD)</h2>
     <p>Descarga una copia de tu perfil, clientes y documentos en JSON (sin PDFs). Máximo una exportación cada 24 horas.</p>

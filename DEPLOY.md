@@ -253,3 +253,37 @@ Si falla `presufactura:process-reminders` (cron horario), se envía un email a *
 | CSS/JS 404 | Actualiza `public_html/.htaccess` (reglas css/js arriba) |
 | Logos 404 | `php artisan storage:link` en laravel/ |
 | Emails no llegan | SMTP en `.env` |
+
+## Veri*Factu
+
+### Requisitos PHP
+
+- `ext-openssl` (certificados .p12)
+- `ext-soap` (envío AEAT): habilitar en php.ini del servidor
+
+### Variables .env
+
+```
+VERIFACTU_ENV=preprod          # preprod | prod
+VERIFACTU_MODE=verifactu       # verifactu | no_verifactu
+VERIFACTU_SOFTWARE_NIF=        # NIF del productor del software
+VERIFACTU_SOFTWARE_NAME=PresuFactura
+VERIFACTU_SOFTWARE_VERSION=2.0.0
+```
+
+### Certificados
+
+- Cada tenant sube su `.p12` desde `/configuracion` → Veri*Factu.
+- Se almacenan cifrados en `storage/app/sif/certs/` (nunca en Git).
+- La contraseña del certificado no se persiste; se guarda en caché 24h tras subida.
+
+### Comandos
+
+```bash
+php artisan presufactura:verifactu-retry-failed [--user=ID]
+php artisan presufactura:verifactu-export {user}
+```
+
+### Cola
+
+El envío AEAT usa jobs (`SubmitBillingRecordJob`). Asegurar que el worker de cola está activo (`QUEUE_CONNECTION=database`).

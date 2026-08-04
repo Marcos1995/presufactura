@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.3",
         "dompdf/dompdf": "^3.0",
+        "endroid/qr-code": "^6.0",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "stripe/stripe-php": "^16.0"
@@ -71,6 +72,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "suggest": {
+        "ext-soap": "Requerido para envío AEAT Veri*Factu (SOAP 1.1)",
         "sentry/sentry-laravel": "Monitorización de errores en producción (opcional; configurar SENTRY_LARAVEL_DSN)"
     }
 }

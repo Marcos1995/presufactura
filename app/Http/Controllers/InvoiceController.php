@@ -8,6 +8,7 @@ use App\Services\DocumentCalculatorService;
 use App\Services\DocumentNumberService;
 use App\Services\EmailService;
 use App\Services\PdfGeneratorService;
+use App\Services\Verifactu\BillingRecordService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -23,6 +24,7 @@ class InvoiceController extends Controller
         private PdfGeneratorService $pdfGenerator,
         private DocumentNumberService $numberService,
         private EmailService $emailService,
+        private BillingRecordService $billingRecordService,
     ) {}
 
     public function index(): View
@@ -87,7 +89,7 @@ class InvoiceController extends Controller
     public function show(Document $invoice): View
     {
         $this->authorizeInvoice($invoice);
-        $invoice->load(['client', 'lineItems']);
+        $invoice->load(['client', 'lineItems', 'billingRecord']);
 
         $clients = auth()->user()->clients()->orderBy('name')->get();
 
@@ -97,7 +99,7 @@ class InvoiceController extends Controller
     public function update(Request $request, Document $invoice): RedirectResponse
     {
         $this->authorizeInvoice($invoice);
-        abort_unless($invoice->status === Document::STATUS_DRAFT, 403);
+        abort_unless($invoice->status === Document::STATUS_DRAFT && ! $invoice->isImmutable(), 403);
 
         $data = $this->validated($request);
         $lines = $this->parseLines($request);
@@ -124,7 +126,7 @@ class InvoiceController extends Controller
     public function destroy(Document $invoice): RedirectResponse
     {
         $this->authorizeInvoice($invoice);
-        abort_unless($invoice->status === Document::STATUS_DRAFT, 403);
+        abort_unless($invoice->status === Document::STATUS_DRAFT && ! $invoice->isImmutable(), 403);
 
         $invoice->delete();
 
@@ -158,6 +160,8 @@ class InvoiceController extends Controller
             'event_type' => DocumentEvent::SENT,
         ]);
 
+        $this->billingRecordService->createAltaRecord($invoice->fresh(['user', 'client', 'lineItems']));
+
         return back()->with('status', 'Factura enviada por email al cliente.');
     }
 
@@ -177,6 +181,22 @@ class InvoiceController extends Controller
         ]);
 
         return back()->with('status', 'Factura marcada como pagada.');
+    }
+
+    public function cancel(Document $invoice): RedirectResponse
+    {
+        $this->authorizeInvoice($invoice);
+        abort_unless($invoice->canCancel(), 403);
+
+        $this->billingRecordService->createAnulacionRecord($invoice);
+
+        $invoice->update(['status' => Document::STATUS_CANCELLED]);
+
+        $invoice->events()->create([
+            'event_type' => DocumentEvent::CANCELLED,
+        ]);
+
+        return back()->with('status', 'Factura anulada. Registro SIF de anulación generado.');
     }
 
     public function pdf(Document $invoice): Response

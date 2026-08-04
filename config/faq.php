@@ -2,8 +2,8 @@
 
 return [
     [
-        'question' => '¿PresuFactura sustituye a Verifactu?',
-        'answer' => 'No. PresuFactura genera documentos proforma a efectos informativos y de cobro. No emitimos facturas fiscales ni cumplimos Verifactu en esta versión. Tú, como autónomo o empresa, eres responsable de cumplir la normativa tributaria vigente y de registrar tus operaciones en tu sistema oficial.',
+        'question' => '¿PresuFactura cumple Veri*Factu?',
+        'answer' => 'Sí. Con Veri*Factu activado en Configuración y un certificado electrónico válido, PresuFactura genera registros SIF con hash encadenado, código QR en el PDF y envío a la AEAT (modalidad VERI*FACTU). Sin activarlo, los documentos siguen siendo proforma.',
         'landing' => true,
     ],
     [

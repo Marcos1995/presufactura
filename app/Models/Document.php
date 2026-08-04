@@ -17,6 +17,7 @@ class Document extends Model
     public const STATUS_EXPIRED = 'expired';
     public const STATUS_PAID = 'paid';
     public const STATUS_PAYMENT_PENDING = 'payment_pending';
+    public const STATUS_CANCELLED = 'cancelled';
 
     protected $fillable = [
         'user_id',
@@ -34,6 +35,7 @@ class Document extends Model
         'notes',
         'public_token',
         'converted_from_id',
+        'rectifies_document_id',
         'paid_at',
         'sent_at',
         'accepted_at',
@@ -82,6 +84,44 @@ class Document extends Model
     public function convertedFrom(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'converted_from_id');
+    }
+
+    public function rectifiesDocument(): BelongsTo
+    {
+        return $this->belongsTo(Document::class, 'rectifies_document_id');
+    }
+
+    public function billingRecord(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(BillingRecord::class)->where('record_type', BillingRecord::TYPE_ALTA);
+    }
+
+    public function billingRecords(): HasMany
+    {
+        return $this->hasMany(BillingRecord::class);
+    }
+
+    public function hasSifRecord(): bool
+    {
+        return $this->billingRecords()->where('record_type', BillingRecord::TYPE_ALTA)->exists();
+    }
+
+    public function isImmutable(): bool
+    {
+        return in_array($this->status, [
+            self::STATUS_SENT,
+            self::STATUS_PAID,
+            self::STATUS_EXPIRED,
+            self::STATUS_PAYMENT_PENDING,
+            self::STATUS_CANCELLED,
+        ], true) && $this->isInvoice();
+    }
+
+    public function canCancel(): bool
+    {
+        return $this->isInvoice()
+            && in_array($this->status, [self::STATUS_SENT, self::STATUS_PAID, self::STATUS_EXPIRED, self::STATUS_PAYMENT_PENDING], true)
+            && $this->billingRecord?->aeat_status === BillingRecord::STATUS_ACCEPTED;
     }
 
     public function isQuote(): bool
@@ -143,6 +183,7 @@ class Document extends Model
             self::STATUS_PAID => 'Pagada',
             self::STATUS_ACCEPTED => 'Aceptada',
             self::STATUS_PAYMENT_PENDING => 'Pago pendiente',
+            self::STATUS_CANCELLED => 'Anulada',
             default => ucfirst($this->status),
         };
     }

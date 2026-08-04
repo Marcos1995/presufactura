@@ -2,16 +2,36 @@
 
 namespace App\Services;
 
+use App\Models\BillingRecord;
 use App\Models\Document;
+use App\Services\Verifactu\QrService;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Support\Facades\View;
 
 class PdfGeneratorService
 {
+    public function __construct(
+        private QrService $qrService,
+    ) {}
+
     public function generateInvoicePdf(Document $document): string
     {
-        return $this->renderPdf('pdf.invoice', $document);
+        $document->load(['user', 'client', 'lineItems', 'billingRecord']);
+
+        $billingRecord = $document->billingRecord;
+        $qrDataUri = null;
+        $isFiscal = false;
+
+        if ($billingRecord && $this->qrService->shouldShowQr($billingRecord)) {
+            $qrDataUri = $this->qrService->generateDataUri($billingRecord);
+            $isFiscal = true;
+        }
+
+        return $this->renderPdf('pdf.invoice', $document, [
+            'qrDataUri' => $qrDataUri,
+            'isFiscal' => $isFiscal,
+        ]);
     }
 
     public function generateQuotePdf(Document $document): string
@@ -19,14 +39,15 @@ class PdfGeneratorService
         return $this->renderPdf('pdf.quote', $document);
     }
 
-    private function renderPdf(string $view, Document $document): string
+    /** @param  array<string, mixed>  $extra */
+    private function renderPdf(string $view, Document $document, array $extra = []): string
     {
         $document->load(['user', 'client', 'lineItems']);
 
-        $html = View::make($view, [
+        $html = View::make($view, array_merge([
             'document' => $document,
             'logoDataUri' => $this->logoDataUri($document->user->logo_path),
-        ])->render();
+        ], $extra))->render();
 
         $tempDir = storage_path('framework/cache/dompdf');
         if (! is_dir($tempDir)) {

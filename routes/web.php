@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/configuracion', [ProfileController::class, 'edit'])->name('settings.index');
         Route::put('/configuracion', [ProfileController::class, 'update'])->name('settings.update');
+        Route::put('/configuracion/verifactu', [ProfileController::class, 'updateVerifactu'])->name('settings.verifactu.update');
         Route::post('/configuracion/exportar', [ProfileController::class, 'export'])->name('settings.export');
         Route::post('/configuracion/eliminar-cuenta', [ProfileController::class, 'destroy'])->name('settings.destroy');
         Route::get('/suscripcion', [SubscriptionController::class, 'index'])->name('subscription.index');
@@ -88,6 +89,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/facturas/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
         Route::post('/facturas/{invoice}/enviar', [InvoiceController::class, 'send'])->name('invoices.send');
         Route::post('/facturas/{invoice}/pagada', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
+        Route::post('/facturas/{invoice}/anular', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
 
         Route::get('/presupuestos', [QuoteController::class, 'index'])->name('quotes.index');
         Route::get('/presupuestos/nuevo', [QuoteController::class, 'create'])->middleware('doc.limit')->name('quotes.create');

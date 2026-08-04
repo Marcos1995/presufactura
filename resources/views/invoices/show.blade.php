@@ -18,6 +18,12 @@
         <button type="submit" class="btn btn-success">Marcar como pagada</button>
     </form>
     @endif
+    @if ($invoice->canCancel())
+    <form method="POST" action="{{ route('invoices.cancel', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Anular esta factura? Se generará un registro SIF de anulación.')">
+        @csrf
+        <button type="submit" class="btn btn-danger">Anular factura</button>
+    </form>
+    @endif
     <a href="{{ route('invoices.index') }}" class="btn btn-secondary">Volver</a>
     @if ($invoice->status === 'draft')
     <form method="POST" action="{{ route('invoices.destroy', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Eliminar esta factura?')">
@@ -53,6 +59,9 @@
                 <strong>Cliente:</strong> {{ $invoice->client->name }}<br>
                 <strong>Email:</strong> {{ $invoice->client->email }}<br>
                 <strong>Estado:</strong> <span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span>
+                @if ($invoice->billingRecord)
+                    <br><strong>AEAT:</strong> <span class="badge badge-{{ $invoice->billingRecord->aeat_status }}">{{ $invoice->billingRecord->aeatStatusLabel() }}</span>
+                @endif
                 @if ($invoice->paid_at)
                     <br><strong>Pagada:</strong> {{ $invoice->paid_at->format('d/m/Y H:i') }}
                 @endif

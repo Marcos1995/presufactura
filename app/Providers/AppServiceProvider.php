@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Exceptions\Handler;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +21,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        try {
+            if (config('verifactu.software.name') && Cache::add('verifactu:startup_logged', true, now()->addDay())) {
+                \App\Models\SifEvent::create([
+                    'event_type' => \App\Models\SifEvent::TYPE_STARTUP,
+                    'payload' => [
+                        'version' => config('verifactu.software.version'),
+                        'env' => config('verifactu.env'),
+                    ],
+                ]);
+            }
+        } catch (\Throwable) {
+            // BD/caché no disponible (composer install, migraciones pendientes)
+        }
+
         if (! filled(config('services.sentry.dsn'))) {
             return;
         }
