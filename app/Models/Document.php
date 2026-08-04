@@ -91,6 +91,11 @@ class Document extends Model
         return $this->belongsTo(Document::class, 'rectifies_document_id');
     }
 
+    public function rectifyingInvoices(): HasMany
+    {
+        return $this->hasMany(Document::class, 'rectifies_document_id');
+    }
+
     public function billingRecord(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(BillingRecord::class)->where('record_type', BillingRecord::TYPE_ALTA);
@@ -123,6 +128,18 @@ class Document extends Model
             && in_array($this->status, [self::STATUS_SENT, self::STATUS_PAID, self::STATUS_EXPIRED, self::STATUS_PAYMENT_PENDING], true)
             && $this->billingRecord?->aeat_status === BillingRecord::STATUS_ACCEPTED
             && ! $this->billingRecords()->where('record_type', BillingRecord::TYPE_ANULACION)->exists();
+    }
+
+    public function canCreateRectificativa(): bool
+    {
+        return $this->isInvoice()
+            && in_array($this->status, [self::STATUS_SENT, self::STATUS_PAID], true)
+            && $this->billingRecord?->aeat_status === BillingRecord::STATUS_ACCEPTED;
+    }
+
+    public function isRectificativa(): bool
+    {
+        return $this->rectifies_document_id !== null;
     }
 
     public function isQuote(): bool

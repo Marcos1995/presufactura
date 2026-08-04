@@ -89,7 +89,7 @@ class InvoiceController extends Controller
     public function show(Document $invoice): View
     {
         $this->authorizeInvoice($invoice);
-        $invoice->load(['client', 'lineItems', 'billingRecord']);
+        $invoice->load(['client', 'lineItems', 'billingRecord', 'rectifiesDocument']);
 
         $clients = auth()->user()->clients()->orderBy('name')->get();
 
@@ -99,7 +99,7 @@ class InvoiceController extends Controller
     public function update(Request $request, Document $invoice): RedirectResponse
     {
         $this->authorizeInvoice($invoice);
-        abort_unless($invoice->status === Document::STATUS_DRAFT && ! $invoice->isImmutable(), 403);
+        $this->ensureMutable($invoice);
 
         $data = $this->validated($request);
         $lines = $this->parseLines($request);
@@ -126,7 +126,7 @@ class InvoiceController extends Controller
     public function destroy(Document $invoice): RedirectResponse
     {
         $this->authorizeInvoice($invoice);
-        abort_unless($invoice->status === Document::STATUS_DRAFT && ! $invoice->isImmutable(), 403);
+        $this->ensureMutable($invoice);
 
         $invoice->delete();
 
@@ -197,6 +197,55 @@ class InvoiceController extends Controller
         ]);
 
         return back()->with('status', 'Factura anulada. Registro SIF de anulación generado.');
+    }
+
+    public function createRectificativa(Document $invoice): RedirectResponse
+    {
+        $this->authorizeInvoice($invoice);
+        abort_unless($invoice->canCreateRectificativa(), 403, 'No se puede crear una rectificativa para esta factura.');
+
+        $invoice->load(['client', 'lineItems']);
+
+        $rectificativa = DB::transaction(function () use ($invoice) {
+            $user = auth()->user();
+
+            $rectificativa = $user->documents()->create([
+                'client_id' => $invoice->client_id,
+                'type' => Document::TYPE_INVOICE,
+                'number' => $this->numberService->nextRectificativaNumber($user),
+                'status' => Document::STATUS_DRAFT,
+                'issue_date' => now()->toDateString(),
+                'due_date' => now()->addDays(30)->toDateString(),
+                'subtotal' => $invoice->subtotal,
+                'vat_amount' => $invoice->vat_amount,
+                'total' => $invoice->total,
+                'notes' => 'Rectificativa de factura '.$invoice->number,
+                'public_token' => Str::random(32),
+                'rectifies_document_id' => $invoice->id,
+            ]);
+
+            foreach ($invoice->lineItems as $item) {
+                $rectificativa->lineItems()->create([
+                    'description' => $item->description,
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->unit_price,
+                    'vat_rate' => $item->vat_rate,
+                    'line_subtotal' => $item->line_subtotal,
+                    'line_vat' => $item->line_vat,
+                    'line_total' => $item->line_total,
+                    'sort_order' => $item->sort_order,
+                ]);
+            }
+
+            $rectificativa->events()->create([
+                'event_type' => DocumentEvent::CREATED,
+            ]);
+
+            return $rectificativa;
+        });
+
+        return redirect()->route('invoices.show', $rectificativa)
+            ->with('status', 'Rectificativa creada. Revisa los importes y envía cuando esté lista.');
     }
 
     public function pdf(Document $invoice): Response
@@ -273,5 +322,12 @@ class InvoiceController extends Controller
             $invoice->user_id === auth()->id() && $invoice->type === Document::TYPE_INVOICE,
             403
         );
+    }
+
+    private function ensureMutable(Document $invoice): void
+    {
+        if ($invoice->isImmutable() || $invoice->status !== Document::STATUS_DRAFT) {
+            abort(403, 'Las facturas emitidas, pagadas o anuladas no se pueden modificar ni eliminar.');
+        }
     }
 }

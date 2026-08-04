@@ -30,7 +30,7 @@
                 </tr>
                 <tr>
                     <td style="padding:16px 28px 24px;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280;line-height:1.5;">
-                        Documento proforma · Sin Verifactu v1<br>
+                        Facturación con Veri*Factu · Documentos proforma sin certificado activo<br>
                         <a href="{{ config('app.url') }}" style="color:#2563eb;">presufactura.es</a>
                     </td>
                 </tr>

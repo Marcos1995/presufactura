@@ -17,7 +17,7 @@ Copia cada bloque en Cursor Agent. Stack: PHP 8.3, Laravel 11, MySQL. Minimal di
 | F11 | QR en PDF | ✅ |
 | F12 | Cliente SOAP AEAT + jobs | ✅ |
 | F13 | UI certificado + estados envío + anulación | ✅ |
-| F14 | Inmutabilidad, rectificativas, legal, tests AEAT | ❌ |
+| F14 | Inmutabilidad, rectificativas, legal, tests AEAT | ✅ |
 
 ---
 

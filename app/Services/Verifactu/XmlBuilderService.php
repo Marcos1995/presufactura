@@ -32,6 +32,22 @@ class XmlBuilderService
 
         $root->appendChild($dom->createElement('NombreRazonEmisor', htmlspecialchars($user->business_name ?: $user->name, ENT_XML1)));
         $root->appendChild($dom->createElement('TipoFactura', $document->rectifies_document_id ? 'R1' : 'F1'));
+
+        if ($document->rectifies_document_id) {
+            $document->loadMissing('rectifiesDocument');
+            $original = $document->rectifiesDocument;
+            if ($original) {
+                $rectificadas = $dom->createElement('FacturasRectificadas');
+                $idRect = $dom->createElement('IDFacturaRectificada');
+                $idRect->appendChild($dom->createElement('IDEmisorFactura', $this->normalizeNif($user->tax_id)));
+                $idRect->appendChild($dom->createElement('NumSerieFactura', $original->number));
+                $idRect->appendChild($dom->createElement('FechaExpedicionFactura', $original->issue_date->format('d-m-Y')));
+                $rectificadas->appendChild($idRect);
+                $root->appendChild($rectificadas);
+                $root->appendChild($dom->createElement('TipoRectificativa', 'I'));
+            }
+        }
+
         $root->appendChild($dom->createElement('DescripcionOperacion', 'Prestación de servicios'));
 
         if ($client->tax_id) {

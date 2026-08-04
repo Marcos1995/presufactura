@@ -31,9 +31,9 @@ F9 → F10 → F11 → F12 → F13 → F14
 ## Criterio de done
 
 - [x] Plan documentado
-- [ ] Factura enviada → registro SIF + hash encadenado
-- [ ] PDF con QR verificable
-- [ ] Job AEAT (preprod)
-- [ ] Anulación encadenada
-- [ ] Facturas emitidas inmutables
-- [ ] Tests hash + flujo emisión
+- [x] Factura enviada → registro SIF + hash encadenado
+- [x] PDF con QR verificable
+- [x] Job AEAT (preprod)
+- [x] Anulación encadenada
+- [x] Facturas emitidas inmutables
+- [x] Tests hash + flujo emisión

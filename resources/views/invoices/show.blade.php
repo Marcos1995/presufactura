@@ -24,6 +24,12 @@
         <button type="submit" class="btn btn-danger">Anular factura</button>
     </form>
     @endif
+    @if ($invoice->canCreateRectificativa())
+    <form method="POST" action="{{ route('invoices.rectificativa', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Crear factura rectificativa de esta factura?')">
+        @csrf
+        <button type="submit" class="btn btn-secondary">Emitir rectificativa</button>
+    </form>
+    @endif
     <a href="{{ route('invoices.index') }}" class="btn btn-secondary">Volver</a>
     @if ($invoice->status === 'draft')
     <form method="POST" action="{{ route('invoices.destroy', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Eliminar esta factura?')">
@@ -62,7 +68,9 @@
                 @if ($invoice->billingRecord)
                     <br><strong>AEAT:</strong> <span class="badge badge-{{ $invoice->billingRecord->aeat_status }}">{{ $invoice->billingRecord->aeatStatusLabel() }}</span>
                 @endif
-                @if ($invoice->paid_at)
+                @if ($invoice->rectifiesDocument)
+                    <br><strong>Rectifica:</strong> {{ $invoice->rectifiesDocument->number }}
+                @endif
                     <br><strong>Pagada:</strong> {{ $invoice->paid_at->format('d/m/Y H:i') }}
                 @endif
                 @if ($invoice->sent_at)
