@@ -36,6 +36,8 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | F8 | Landing comercial, /ayuda, WelcomeMail, emails branded, SEO |
 | F9 | Veri*Factu: migraciones SIF, modelos, config/verifactu.php |
 | F10 | Veri*Factu: HashChainService, XmlBuilderService, BillingRecordService, hook envío factura |
+| F11 | Veri*Factu: QrService, QR en PDF, badge fiscal vs proforma |
+| F12 | Veri*Factu: AeatSoapClient, SubmitBillingRecordJob, comando retry AEAT |
 
 ## Producción
 

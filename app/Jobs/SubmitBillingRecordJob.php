@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class SubmitBillingRecordJob implements ShouldQueue
 {
@@ -51,13 +52,53 @@ class SubmitBillingRecordJob implements ShouldQueue
 
         $result = $client->submit($record, $password);
 
+        if ($result['success']) {
+            $record->update([
+                'aeat_status' => BillingRecord::STATUS_ACCEPTED,
+                'aeat_response' => $result,
+                'sent_at' => now(),
+            ]);
+
+            return;
+        }
+
+        if ($result['permanent'] ?? false) {
+            $this->markRejected($record, $result);
+
+            return;
+        }
+
+        throw new RuntimeException($result['message'] ?? 'Error de envío AEAT');
+    }
+
+    public function failed(?\Throwable $exception): void
+    {
+        $record = BillingRecord::find($this->billingRecordId);
+        if (! $record || $record->aeat_status !== BillingRecord::STATUS_PENDING) {
+            return;
+        }
+
+        $this->markRejected($record, [
+            'success' => false,
+            'message' => $exception?->getMessage() ?? 'Error de envío AEAT tras reintentos',
+        ]);
+
+        Log::warning('Veri*Factu: envío rechazado tras reintentos', [
+            'billing_record_id' => $record->id,
+            'message' => $exception?->getMessage(),
+        ]);
+    }
+
+    /** @param array<string, mixed> $result */
+    private function markRejected(BillingRecord $record, array $result): void
+    {
         $record->update([
-            'aeat_status' => $result['success'] ? BillingRecord::STATUS_ACCEPTED : BillingRecord::STATUS_REJECTED,
+            'aeat_status' => BillingRecord::STATUS_REJECTED,
             'aeat_response' => $result,
             'sent_at' => now(),
         ]);
 
-        if (! $result['success']) {
+        if (! ($result['success'] ?? false)) {
             Log::warning('Veri*Factu: envío rechazado', [
                 'billing_record_id' => $record->id,
                 'message' => $result['message'] ?? 'unknown',
