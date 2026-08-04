@@ -1,9 +1,9 @@
 @extends('layouts.marketing')
 
-@section('title', config('app.name') . ' — Presupuestos y facturas proforma para autónomos')
-@section('meta_description', 'Crea presupuestos, envía facturas proforma por email y cobra más rápido. Para autónomos y pymes en España. Empieza gratis, sin tarjeta.')
+@section('title', config('app.name') . ' — Presupuestos y facturas para autónomos con Veri*Factu')
+@section('meta_description', 'Presupuestos, facturas proforma o fiscales con Veri*Factu, PDF con QR y envío a AEAT. Para autónomos y pymes en España. Empieza gratis, sin tarjeta.')
 @section('og_title', 'PresuFactura — De presupuesto a cobro en minutos')
-@section('og_description', 'Presupuestos con enlace público, facturas PDF, recordatorios automáticos. Diseñado para autónomos en España.')
+@section('og_description', 'Presupuestos con enlace público, facturas con Veri*Factu opcional, recordatorios automáticos. Diseñado para autónomos en España.')
 
 @section('content')
 <section class="landing-hero">
@@ -14,7 +14,7 @@
     </div>
     <p class="hero-badge reveal">Para autónomos y pymes en España</p>
     <h1 class="reveal reveal-delay-1">De presupuesto a cobro<br>en minutos, no en horas</h1>
-    <p class="hero-sub reveal reveal-delay-2">Crea presupuestos y facturas proforma, envíalos por email con PDF y haz seguimiento de cobros desde un panel claro. Sin instalaciones. Empieza gratis.</p>
+    <p class="hero-sub reveal reveal-delay-2">Crea presupuestos y facturas, envíalos por email con PDF y activa Veri*Factu cuando quieras cumplir con Hacienda. Sin instalaciones. Empieza gratis.</p>
     <div class="hero-actions reveal reveal-delay-3">
         @if ($loggedIn)
             <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
@@ -23,12 +23,12 @@
             <a href="#precios" class="btn btn-secondary btn-lg">Ver precios</a>
         @endif
     </div>
-    <p class="hero-note reveal reveal-delay-3">Sin tarjeta · Configuración en 3 minutos · Documentos proforma</p>
+    <p class="hero-note reveal reveal-delay-3">Sin tarjeta · Configuración en 3 minutos · Veri*Factu opcional</p>
     <div class="trust-strip reveal reveal-delay-4">
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> IVA incluido</span>
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> PDF + email</span>
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Enlace público</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Recordatorios Pro</span>
+        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Veri*Factu</span>
     </div>
 </section>
 
@@ -96,7 +96,7 @@
         <div class="feature-card reveal reveal-delay-1">
             <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg></div>
             <h3>Email + PDF automático</h3>
-            <p>Envía documentos proforma con PDF adjunto y enlace público para tu cliente.</p>
+            <p>PDF adjunto, enlace público y badge fiscal con QR si activas Veri*Factu.</p>
         </div>
         <div class="feature-card reveal reveal-delay-2">
             <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
@@ -106,7 +106,7 @@
         <div class="feature-card reveal reveal-delay-3">
             <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg></div>
             <h3>Hecho para España</h3>
-            <p>IVA, IBAN, NIF/CIF. Proforma honesta — sin prometer Verifactu que no tenemos.</p>
+            <p>IVA, IBAN, NIF/CIF y soporte Veri*Factu con certificado electrónico y envío a AEAT.</p>
         </div>
     </div>
 </section>

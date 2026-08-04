@@ -6,7 +6,7 @@
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
     @include('layouts.partials.fonts')
-    <meta name="description" content="@yield('meta_description', 'PresuFactura: presupuestos y facturas proforma para autónomos y pequeñas empresas en España. Envía PDF, cobra más rápido.')">
+    <meta name="description" content="@yield('meta_description', 'PresuFactura: presupuestos y facturas para autónomos en España. Veri*Factu opcional, PDF con QR, envío a AEAT. Empieza gratis.')">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="@yield('canonical', url()->current())">
 
@@ -53,7 +53,7 @@
     @yield('content')
 
     <footer class="landing-footer">
-        <p><strong>{{ config('app.name') }}</strong> — Presupuestos y facturas proforma para autónomos</p>
+        <p><strong>{{ config('app.name') }}</strong> — Presupuestos y facturas para autónomos con Veri*Factu opcional</p>
         @include('layouts.partials.legal-footer')
     </footer>
     @include('layouts.partials.cookie-banner')

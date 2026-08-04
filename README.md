@@ -6,7 +6,7 @@ Micro-SaaS para autónomos: presupuesto → factura → recordatorios de cobro.
 
 ## Requisitos
 
-- PHP 8.3+ (extensiones: `openssl`, `pdo_mysql`, `mbstring`, `fileinfo`, `curl`, `zip`)
+- PHP 8.3+ (extensiones: `openssl`, `soap`, `pdo_mysql`, `mbstring`, `fileinfo`, `curl`, `zip`)
 - Composer 2.x
 - MySQL 8.0+
 

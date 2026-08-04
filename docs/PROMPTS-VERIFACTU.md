@@ -8,7 +8,7 @@ Copia cada bloque en Cursor Agent. Stack: PHP 8.3, Laravel 11, MySQL. Minimal di
 
 ---
 
-## Resumen: qué falta (0 % hecho hoy)
+## Resumen: estado F9–F14 (completado)
 
 | # | Bloque | Estado |
 |---|--------|--------|
@@ -152,13 +152,13 @@ Extensión PHP: `ext-soap`, `ext-openssl` (ya requerida).
 
 ## Criterio de «aplicación completa» fiscalmente
 
-- [ ] Factura emitida genera registro SIF con hash encadenado
-- [ ] PDF lleva QR verificable
-- [ ] Envío AEAT preprod/prod funcional
-- [ ] Anulación con registro encadenado
-- [ ] Facturas emitidas inmutables
-- [ ] Certificado por tenant gestionado de forma segura
-- [ ] Declaración responsable firmada y archivada
-- [ ] Tests automatizados del hash y flujo emisión
+- [x] Factura emitida genera registro SIF con hash encadenado
+- [x] PDF lleva QR verificable
+- [x] Envío AEAT preprod/prod funcional
+- [x] Anulación con registro encadenado
+- [x] Facturas emitidas inmutables
+- [x] Certificado por tenant gestionado de forma segura
+- [ ] Declaración responsable firmada y archivada (manual)
+- [x] Tests automatizados del hash y flujo emisión
 
-Hasta entonces PresuFactura sigue siendo **proforma** (v1).
+Con Veri*Factu activado y certificado válido, PresuFactura emite facturas fiscales conforme RRSIF. Sin activarlo, los documentos siguen siendo proforma.

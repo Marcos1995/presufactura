@@ -1,6 +1,6 @@
 # Veri*Factu en Presufactura — Análisis y plan de implementación
 
-> **Estado del proyecto (auditoría 2026-08-04):** facturación proforma operativa (F1–F8 + v1.1 RGPD). **Módulo SIF/VERI*FACTU: 0 % implementado** — solo menciones en UI/legal y este documento. Prerrequisitos de datos y emisión listos; falta todo el núcleo técnico y legal.
+> **Estado del proyecto (2026-08-04, F9–F14):** módulo SIF/VERI*FACTU **implementado** (registros encadenados, QR, envío AEAT, anulación, inmutabilidad, rectificativas, export). Sin Veri*Factu activado, los documentos siguen siendo proforma. Pendiente manual: declaración responsable firmada ante AEAT.
 
 **Plan ejecutable por fases:** [`docs/PROMPTS-VERIFACTU.md`](PROMPTS-VERIFACTU.md)
 
@@ -39,9 +39,23 @@ No sustituye la factura en sí: la factura sigue siendo PDF/papel/electrónica; 
 
 ---
 
-## Estado actual en PresuFactura (v1) — verificado en código
+## Estado actual en PresuFactura — verificado en código (F9–F14)
 
-### Ya existe (prerrequisitos cumplidos)
+### Módulo SIF implementado
+
+| Pieza | Estado | Archivos clave |
+|-------|--------|----------------|
+| **Persistencia** | ✅ | `billing_records`, `sif_events`, `user_sif_config`, modelos |
+| **Hash + XML** | ✅ | `HashChainService`, `XmlBuilderService`, `BillingRecordService` |
+| **QR en PDF** | ✅ | `QrService`, `pdf/_document.blade.php` |
+| **Envío AEAT** | ✅ | `AeatSoapClient`, `SubmitBillingRecordJob`, comando retry |
+| **UI tenant** | ✅ | `/configuracion` Veri*Factu, badges AEAT, anulación |
+| **Cumplimiento** | ✅ | Inmutabilidad, rectificativas serie R, export, tests |
+| **Declaración responsable** | ⏳ | Plantilla `docs/DECLARACION-RESPONSABLE.md` (firma manual) |
+| **Modalidad NO VERI*FACTU** | ❌ | No implementada (solo VERI*FACTU) |
+| **Consulta LR / subsanación** | ❌ | Fuera de alcance v1 |
+
+### Prerrequisitos (F1–F8)
 
 | Capa | Qué hay hoy | Archivos clave |
 |------|-------------|----------------|
@@ -49,106 +63,37 @@ No sustituye la factura en sí: la factura sigue siendo PDF/papel/electrónica; 
 | **Clientes** | NIF, dirección, email | `Client`, `ClientController` |
 | **Facturación** | CRUD facturas/presupuestos, líneas, totales, numeración | `Document`, `InvoiceController`, `QuoteController`, `DocumentNumberService`, `DocumentCalculatorService` |
 | **Estados** | draft → sent → paid / payment_pending; presupuesto accepted | `Document::STATUS_*`, `DocumentActionController` |
-| **PDF** | Dompdf, plantilla compartida proforma | `PdfGeneratorService`, `resources/views/pdf/_document.blade.php` (L162: disclaimer sin Verifactu) |
-| **Trazabilidad básica** | `DocumentEvent` (created, sent, paid…) | `document_events` — **no** eventos SIF |
-| **Multi-tenant** | Cada `User` es un emisor con su cadena de numeración | `documents.user_id` unique `[user_id, number]` |
-| **Cola/jobs** | Tabla `jobs` migrada; sin jobs SIF | `0001_01_01_000002_create_jobs_table.php` |
+| **PDF** | Dompdf; badge fiscal o proforma según registro SIF | `PdfGeneratorService`, `pdf/_document.blade.php` |
+| **Trazabilidad** | `DocumentEvent` + `SifEvent` (arranque, export…) | `document_events`, `sif_events` |
+| **Multi-tenant** | Cada `User` es un emisor con su cadena de numeración y hashes | `documents.user_id`, `billing_records.user_id` |
+| **Cola/jobs** | Envío AEAT asíncrono con reintentos | `SubmitBillingRecordJob` |
 | **RGPD v1.1** | Export datos, baja cuenta, verificación email, cookies | según `PROMPTS-V1.1.md` |
 
-### Puntos de enganche para Veri*Factu (ya identificados)
+### Puntos de enganche (implementados)
 
-| Momento | Dónde enganchar |
-|---------|-----------------|
-| Emisión fiscal | `InvoiceController::send()` — tras `STATUS_SENT`, generar registro SIF + QR |
-| PDF | `PdfGeneratorService::generateInvoicePdf()` — pasar QR data URI a la vista |
-| Plantilla | `pdf/_document.blade.php` — sustituir badge «proforma» y footer |
-| Inmutabilidad | `InvoiceController::update()` / `destroy()` — hoy solo bloquean borrador; ampliar a enviadas |
-| Anulación | **No existe** — crear acción + registro encadenado |
-| Config tenant | `ProfileController` / `/configuracion` — certificado, modalidad VERI*FACTU |
-| Rectificativas | **No existe** — nuevo tipo documento o flag `is_rectificative` |
-
-### Lo que falta (módulo SIF completo)
-
-| Pieza | Archivos / dependencias a crear |
-|-------|----------------------------------|
-| **Migraciones** | `billing_records`, `billing_record_hashes`, `sif_events`, certificado por tenant |
-| **Servicios PHP** | `app/Services/Verifactu/HashChainService`, `XmlBuilderService`, `QrService`, `AeatSoapClient` |
-| **Jobs/cola** | Envío asíncrono a AEAT con reintentos |
-| **Config** | `config/verifactu.php` + vars `.env` (entorno preprod/prod, modalidad) |
-| **Composer** | Cliente SOAP (`ext-soap` o `php-soap/wsdl`), generador QR (`endroid/qr-code` o similar), validación XSD |
-| **UI** | Subida certificado `.p12`, toggle modalidad, estado envío AEAT, anulación |
-| **PDF** | QR incrustado + leyenda "Factura verificable" (sustituir disclaimer proforma) |
-| **Inmutabilidad** | Bloquear edición/borrado de facturas emitidas; solo anulación con registro encadenado |
-| **Legal** | Declaración responsable AEAT, actualizar términos/FAQ |
-| **Tests** | Unitarios hash/XML + integración entorno pruebas AEAT |
-
-**Dependencias Composer sugeridas:** `ext-soap`, `endroid/qr-code`, `robrichards/xmlseclibs` (firma XAdES si modalidad NO VERI*FACTU).
+| Momento | Implementación |
+|---------|----------------|
+| Emisión fiscal | `InvoiceController::send()` → `BillingRecordService::createAltaRecord()` |
+| PDF | `PdfGeneratorService` → QR data URI + badge fiscal/proforma |
+| Inmutabilidad | `InvoiceController::update()` / `destroy()` → 403 en sent/paid/cancelled |
+| Anulación | `InvoiceController::cancel()` → registro anulación + job AEAT |
+| Config tenant | `ProfileController::updateVerifactu()` — certificado .p12 cifrado |
+| Rectificativas | Serie R, `rectifies_document_id`, XML tipo R1 |
 
 ---
 
-## Qué falta hoy en Presufactura (detalle por capas)
+## Pendiente / fuera de alcance v1
 
-**Falta todo el módulo SIF**; la facturación proforma actual no es conforme. Resumen:
-
-### 1. Modelo de datos (base)
-
-- [ ] Identificación del **SIF**: nombre, versión, NIF del productor, tipo de uso.
-- [ ] **Registro de facturación de alta** por cada factura emitida.
-- [ ] **Registro de anulación** por cada factura anulada.
-- [ ] **Cadena de hashes**: guardar hash actual + hash del registro anterior (por emisor/NIF).
-- [ ] **Registro de eventos** del sistema (arranque, parada, exportaciones, incidencias).
-- [ ] Campos obligatorios ROF: NIF emisor/receptor, número, fecha, base, cuota, tipo impositivo, etc.
-
-### 2. Lógica de negocio
-
-- [ ] Generación del **hash encadenado** según especificación OM (orden y formato de campos estricto).
-- [ ] Construcción del **XML** conforme a `SuministroLR.xsd`.
-- [ ] Validación interna contra XSD antes de enviar o imprimir.
-- [ ] Flujos de **subsanación** y **reintento** ante rechazo AEAT.
-- [ ] **Anulación** con su propio registro encadenado.
-- [ ] Impedir modificar/borrar facturas sin dejar traza (solo anulación + nuevo registro).
-
-### 3. QR en la factura (PDF/Papel)
-
-- [ ] Generar URL del QR con parámetros exigidos por AEAT.
-- [ ] Incrustar QR en plantilla PDF (y opcional leyenda "Factura verificable").
-- [ ] Diferenciar URL según modalidad VERI*FACTU vs NO VERI*FACTU.
-
-### 4. Integración AEAT (modalidad VERI*FACTU)
-
-- [ ] Cliente **SOAP 1.1** document/literal contra WSDL oficial.
-- [ ] Autenticación con **certificado electrónico cualificado** (FNMT, Camerfirma, etc.) del obligado tributario.
-- [ ] Entornos **preproducción** y **producción** configurables.
-- [ ] Cola de envío, reintentos y registro de respuestas (aceptación/rechazo).
-- [ ] Consulta de registros presentados (`ConsultaLR.xsd`).
+- [ ] **Declaración responsable** firmada y archivada ante AEAT (plantilla en `docs/DECLARACION-RESPONSABLE.md`).
+- [ ] Validación XSD estricta antes de envío (opcional).
+- [ ] Consulta LR y subsanación automática.
+- [ ] Modalidad NO VERI*FACTU (firma XAdES, conservación local).
 
 **Recursos oficiales:**
 
 - WSDL: https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tikeV1.0/cont/ws/SistemaFacturacion.wsdl
 - Documentación: https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu.html
 - PDF técnico v1.0.3: `Veri-Factu_Descripcion_SWeb.pdf` (AEAT Desarrolladores)
-
-### 5. Modalidad NO VERI*FACTU (alternativa)
-
-Si no se remite en tiempo real:
-
-- [ ] **Firma electrónica** de cada registro (XAdES) con certificado del sistema.
-- [ ] **Registro de eventos** con la misma seguridad.
-- [ ] Exportación bajo requerimiento AEAT (remisión bajo requerimiento).
-- [ ] QR con URL de comunicación (no verificación directa).
-
-### 6. Cumplimiento legal del fabricante
-
-- [ ] **Declaración responsable** del software ante AEAT (modelo oficial).
-- [ ] Documentación de usuario: modalidad elegida, trazabilidad, exportación.
-- [ ] Política de actualizaciones cuando AEAT publique nuevas versiones XSD.
-
-### 7. Infraestructura y operación
-
-- [ ] Almacenamiento seguro de certificados (.p12) — nunca en git.
-- [ ] Backup de registros mínimo **4 años**.
-- [ ] Logs de auditoría inmutables.
-- [ ] Tests automatizados contra entorno de pruebas AEAT.
 
 ---
 
@@ -205,11 +150,9 @@ Si no se remite en tiempo real:
 
 ## Próximo paso concreto
 
-1. Decidir modalidad (VERI*FACTU recomendada para SaaS) y certificado por tenant.
-2. Migraciones + modelos `BillingRecord`, `SifEvent`.
-3. Crear `app/Services/Verifactu/` con: `HashChainService`, `XmlBuilderService`, `QrService`, `AeatSoapClient`.
-4. Hook en `InvoiceController` al emitir (status `sent`): generar registro, hash, QR, encolar envío AEAT.
-5. Probar una factura de alta en **entorno de pruebas AEAT** antes de producción.
+1. Completar y firmar la **declaración responsable** (`docs/DECLARACION-RESPONSABLE.md`).
+2. Probar flujo completo en **preproducción AEAT** con certificado de pruebas por tenant.
+3. Configurar `VERIFACTU_ENV=prod` y monitorizar caducidad de certificados en producción.
 
 ---
 
