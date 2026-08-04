@@ -7,6 +7,7 @@ use DOMDocument;
 
 class XmlBuilderService
 {
+    // Validación XSD opcional: storage/app/sif/xsd/SuministroLR.xsd (descargar de AEAT)
     public function buildAltaXml(Document $document, string $hash, string $timestamp): string
     {
         $document->loadMissing(['user', 'client', 'lineItems']);

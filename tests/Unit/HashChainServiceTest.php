@@ -15,48 +15,69 @@ class HashChainServiceTest extends TestCase
         $this->service = new HashChainService;
     }
 
-    public function test_compute_hash_is_deterministic(): void
+    /** @dataProvider aeatHuellaFixtures */
+    public function test_official_aeat_hash_vectors(string $tipo, array $campos, string $cadena, string $expectedHuella): void
     {
-        $data = [
-            'nif' => 'B12345678',
-            'number' => 'F2026-001',
-            'issue_date' => '04-08-2026',
-            'invoice_type' => 'F1',
-            'vat_amount' => '21.00',
-            'total' => '121.00',
-            'previous_hash' => '',
-            'timestamp' => '2026-08-04T12:00:00+02:00',
-        ];
+        $built = implode('&', array_map(
+            fn (array $c) => $c['nombre'].'='.$c['valor'],
+            $campos
+        ));
+        $this->assertSame($cadena, $built);
 
-        $hash1 = $this->service->computeHash($data);
-        $hash2 = $this->service->computeHash($data);
+        $hash = match ($tipo) {
+            'alta' => $this->service->computeAltaHash([
+                'nif' => $this->fieldValue($campos, 'IDEmisorFactura'),
+                'number' => $this->fieldValue($campos, 'NumSerieFactura'),
+                'issue_date' => $this->fieldValue($campos, 'FechaExpedicionFactura'),
+                'invoice_type' => $this->fieldValue($campos, 'TipoFactura'),
+                'vat_amount' => $this->fieldValue($campos, 'CuotaTotal'),
+                'total' => $this->fieldValue($campos, 'ImporteTotal'),
+                'previous_hash' => $this->fieldValue($campos, 'Huella'),
+                'timestamp' => $this->fieldValue($campos, 'FechaHoraHusoGenRegistro'),
+            ]),
+            'anulacion' => $this->service->computeAnulacionHash([
+                'nif' => $this->fieldValue($campos, 'IDEmisorFacturaAnulada'),
+                'number' => $this->fieldValue($campos, 'NumSerieFacturaAnulada'),
+                'issue_date' => $this->fieldValue($campos, 'FechaExpedicionFacturaAnulada'),
+                'previous_hash' => $this->fieldValue($campos, 'Huella'),
+                'timestamp' => $this->fieldValue($campos, 'FechaHoraHusoGenRegistro'),
+            ]),
+            default => $this->fail("Tipo desconocido: {$tipo}"),
+        };
 
-        $this->assertSame($hash1, $hash2);
-        $this->assertSame(64, strlen($hash1));
-        $this->assertMatchesRegularExpression('/^[A-F0-9]{64}$/', $hash1);
+        $this->assertSame($expectedHuella, $hash);
     }
 
-    public function test_compute_hash_changes_with_previous_hash(): void
+    public static function aeatHuellaFixtures(): array
     {
-        $base = [
-            'nif' => 'B12345678',
-            'number' => 'F2026-001',
-            'issue_date' => '04-08-2026',
-            'invoice_type' => 'F1',
-            'vat_amount' => '21.00',
-            'total' => '121.00',
-            'timestamp' => '2026-08-04T12:00:00+02:00',
-        ];
+        $json = json_decode(
+            file_get_contents(__DIR__.'/../Fixtures/verifactu/huella.json'),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
 
-        $hashWithout = $this->service->computeHash(array_merge($base, ['previous_hash' => '']));
-        $hashWith = $this->service->computeHash(array_merge($base, ['previous_hash' => 'ABC123']));
-
-        $this->assertNotSame($hashWithout, $hashWith);
+        return array_map(
+            fn (array $caso) => [$caso['tipo'], $caso['campos'], $caso['cadena'], $caso['huella']],
+            $json['casos']
+        );
     }
 
     public function test_format_amount(): void
     {
         $this->assertSame('121.00', $this->service->formatAmount(121));
         $this->assertSame('121.50', $this->service->formatAmount(121.5));
+    }
+
+    /** @param  array<int, array{nombre: string, valor: string}>  $campos */
+    private function fieldValue(array $campos, string $nombre): string
+    {
+        foreach ($campos as $campo) {
+            if ($campo['nombre'] === $nombre) {
+                return $campo['valor'];
+            }
+        }
+
+        return '';
     }
 }

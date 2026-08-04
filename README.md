@@ -35,6 +35,7 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | F7 | DEPLOY.md, deploy.sh, smoke-test, Stripe payment_failed |
 | F8 | Landing comercial, /ayuda, WelcomeMail, emails branded, SEO |
 | F9 | Veri*Factu: migraciones SIF, modelos, config/verifactu.php |
+| F10 | Veri*Factu: HashChainService, XmlBuilderService, BillingRecordService, hook envío factura |
 
 ## Producción
 

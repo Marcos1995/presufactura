@@ -8,21 +8,47 @@ use Carbon\Carbon;
 class HashChainService
 {
     /**
-     * Calcula la huella SHA-256 encadenada según especificación AEAT Veri*Factu.
+     * Calcula la huella SHA-256 de un registro de alta según OM AEAT Veri*Factu.
      *
      * @param  array{nif: string, number: string, issue_date: string, invoice_type: string, vat_amount: string, total: string, previous_hash: string|null, timestamp: string}  $data
      */
-    public function computeHash(array $data): string
+    public function computeAltaHash(array $data): string
     {
         $previousHash = $data['previous_hash'] ?? '';
 
         $payload = implode('&', [
-            'NIF='.$data['nif'],
+            'IDEmisorFactura='.$data['nif'],
             'NumSerieFactura='.$data['number'],
             'FechaExpedicionFactura='.$data['issue_date'],
             'TipoFactura='.$data['invoice_type'],
             'CuotaTotal='.$data['vat_amount'],
             'ImporteTotal='.$data['total'],
+            'Huella='.$previousHash,
+            'FechaHoraHusoGenRegistro='.$data['timestamp'],
+        ]);
+
+        return strtoupper(hash('sha256', $payload));
+    }
+
+    /** @deprecated Use computeAltaHash() */
+    public function computeHash(array $data): string
+    {
+        return $this->computeAltaHash($data);
+    }
+
+    /**
+     * Calcula la huella SHA-256 de un registro de anulación según OM AEAT Veri*Factu.
+     *
+     * @param  array{nif: string, number: string, issue_date: string, previous_hash: string|null, timestamp: string}  $data
+     */
+    public function computeAnulacionHash(array $data): string
+    {
+        $previousHash = $data['previous_hash'] ?? '';
+
+        $payload = implode('&', [
+            'IDEmisorFacturaAnulada='.$data['nif'],
+            'NumSerieFacturaAnulada='.$data['number'],
+            'FechaExpedicionFacturaAnulada='.$data['issue_date'],
             'Huella='.$previousHash,
             'FechaHoraHusoGenRegistro='.$data['timestamp'],
         ]);

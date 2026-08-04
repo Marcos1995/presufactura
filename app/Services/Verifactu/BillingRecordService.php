@@ -38,7 +38,7 @@ class BillingRecordService
             $timestamp = $this->hashChain->formatTimestamp();
             $invoiceType = $document->rectifies_document_id ? 'R1' : 'F1';
 
-            $hash = $this->hashChain->computeHash([
+            $hash = $this->hashChain->computeAltaHash([
                 'nif' => strtoupper(preg_replace('/\s+/', '', $user->tax_id)),
                 'number' => $document->number,
                 'issue_date' => $this->hashChain->formatIssueDate($document->issue_date),
@@ -96,13 +96,10 @@ class BillingRecordService
             $previousHash = $this->hashChain->getPreviousHash($user->id);
             $timestamp = $this->hashChain->formatTimestamp();
 
-            $hash = $this->hashChain->computeHash([
+            $hash = $this->hashChain->computeAnulacionHash([
                 'nif' => strtoupper(preg_replace('/\s+/', '', $user->tax_id)),
                 'number' => $document->number,
                 'issue_date' => $this->hashChain->formatIssueDate($document->issue_date),
-                'invoice_type' => 'F1',
-                'vat_amount' => $this->hashChain->formatAmount((float) $document->vat_amount),
-                'total' => $this->hashChain->formatAmount((float) $document->total),
                 'previous_hash' => $previousHash ?? '',
                 'timestamp' => $timestamp,
             ]);
