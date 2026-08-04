@@ -37,9 +37,40 @@ No sustituye la factura en sí: la factura sigue siendo PDF/papel/electrónica; 
 
 ---
 
-## Qué falta hoy en Presufactura
+## Estado actual en PresuFactura (v1)
 
-Como no hay código aún, **falta todo el módulo SIF**. Resumen por capas:
+### Ya existe (prerrequisitos cumplidos)
+
+| Capa | Qué hay hoy |
+|------|-------------|
+| **Datos fiscales** | `User`: NIF (`tax_id`), IBAN, dirección, IVA por defecto |
+| **Facturación** | CRUD facturas/presupuestos, líneas, totales, numeración (`DocumentNumberService`) |
+| **PDF** | `PdfGeneratorService` + plantillas Blade (`pdf/invoice.blade.php`) |
+| **Trazabilidad básica** | `DocumentEvent` (created, sent, paid…) — **no** eventos SIF |
+| **Multi-tenant** | Cada `User` es un emisor independiente |
+
+### Lo que falta (módulo SIF completo)
+
+| Pieza | Archivos / dependencias a crear |
+|-------|----------------------------------|
+| **Migraciones** | `billing_records`, `billing_record_hashes`, `sif_events`, certificado por tenant |
+| **Servicios PHP** | `app/Services/Verifactu/HashChainService`, `XmlBuilderService`, `QrService`, `AeatSoapClient` |
+| **Jobs/cola** | Envío asíncrono a AEAT con reintentos |
+| **Config** | `config/verifactu.php` + vars `.env` (entorno preprod/prod, modalidad) |
+| **Composer** | Cliente SOAP (`ext-soap` o `php-soap/wsdl`), generador QR (`endroid/qr-code` o similar), validación XSD |
+| **UI** | Subida certificado `.p12`, toggle modalidad, estado envío AEAT, anulación |
+| **PDF** | QR incrustado + leyenda "Factura verificable" (sustituir disclaimer proforma) |
+| **Inmutabilidad** | Bloquear edición/borrado de facturas emitidas; solo anulación con registro encadenado |
+| **Legal** | Declaración responsable AEAT, actualizar términos/FAQ |
+| **Tests** | Unitarios hash/XML + integración entorno pruebas AEAT |
+
+**Dependencias Composer sugeridas:** `ext-soap`, `endroid/qr-code`, `robrichards/xmlseclibs` (firma XAdES si modalidad NO VERI*FACTU).
+
+---
+
+## Qué falta hoy en Presufactura (detalle por capas)
+
+**Falta todo el módulo SIF**; la facturación proforma actual no es conforme. Resumen:
 
 ### 1. Modelo de datos (base)
 
@@ -156,10 +187,11 @@ Si no se remite en tiempo real:
 
 ## Próximo paso concreto
 
-1. Definir stack y modalidad (VERI*FACTU recomendada para SaaS).
-2. Implementar el CRUD de facturas si aún no existe.
-3. Crear módulo `verifactu/` con: `hash.py`, `xml_builder.py`, `qr.py`, `aeat_client.py`.
-4. Probar una factura de alta en **entorno de pruebas AEAT** antes de producción.
+1. Decidir modalidad (VERI*FACTU recomendada para SaaS) y certificado por tenant.
+2. Migraciones + modelos `BillingRecord`, `SifEvent`.
+3. Crear `app/Services/Verifactu/` con: `HashChainService`, `XmlBuilderService`, `QrService`, `AeatSoapClient`.
+4. Hook en `InvoiceController` al emitir (status `sent`): generar registro, hash, QR, encolar envío AEAT.
+5. Probar una factura de alta en **entorno de pruebas AEAT** antes de producción.
 
 ---
 
