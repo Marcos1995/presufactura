@@ -12,7 +12,7 @@ Copia cada bloque en Cursor Agent. Stack: PHP 8.3, Laravel 11, MySQL. Minimal di
 
 | # | Bloque | Estado |
 |---|--------|--------|
-| F9 | Modelo BD + config | ❌ |
+| F9 | Modelo BD + config | ✅ |
 | F10 | Hash encadenado + registros alta/anulación | ❌ |
 | F11 | QR en PDF | ❌ |
 | F12 | Cliente SOAP AEAT + jobs | ❌ |

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SifEvent extends Model
 {
+    use HasFactory;
     public const TYPE_STARTUP = 'startup';
 
     public const TYPE_EXPORT = 'export';

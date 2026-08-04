@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserSifConfig extends Model
 {
+    use HasFactory;
     protected $table = 'user_sif_config';
 
     public const MODE_VERIFACTU = 'verifactu';
