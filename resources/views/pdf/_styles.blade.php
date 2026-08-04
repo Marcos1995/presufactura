@@ -118,14 +118,23 @@
 
     .badge {
         display: inline-block;
-        background: #fff7ed;
-        color: #9a3412;
-        border: 1px solid #fed7aa;
         padding: 5px 10px;
         font-size: 7.5px;
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 0.4px;
+    }
+
+    .badge-proforma {
+        background: #fff7ed;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+    }
+
+    .badge-fiscal {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #86efac;
     }
 
     /* Parties */

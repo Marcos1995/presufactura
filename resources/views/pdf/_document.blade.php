@@ -29,7 +29,7 @@
                 <div class="doc-kicker">{{ ($isFiscal ?? false) ? 'Factura' : 'Documento proforma' }}</div>
                 <div class="doc-title">{{ $docTitle }}</div>
                 <div class="doc-number">{{ $document->number }}</div>
-                <span class="badge">{{ $proformaBadge }}</span>
+                <span class="badge {{ ($isFiscal ?? false) ? 'badge-fiscal' : 'badge-proforma' }}">{{ $proformaBadge }}</span>
             </td>
         </tr>
     </table>

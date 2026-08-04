@@ -3,9 +3,8 @@
 namespace App\Services\Verifactu;
 
 use App\Models\BillingRecord;
-use App\Models\UserSifConfig;
+use App\Models\Document;
 use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Writer\PngWriter;
 
@@ -36,14 +35,13 @@ class QrService
     {
         $url = $this->buildUrl($record);
 
-        $result = Builder::create()
-            ->writer(new PngWriter)
-            ->data($url)
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(ErrorCorrectionLevel::Medium)
-            ->size(200)
-            ->margin(4)
-            ->build();
+        $result = (new Builder(writer: new PngWriter))
+            ->build(
+                data: $url,
+                errorCorrectionLevel: ErrorCorrectionLevel::Medium,
+                size: 200,
+                margin: 4,
+            );
 
         return 'data:image/png;base64,'.base64_encode($result->getString());
     }
@@ -52,10 +50,10 @@ class QrService
     {
         return $record->isAlta()
             && in_array($record->document->status, [
-                \App\Models\Document::STATUS_SENT,
-                \App\Models\Document::STATUS_PAID,
-                \App\Models\Document::STATUS_EXPIRED,
-                \App\Models\Document::STATUS_PAYMENT_PENDING,
+                Document::STATUS_SENT,
+                Document::STATUS_PAID,
+                Document::STATUS_EXPIRED,
+                Document::STATUS_PAYMENT_PENDING,
             ], true);
     }
 }
