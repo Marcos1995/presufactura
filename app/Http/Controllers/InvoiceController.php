@@ -31,7 +31,7 @@ class InvoiceController extends Controller
     {
         $invoices = auth()->user()->documents()
             ->where('type', Document::TYPE_INVOICE)
-            ->with('client')
+            ->with(['client', 'billingRecord'])
             ->orderByDesc('created_at')
             ->get();
 

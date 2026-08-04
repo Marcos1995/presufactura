@@ -74,8 +74,10 @@ class ProfileController extends Controller
         $data = $request->validate([
             'verifactu_enabled' => ['nullable', 'boolean'],
             'verifactu_mode' => ['required', 'in:verifactu,no_verifactu'],
-            'cert_file' => ['nullable', 'file', 'max:5120'],
-            'cert_password' => ['nullable', 'string', 'max:255'],
+            'cert_file' => ['nullable', 'file', 'max:5120', 'extensions:p12,pfx'],
+            'cert_password' => ['nullable', 'required_with:cert_file', 'string', 'max:255'],
+        ], [
+            'cert_password.required_with' => 'Indica la contraseña del certificado.',
         ]);
 
         $config = $user->sifConfig ?? new UserSifConfig(['user_id' => $user->id]);
@@ -95,6 +97,10 @@ class ProfileController extends Controller
             $expiresAt = isset($certInfo['validTo_time_t'])
                 ? \Carbon\Carbon::createFromTimestamp($certInfo['validTo_time_t'])
                 : null;
+
+            if ($expiresAt?->isPast()) {
+                return back()->withErrors(['cert_file' => 'El certificado está caducado. Sube uno vigente.']);
+            }
 
             if ($config->cert_path && Storage::disk('local')->exists($config->cert_path)) {
                 Storage::disk('local')->delete($config->cert_path);

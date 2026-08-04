@@ -8,7 +8,12 @@
 <section class="help-page">
     <div class="help-intro">
         <h1>Centro de ayuda</h1>
-        <p class="section-sub">Respuestas claras sobre PresuFactura, planes, Verifactu y tus datos.</p>
+        <p class="section-sub">Respuestas claras sobre PresuFactura, planes, Veri*Factu y tus datos.</p>
+    </div>
+
+    <div class="help-verifactu card card-narrow">
+        <h2>Veri*Factu</h2>
+        <p>Activa Veri*Factu en <strong>Configuración</strong>, sube tu certificado electrónico .p12 y elige la modalidad de envío a AEAT. Cada factura enviada genera un registro SIF con hash encadenado, código QR en el PDF y remisión automática a Hacienda. Si AEAT acepta el registro, puedes anular la factura desde su detalle; se creará un registro de anulación encadenado.</p>
     </div>
 
     @include('partials.faq-list', ['faqs' => $faqs])

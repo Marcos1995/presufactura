@@ -89,6 +89,14 @@ class BillingRecordService
             return null;
         }
 
+        $existing = $document->billingRecords()
+            ->where('record_type', BillingRecord::TYPE_ANULACION)
+            ->first();
+
+        if ($existing) {
+            return $existing;
+        }
+
         return DB::transaction(function () use ($document, $altaRecord) {
             $document->loadMissing(['user']);
             $user = $document->user;

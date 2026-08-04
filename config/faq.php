@@ -28,7 +28,7 @@ return [
     ],
     [
         'question' => '¿Los documentos tienen validez legal?',
-        'answer' => 'Los PDF y emails que genera PresuFactura son proforma: sirven para presupuestar, facturar a efectos de cobro y enviar recordatorios, pero no sustituyen una factura fiscal válida ante Hacienda.',
+        'answer' => 'Con Veri*Factu desactivado, los PDF son proforma (cobro y recordatorios). Con Veri*Factu activado y certificado válido, las facturas enviadas generan registros SIF con validez fiscal ante la AEAT.',
         'landing' => false,
     ],
     [

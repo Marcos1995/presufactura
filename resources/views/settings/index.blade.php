@@ -139,6 +139,23 @@
 
         @php $sif = $user->sifConfig; @endphp
 
+        @if ($sif)
+            <p>
+                <strong>Estado certificado:</strong>
+                <span class="badge {{ $sif->certificateStatusBadgeClass() }}">{{ $sif->certificateStatusLabel() }}</span>
+                @if ($sif->cert_expires_at)
+                    — caduca {{ $sif->cert_expires_at->format('d/m/Y') }}
+                @endif
+            </p>
+            @if ($sif->certificateStatus() === 'expiring')
+                <p class="form-error">Tu certificado caduca en menos de 30 días. Renueva el .p12 antes de que expire.</p>
+            @endif
+        @endif
+
+        @if ($sif?->enabled && ! $sif?->hasValidCertificate())
+            <p class="form-error">Veri*Factu está activo pero falta un certificado válido. Sube un .p12 vigente para enviar a AEAT.</p>
+        @endif
+
         <div class="form-group">
             <label>
                 <input type="checkbox" name="verifactu_enabled" value="1" {{ old('verifactu_enabled', $sif?->enabled) ? 'checked' : '' }}>
@@ -158,8 +175,9 @@
             <label for="cert_file">Certificado .p12</label>
             <input type="file" id="cert_file" name="cert_file" accept=".p12,.pfx">
             @if ($sif?->cert_path)
-                <p class="text-muted">Certificado cargado. Caduca: {{ $sif->cert_expires_at?->format('d/m/Y') ?? '—' }}</p>
+                <p class="text-muted">Certificado cargado. Sube uno nuevo para reemplazarlo.</p>
             @endif
+            @error('cert_file')<span class="form-error">{{ $message }}</span>@enderror
             @error('cert_password')<span class="form-error">{{ $message }}</span>@enderror
         </div>
 

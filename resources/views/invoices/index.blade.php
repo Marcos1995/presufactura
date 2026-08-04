@@ -34,6 +34,7 @@
                     <th>Cliente</th>
                     <th>Fecha</th>
                     <th>Estado</th>
+                    <th>AEAT</th>
                     <th class="text-right">Total</th>
                     <th></th>
                 </tr>
@@ -45,6 +46,13 @@
                     <td>{{ $invoice->client->name }}</td>
                     <td>{{ $invoice->issue_date->format('d/m/Y') }}</td>
                     <td><span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span></td>
+                    <td>
+                        @if ($invoice->billingRecord)
+                            <span class="badge badge-{{ $invoice->billingRecord->aeat_status }}">{{ $invoice->billingRecord->aeatStatusLabel() }}</span>
+                        @else
+                            <span class="text-muted">—</span>
+                        @endif
+                    </td>
                     <td class="text-right">{{ number_format($invoice->total, 2, ',', '.') }} €</td>
                     <td class="table-actions">
                         <a href="{{ route('invoices.show', $invoice) }}">Ver</a>

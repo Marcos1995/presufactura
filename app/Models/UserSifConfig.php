@@ -47,4 +47,46 @@ class UserSifConfig extends Model
             && $this->cert_expires_at
             && $this->cert_expires_at->isFuture();
     }
+
+    public function certificateStatus(): string
+    {
+        if (! filled($this->cert_path)) {
+            return 'missing';
+        }
+
+        if (! $this->cert_expires_at) {
+            return 'unknown';
+        }
+
+        if ($this->cert_expires_at->isPast()) {
+            return 'expired';
+        }
+
+        if ($this->cert_expires_at->lte(now()->addDays(30))) {
+            return 'expiring';
+        }
+
+        return 'valid';
+    }
+
+    public function certificateStatusLabel(): string
+    {
+        return match ($this->certificateStatus()) {
+            'missing' => 'Sin certificado',
+            'expired' => 'Certificado caducado',
+            'expiring' => 'Caduca pronto',
+            'valid' => 'Certificado válido',
+            default => 'Estado desconocido',
+        };
+    }
+
+    public function certificateStatusBadgeClass(): string
+    {
+        return match ($this->certificateStatus()) {
+            'valid' => 'badge-cert-valid',
+            'expired' => 'badge-cert-expired',
+            'expiring' => 'badge-cert-expiring',
+            default => 'badge-cert-missing',
+        };
+    }
 }

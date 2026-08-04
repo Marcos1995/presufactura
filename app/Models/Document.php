@@ -121,7 +121,8 @@ class Document extends Model
     {
         return $this->isInvoice()
             && in_array($this->status, [self::STATUS_SENT, self::STATUS_PAID, self::STATUS_EXPIRED, self::STATUS_PAYMENT_PENDING], true)
-            && $this->billingRecord?->aeat_status === BillingRecord::STATUS_ACCEPTED;
+            && $this->billingRecord?->aeat_status === BillingRecord::STATUS_ACCEPTED
+            && ! $this->billingRecords()->where('record_type', BillingRecord::TYPE_ANULACION)->exists();
     }
 
     public function isQuote(): bool

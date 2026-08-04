@@ -38,6 +38,7 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | F10 | Veri*Factu: HashChainService, XmlBuilderService, BillingRecordService, hook envío factura |
 | F11 | Veri*Factu: QrService, QR en PDF, badge fiscal vs proforma |
 | F12 | Veri*Factu: AeatSoapClient, SubmitBillingRecordJob, comando retry AEAT |
+| F13 | Veri*Factu: UI configuración certificado, badges AEAT, anulación facturas |
 
 ## Producción
 
