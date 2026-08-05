@@ -47,7 +47,7 @@
                     <td>{{ $invoice->issue_date->format('d/m/Y') }}</td>
                     <td><span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span></td>
                     <td>
-                        @if ($invoice->billingRecord)
+                        @if (($verifactuAvailable ?? false) && $invoice->billingRecord)
                             <span class="badge badge-{{ $invoice->billingRecord->aeat_status }}">{{ $invoice->billingRecord->aeatStatusLabel() }}</span>
                         @else
                             <span class="text-muted">—</span>

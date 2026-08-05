@@ -8,6 +8,7 @@ use App\Services\DocumentCalculatorService;
 use App\Services\DocumentNumberService;
 use App\Services\EmailService;
 use App\Services\PdfGeneratorService;
+use App\Support\VerifactuSchema;
 use App\Services\Verifactu\BillingRecordService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,13 +30,21 @@ class InvoiceController extends Controller
 
     public function index(): View
     {
+        $with = ['client'];
+        if (VerifactuSchema::hasBillingRecordsTable()) {
+            $with[] = 'billingRecord';
+        }
+
         $invoices = auth()->user()->documents()
             ->where('type', Document::TYPE_INVOICE)
-            ->with(['client', 'billingRecord'])
+            ->with($with)
             ->orderByDesc('created_at')
             ->get();
 
-        return view('invoices.index', compact('invoices'));
+        return view('invoices.index', [
+            'invoices' => $invoices,
+            'verifactuAvailable' => VerifactuSchema::hasBillingRecordsTable(),
+        ]);
     }
 
     public function create(): View
@@ -89,11 +98,19 @@ class InvoiceController extends Controller
     public function show(Document $invoice): View
     {
         $this->authorizeInvoice($invoice);
-        $invoice->load(['client', 'lineItems', 'billingRecord', 'rectifiesDocument']);
+        $load = ['client', 'lineItems', 'rectifiesDocument'];
+        if (VerifactuSchema::hasBillingRecordsTable()) {
+            $load[] = 'billingRecord';
+        }
+        $invoice->load($load);
 
         $clients = auth()->user()->clients()->orderBy('name')->get();
 
-        return view('invoices.show', compact('invoice', 'clients'));
+        return view('invoices.show', [
+            'invoice' => $invoice,
+            'clients' => $clients,
+            'verifactuAvailable' => VerifactuSchema::hasBillingRecordsTable(),
+        ]);
     }
 
     public function update(Request $request, Document $invoice): RedirectResponse

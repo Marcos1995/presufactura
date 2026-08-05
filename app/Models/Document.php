@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\VerifactuSchema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -108,6 +109,10 @@ class Document extends Model
 
     public function hasSifRecord(): bool
     {
+        if (! VerifactuSchema::hasBillingRecordsTable()) {
+            return false;
+        }
+
         return $this->billingRecords()->where('record_type', BillingRecord::TYPE_ALTA)->exists();
     }
 
@@ -124,6 +129,10 @@ class Document extends Model
 
     public function canCancel(): bool
     {
+        if (! VerifactuSchema::hasBillingRecordsTable()) {
+            return false;
+        }
+
         return $this->isInvoice()
             && in_array($this->status, [self::STATUS_SENT, self::STATUS_PAID, self::STATUS_EXPIRED, self::STATUS_PAYMENT_PENDING], true)
             && $this->billingRecord?->aeat_status === BillingRecord::STATUS_ACCEPTED
@@ -132,6 +141,10 @@ class Document extends Model
 
     public function canCreateRectificativa(): bool
     {
+        if (! VerifactuSchema::hasBillingRecordsTable()) {
+            return false;
+        }
+
         return $this->isInvoice()
             && in_array($this->status, [self::STATUS_SENT, self::STATUS_PAID], true)
             && $this->billingRecord?->aeat_status === BillingRecord::STATUS_ACCEPTED;

@@ -130,14 +130,13 @@
 </div>
 
 <div class="card card-narrow">
+    @if ($verifactuAvailable ?? false)
     <form method="POST" action="{{ route('settings.verifactu.update') }}" class="form" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <h2 class="form-section-title">Veri*Factu</h2>
         <p class="text-muted">Activa la facturación fiscal conforme RRSIF. Requiere certificado electrónico .p12 del obligado tributario.</p>
-
-        @php $sif = $user->sifConfig; @endphp
 
         @if ($sif)
             <p>
@@ -191,6 +190,10 @@
             <button type="submit" class="btn btn-primary">Guardar Veri*Factu</button>
         </div>
     </form>
+    @else
+    <h2 class="form-section-title">Veri*Factu</h2>
+    <p class="text-muted">Disponible tras ejecutar las migraciones del sistema (php artisan migrate).</p>
+    @endif
 </div>
 
 <div class="card card-narrow settings-export-box">

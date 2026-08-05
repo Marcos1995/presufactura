@@ -65,7 +65,7 @@
                 <strong>Cliente:</strong> {{ $invoice->client->name }}<br>
                 <strong>Email:</strong> {{ $invoice->client->email }}<br>
                 <strong>Estado:</strong> <span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span>
-                @if ($invoice->billingRecord)
+                @if (($verifactuAvailable ?? false) && $invoice->billingRecord)
                     <br><strong>AEAT:</strong> <span class="badge badge-{{ $invoice->billingRecord->aeat_status }}">{{ $invoice->billingRecord->aeatStatusLabel() }}</span>
                 @endif
                 @if ($invoice->rectifiesDocument)

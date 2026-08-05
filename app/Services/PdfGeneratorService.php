@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BillingRecord;
 use App\Models\Document;
+use App\Support\VerifactuSchema;
 use App\Services\Verifactu\QrService;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -17,7 +18,11 @@ class PdfGeneratorService
 
     public function generateInvoicePdf(Document $document): string
     {
-        $document->load(['user', 'client', 'lineItems', 'billingRecord']);
+        $load = ['user', 'client', 'lineItems'];
+        if (VerifactuSchema::hasBillingRecordsTable()) {
+            $load[] = 'billingRecord';
+        }
+        $document->load($load);
 
         $billingRecord = $document->billingRecord;
         $qrDataUri = null;

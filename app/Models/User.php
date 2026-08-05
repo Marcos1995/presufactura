@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\VerifyEmailNotification;
+use App\Support\VerifactuSchema;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -99,6 +100,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasVerifactuEnabled(): bool
     {
+        if (! VerifactuSchema::hasSifConfigTable()) {
+            return false;
+        }
+
         return $this->sifConfig?->enabled === true;
     }
 

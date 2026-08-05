@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\AccountDeletedMail;
 use App\Models\UserSifConfig;
+use App\Support\VerifactuSchema;
 use App\Services\DataExportService;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
@@ -22,9 +23,13 @@ class ProfileController extends Controller
     public function edit(): View
     {
         $user = auth()->user();
-        $user->load('sifConfig');
+        $sif = VerifactuSchema::hasSifConfigTable() ? $user->sifConfig : null;
 
-        return view('settings.index', ['user' => $user]);
+        return view('settings.index', [
+            'user' => $user,
+            'sif' => $sif,
+            'verifactuAvailable' => VerifactuSchema::hasSifConfigTable(),
+        ]);
     }
 
     public function update(Request $request): RedirectResponse
@@ -69,6 +74,10 @@ class ProfileController extends Controller
 
     public function updateVerifactu(Request $request): RedirectResponse
     {
+        if (! VerifactuSchema::hasSifConfigTable()) {
+            return back()->with('error', 'Veri*Factu no está disponible. Ejecuta php artisan migrate.');
+        }
+
         $user = auth()->user();
 
         $data = $request->validate([
