@@ -90,7 +90,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/facturas/{invoice}/enviar', [InvoiceController::class, 'send'])->name('invoices.send');
         Route::post('/facturas/{invoice}/pagada', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
         Route::post('/facturas/{invoice}/anular', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
-        Route::post('/facturas/{invoice}/rectificativa', [InvoiceController::class, 'createRectificativa'])->name('invoices.rectificativa');
+        Route::post('/facturas/{invoice}/rectificativa', [InvoiceController::class, 'createRectificativa'])->middleware('doc.limit')->name('invoices.rectificativa');
 
         Route::get('/presupuestos', [QuoteController::class, 'index'])->name('quotes.index');
         Route::get('/presupuestos/nuevo', [QuoteController::class, 'create'])->middleware('doc.limit')->name('quotes.create');

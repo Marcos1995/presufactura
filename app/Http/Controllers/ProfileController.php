@@ -36,7 +36,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        $data = $request->validate([
+        $rules = [
             'business_name' => ['required', 'string', 'max:255'],
             'tax_id' => ['required', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
@@ -49,11 +49,16 @@ class ProfileController extends Controller
             'invoice_prefix' => ['required', 'string', 'max:20'],
             'quote_prefix' => ['required', 'string', 'max:20'],
             'default_due_days' => ['required', 'integer', 'min:1', 'max:365'],
-            'reminder_day_1' => ['required', 'integer', 'min:1', 'max:90'],
-            'reminder_day_2' => ['required', 'integer', 'min:1', 'max:90'],
-            'reminder_day_3' => ['required', 'integer', 'min:1', 'max:90'],
-            'owner_reminder_day' => ['required', 'integer', 'min:1', 'max:90'],
-        ], [
+        ];
+
+        if ($user->isPro()) {
+            $rules['reminder_day_1'] = ['required', 'integer', 'min:1', 'max:90'];
+            $rules['reminder_day_2'] = ['required', 'integer', 'min:1', 'max:90'];
+            $rules['reminder_day_3'] = ['required', 'integer', 'min:1', 'max:90'];
+            $rules['owner_reminder_day'] = ['required', 'integer', 'min:1', 'max:90'];
+        }
+
+        $data = $request->validate($rules, [
             'business_name.required' => 'El nombre comercial es obligatorio.',
             'tax_id.required' => 'El NIF/CIF es obligatorio.',
         ]);

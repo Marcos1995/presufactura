@@ -30,4 +30,20 @@ class DocumentLimitTest extends TestCase
         $response->assertSessionHas('show_upgrade_modal', true);
         $this->assertSame(3, $user->fresh()->documentsThisMonthCount());
     }
+
+    public function test_pro_plan_allows_fourth_document_in_month(): void
+    {
+        $user = User::factory()->onboarded()->pro()->create();
+        $client = $this->createClient($user);
+
+        for ($i = 0; $i < 3; $i++) {
+            $this->createDocument($user, $client, [
+                'number' => 'FAC-00'.$i,
+            ]);
+        }
+
+        $this->actingAs($user);
+
+        $this->get(route('invoices.create'))->assertOk();
+    }
 }

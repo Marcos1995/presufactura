@@ -51,4 +51,11 @@ class UserFactory extends Factory
             'onboarding_completed_at' => now(),
         ]);
     }
+
+    public function pro(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'plan' => 'pro',
+        ]);
+    }
 }

@@ -79,6 +79,15 @@ Eventos: `checkout.session.completed`, `customer.subscription.deleted`, `invoice
 Activa Customer Portal en Stripe Dashboard → Settings → Billing → Customer portal.
 Usuarios Pro acceden desde `/suscripcion`.
 
+### Probar planes sin Stripe
+
+```bash
+php artisan presufactura:set-plan tu@email.com pro
+php artisan presufactura:set-plan tu@email.com free
+```
+
+Tras migrar/seed local también hay `free@example.com` y `pro@example.com` (password: `password`).
+
 ## Cron producción
 
 ```bash

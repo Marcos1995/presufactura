@@ -197,6 +197,7 @@ class Document extends Model
     public function canClaimPaid(): bool
     {
         return $this->isInvoice()
+            && $this->user?->isPro()
             && in_array($this->status, [self::STATUS_SENT, self::STATUS_EXPIRED], true);
     }
 
