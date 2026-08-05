@@ -21,7 +21,7 @@
     </div>
 @else
     <div class="card">
-        <table class="data-table">
+        <table class="data-table data-table-list">
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -34,10 +34,10 @@
             <tbody>
                 @foreach ($clients as $client)
                 <tr>
-                    <td>{{ $client->name }}</td>
-                    <td>{{ $client->email }}</td>
-                    <td>{{ $client->tax_id ?: '—' }}</td>
-                    <td>{{ $client->phone ?: '—' }}</td>
+                    <td data-label="Nombre">{{ $client->name }}</td>
+                    <td data-label="Email">{{ $client->email }}</td>
+                    <td data-label="NIF">{{ $client->tax_id ?: '—' }}</td>
+                    <td data-label="Teléfono">{{ $client->phone ?: '—' }}</td>
                     <td class="table-actions">
                         <a href="{{ route('clients.edit', $client) }}">Editar</a>
                         <form method="POST" action="{{ route('clients.destroy', $client) }}" class="inline-form" onsubmit="return confirm('¿Eliminar este cliente?')">

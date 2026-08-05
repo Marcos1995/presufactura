@@ -1354,10 +1354,42 @@ a:hover { text-decoration: underline; }
     .mock-row.head { display: none; }
     .screenshot-mock { flex-direction: column; }
     .mock-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+}
 
-    .card { padding: 1rem; overflow: hidden; }
+/* Tablas y fichas apiladas: incluye móvil en horizontal (>768px) */
+@media (max-width: 992px) {
+    .panel-header { padding: 1rem 1.25rem; }
+    .panel-main { padding: 1rem; }
+    .panel-footer { padding: 1rem; }
+    .panel-content { min-width: 0; max-width: 100%; }
 
-    .data-table-list { display: block; }
+    .card {
+        padding: 1rem;
+        max-width: 100%;
+    }
+    .auth-card { padding: 1.25rem; max-width: 100%; }
+    .guest-container { padding: 1rem; }
+
+    .invoice-meta {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .invoice-meta > div { min-width: 0; word-break: break-word; }
+
+    .public-link-input { min-width: 0; width: 100%; }
+    .public-link-row { flex-direction: column; align-items: stretch; }
+    .public-link-row .btn { width: 100%; text-align: center; }
+
+    .public-doc-total { padding: 1rem; margin: 1rem 0; }
+    .public-doc-total strong { font-size: 1.5rem; word-break: break-word; }
+
+    .data-table.data-table-list,
+    .data-table.data-table-lines {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+    }
+
     .data-table-list thead { display: none; }
     .data-table-list tbody { display: block; }
     .data-table-list tbody tr {
@@ -1369,13 +1401,16 @@ a:hover { text-decoration: underline; }
     }
     .data-table-list tbody tr:last-child { margin-bottom: 0; }
     .data-table-list tbody td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.75rem;
+        display: grid;
+        grid-template-columns: minmax(5rem, 38%) minmax(0, 1fr);
+        gap: 0.35rem 0.75rem;
+        align-items: start;
         padding: 0.4rem 0;
         border-bottom: none;
         text-align: right !important;
+        min-width: 0;
+        word-break: break-word;
+        overflow-wrap: anywhere;
     }
     .data-table-list tbody td::before {
         content: attr(data-label);
@@ -1383,9 +1418,9 @@ a:hover { text-decoration: underline; }
         font-size: 0.78rem;
         color: var(--gray-500);
         text-align: left;
-        flex-shrink: 0;
     }
     .data-table-list tbody td.table-actions {
+        display: flex;
         justify-content: flex-end;
         flex-wrap: wrap;
         gap: 0.5rem;
@@ -1398,7 +1433,6 @@ a:hover { text-decoration: underline; }
     .data-table-list tbody td.table-actions a,
     .data-table-list tbody td.table-actions form { margin-left: 0; }
 
-    .data-table-lines { display: block; }
     .data-table-lines thead { display: none; }
     .data-table-lines tbody { display: block; }
     .data-table-lines tbody tr {
@@ -1408,18 +1442,22 @@ a:hover { text-decoration: underline; }
     }
     .data-table-lines tbody tr:last-child { border-bottom: none; }
     .data-table-lines tbody td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.75rem;
+        display: grid;
+        grid-template-columns: minmax(5rem, 38%) minmax(0, 1fr);
+        gap: 0.35rem 0.75rem;
+        align-items: start;
         padding: 0.25rem 0;
         border-bottom: none;
         text-align: right !important;
+        min-width: 0;
+        word-break: break-word;
+        overflow-wrap: anywhere;
     }
     .data-table-lines tbody td:first-child {
+        display: block;
         font-weight: 600;
         margin-bottom: 0.25rem;
-        justify-content: flex-start;
+        text-align: left !important;
     }
     .data-table-lines tbody td:first-child::before { display: none; }
     .data-table-lines tbody td:not(:first-child)::before {
@@ -1428,7 +1466,6 @@ a:hover { text-decoration: underline; }
         font-size: 0.78rem;
         color: var(--gray-500);
         text-align: left;
-        flex-shrink: 0;
     }
     .data-table-lines tfoot {
         display: block;
@@ -1437,21 +1474,58 @@ a:hover { text-decoration: underline; }
         border-top: 2px solid var(--gray-200);
     }
     .data-table-lines tfoot tr {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.75rem;
         align-items: center;
         padding: 0.35rem 0;
     }
     .data-table-lines tfoot td {
+        display: block;
         padding: 0;
         border: none;
+        min-width: 0;
     }
-    .data-table-lines tfoot td[colspan] { flex: 1; text-align: left; }
-    .data-table-lines tfoot td:not([colspan]) { text-align: right; flex-shrink: 0; }
+    .data-table-lines tfoot td[colspan] { text-align: left !important; }
+    .data-table-lines tfoot td:not([colspan]) { text-align: right !important; white-space: nowrap; }
 
-    .public-doc-total { padding: 1rem; margin: 1rem 0; }
-    .public-doc-total strong { font-size: 1.5rem; word-break: break-word; }
-
-    .public-link-row { flex-direction: column; align-items: stretch; }
-    .public-link-row .btn { width: 100%; text-align: center; }
+    .line-items-table { display: block; }
+    .line-items-table thead { display: none; }
+    .line-items-table tbody { display: block; }
+    .line-items-table tbody tr {
+        display: block;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+    }
+    .line-items-table tbody tr:last-child { margin-bottom: 0; }
+    .line-items-table tbody td {
+        display: block;
+        padding: 0.35rem 0;
+    }
+    .line-items-table tbody td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        font-size: 0.78rem;
+        color: var(--gray-500);
+        margin-bottom: 0.25rem;
+    }
+    .line-items-table tbody td:first-child::before { content: "Descripción"; }
+    .line-items-table tbody td:nth-child(2)::before { content: "Cant."; }
+    .line-items-table tbody td:nth-child(3)::before { content: "Precio"; }
+    .line-items-table tbody td:nth-child(4)::before { content: "IVA %"; }
+    .line-items-table tbody td:nth-child(5)::before { content: "Total"; }
+    .line-items-table tbody td:last-child::before { display: none; }
+    .line-items-table tbody td:last-child {
+        text-align: right;
+        padding-top: 0.5rem;
+    }
+    .line-items-table .col-qty,
+    .line-items-table .col-price,
+    .line-items-table .col-vat,
+    .line-items-table .col-total { width: auto; }
+    .line-items-table input { max-width: 100%; }
+    .totals-box { max-width: none; margin-left: 0; }
 }
