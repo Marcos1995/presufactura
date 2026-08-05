@@ -150,9 +150,9 @@ No sustituye la factura en sí: la factura sigue siendo PDF/papel/electrónica; 
 
 ## Próximo paso concreto
 
-1. Completar y firmar la **declaración responsable** (`docs/DECLARACION-RESPONSABLE.md`).
-2. Probar flujo completo en **preproducción AEAT** con certificado de pruebas por tenant.
-3. Configurar `VERIFACTU_ENV=prod` y monitorizar caducidad de certificados en producción.
+1. Seguir el checklist de **entorno de pruebas**: [`docs/VERIFACTU-ENTORNO-PRUEBAS.md`](VERIFACTU-ENTORNO-PRUEBAS.md).
+2. Completar y firmar la **declaración responsable** (`docs/DECLARACION-RESPONSABLE.md`).
+3. Tras validar en preprod, configurar `VERIFACTU_ENV=prod` y monitorizar caducidad de certificados.
 
 ---
 

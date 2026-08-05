@@ -3,6 +3,11 @@
 return [
     'env' => env('VERIFACTU_ENV', 'preprod'),
 
+    'env_labels' => [
+        'preprod' => 'Entorno de pruebas AEAT',
+        'prod' => 'Entorno real AEAT',
+    ],
+
     'mode' => env('VERIFACTU_MODE', 'verifactu'),
 
     'software' => [

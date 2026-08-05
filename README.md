@@ -102,6 +102,7 @@ Módulo SIF implementado: registros encadenados, QR en PDF, envío AEAT, anulaci
 
 - Plan: **[docs/PLAN-VERIFACTU-IMPLEMENTACION.md](docs/PLAN-VERIFACTU-IMPLEMENTACION.md)**
 - Análisis: **[docs/VERIFACTU.md](docs/VERIFACTU.md)**
+- Entorno de pruebas AEAT: **[docs/VERIFACTU-ENTORNO-PRUEBAS.md](docs/VERIFACTU-ENTORNO-PRUEBAS.md)**
 - Comandos: `presufactura:verifactu-retry-failed`, `presufactura:verifactu-export {user}`
 
 ## Notas

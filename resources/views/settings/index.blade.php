@@ -141,6 +141,13 @@
 
         <h2 class="form-section-title">Veri*Factu</h2>
         <p class="text-muted">Activa la facturación fiscal conforme RRSIF. Requiere certificado electrónico .p12 del obligado tributario.</p>
+        <p>
+            <strong>Entorno AEAT:</strong>
+            <span class="badge {{ \App\Support\VerifactuEnv::badgeClass() }}">{{ \App\Support\VerifactuEnv::label() }}</span>
+            @if (\App\Support\VerifactuEnv::isPreprod())
+                <span class="text-muted">— usa certificado de pruebas. Guía: docs/VERIFACTU-ENTORNO-PRUEBAS.md</span>
+            @endif
+        </p>
 
         @if ($sif)
             <p>

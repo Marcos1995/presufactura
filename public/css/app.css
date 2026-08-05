@@ -590,6 +590,8 @@ a:hover { text-decoration: underline; }
 .badge-cert-expired { background: #fee2e2; color: #991b1b; }
 .badge-cert-expiring { background: #ffedd5; color: #c2410c; }
 .badge-cert-missing { background: var(--gray-100); color: var(--gray-700); }
+.badge-env-preprod { background: #fef3c7; color: #92400e; }
+.badge-env-prod { background: #dcfce7; color: #166534; }
 
 .public-link-box { margin-bottom: 1rem; }
 .public-link-box .public-link-row {
