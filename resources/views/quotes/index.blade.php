@@ -27,7 +27,7 @@
     </div>
 @else
     <div class="card">
-        <table class="data-table">
+        <table class="data-table data-table-list">
             <thead>
                 <tr>
                     <th>Número</th>
@@ -41,11 +41,11 @@
             <tbody>
                 @foreach ($quotes as $quote)
                 <tr data-href="{{ route('quotes.show', $quote) }}">
-                    <td><a href="{{ route('quotes.show', $quote) }}">{{ $quote->number }}</a></td>
-                    <td>{{ $quote->client->name }}</td>
-                    <td>{{ $quote->valid_until?->format('d/m/Y') ?? '—' }}</td>
-                    <td><span class="badge badge-{{ $quote->status }}">{{ $quote->statusLabel() }}</span></td>
-                    <td class="text-right">{{ number_format($quote->total, 2, ',', '.') }} €</td>
+                    <td data-label="Número"><a href="{{ route('quotes.show', $quote) }}">{{ $quote->number }}</a></td>
+                    <td data-label="Cliente">{{ $quote->client->name }}</td>
+                    <td data-label="Válido hasta">{{ $quote->valid_until?->format('d/m/Y') ?? '—' }}</td>
+                    <td data-label="Estado"><span class="badge badge-{{ $quote->status }}">{{ $quote->statusLabel() }}</span></td>
+                    <td data-label="Total" class="text-right">{{ number_format($quote->total, 2, ',', '.') }} €</td>
                     <td class="table-actions"><a href="{{ route('quotes.show', $quote) }}">Ver</a></td>
                 </tr>
                 @endforeach

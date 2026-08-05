@@ -46,7 +46,7 @@
 @if ($recentDocuments->isNotEmpty())
 <div class="card">
     <h2 class="section-title">Últimos documentos</h2>
-    <table class="data-table">
+    <table class="data-table data-table-list">
         <thead>
             <tr>
                 <th>Número</th>
@@ -60,11 +60,11 @@
         <tbody>
             @foreach ($recentDocuments as $doc)
             <tr data-href="{{ $doc->isInvoice() ? route('invoices.show', $doc) : route('quotes.show', $doc) }}">
-                <td>{{ $doc->number }}</td>
-                <td>{{ $doc->isInvoice() ? 'Factura' : 'Presupuesto' }}</td>
-                <td>{{ $doc->client->name }}</td>
-                <td><span class="badge badge-{{ $doc->status }}">{{ $doc->statusLabel() }}</span></td>
-                <td class="text-right">{{ number_format($doc->total, 2, ',', '.') }} €</td>
+                <td data-label="Número">{{ $doc->number }}</td>
+                <td data-label="Tipo">{{ $doc->isInvoice() ? 'Factura' : 'Presupuesto' }}</td>
+                <td data-label="Cliente">{{ $doc->client->name }}</td>
+                <td data-label="Estado"><span class="badge badge-{{ $doc->status }}">{{ $doc->statusLabel() }}</span></td>
+                <td data-label="Total" class="text-right">{{ number_format($doc->total, 2, ',', '.') }} €</td>
                 <td class="table-actions">
                     @if ($doc->isInvoice())
                         <a href="{{ route('invoices.show', $doc) }}">Ver</a>

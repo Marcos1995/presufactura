@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <table class="data-table">
+                <table class="data-table data-table-lines">
                     <thead>
                         <tr>
                             <th>Descripción</th>
@@ -54,9 +54,9 @@
                         @foreach ($invoice->lineItems as $item)
                         <tr>
                             <td>{{ $item->description }}</td>
-                            <td class="text-right">{{ number_format($item->quantity, 2, ',', '.') }}</td>
-                            <td class="text-right">{{ number_format($item->unit_price, 2, ',', '.') }} €</td>
-                            <td class="text-right">{{ number_format($item->line_total, 2, ',', '.') }} €</td>
+                            <td data-label="Cant." class="text-right">{{ number_format($item->quantity, 2, ',', '.') }}</td>
+                            <td data-label="Precio" class="text-right">{{ number_format($item->unit_price, 2, ',', '.') }} €</td>
+                            <td data-label="Total" class="text-right">{{ number_format($item->line_total, 2, ',', '.') }} €</td>
                         </tr>
                         @endforeach
                     </tbody>

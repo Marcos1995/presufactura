@@ -27,7 +27,7 @@
     </div>
 @else
     <div class="card">
-        <table class="data-table">
+        <table class="data-table data-table-list">
             <thead>
                 <tr>
                     <th>Número</th>
@@ -42,18 +42,18 @@
             <tbody>
                 @foreach ($invoices as $invoice)
                 <tr data-href="{{ route('invoices.show', $invoice) }}">
-                    <td><a href="{{ route('invoices.show', $invoice) }}">{{ $invoice->number }}</a></td>
-                    <td>{{ $invoice->client->name }}</td>
-                    <td>{{ $invoice->issue_date->format('d/m/Y') }}</td>
-                    <td><span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span></td>
-                    <td>
+                    <td data-label="Número"><a href="{{ route('invoices.show', $invoice) }}">{{ $invoice->number }}</a></td>
+                    <td data-label="Cliente">{{ $invoice->client->name }}</td>
+                    <td data-label="Fecha">{{ $invoice->issue_date->format('d/m/Y') }}</td>
+                    <td data-label="Estado"><span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span></td>
+                    <td data-label="AEAT">
                         @if (($verifactuAvailable ?? false) && $invoice->billingRecord)
                             <span class="badge badge-{{ $invoice->billingRecord->aeat_status }}">{{ $invoice->billingRecord->aeatStatusLabel() }}</span>
                         @else
                             <span class="text-muted">—</span>
                         @endif
                     </td>
-                    <td class="text-right">{{ number_format($invoice->total, 2, ',', '.') }} €</td>
+                    <td data-label="Total" class="text-right">{{ number_format($invoice->total, 2, ',', '.') }} €</td>
                     <td class="table-actions">
                         <a href="{{ route('invoices.show', $invoice) }}">Ver</a>
                         <a href="{{ route('invoices.pdf', $invoice) }}">PDF</a>
