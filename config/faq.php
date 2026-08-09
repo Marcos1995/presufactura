@@ -7,18 +7,18 @@ return [
         'landing' => true,
     ],
     [
-        'question' => '¿Qué diferencia hay entre Free y Pro?',
-        'answer' => 'El plan Free incluye 3 documentos al mes (presupuestos o facturas), clientes ilimitados, PDF proforma y enlace público. Pro (12 €/mes) añade documentos ilimitados, recordatorios automáticos al cliente (+3, +7 y +14 días tras vencimiento) y un aviso por email al autónomo el día +10 para que confirmes si cobraste.',
+        'question' => '¿Cuánto cuesta PresuFactura?',
+        'answer' => 'Nada. PresuFactura es completamente gratis: documentos ilimitados, clientes ilimitados, recordatorios automáticos, botón «He pagado» y Veri*Factu opcional. No hay planes de pago ni tarjeta.',
         'landing' => true,
     ],
     [
-        'question' => '¿Puedo empezar gratis?',
-        'answer' => 'Sí. Regístrate sin tarjeta y usa el plan Free con 3 documentos al mes. Puedes actualizar a Pro cuando lo necesites desde la página de precios o tu panel.',
+        'question' => '¿Puedo empezar sin tarjeta?',
+        'answer' => 'Sí. Regístrate sin tarjeta y tienes acceso inmediato a todas las funciones.',
         'landing' => true,
     ],
     [
-        'question' => '¿Cómo cancelo la suscripción Pro?',
-        'answer' => 'Entra en Suscripción en tu panel y pulsa «Gestionar suscripción en Stripe». Desde el portal de Stripe puedes cancelar en cualquier momento. Seguirás con acceso Pro hasta el final del periodo facturado.',
+        'question' => '¿Hay límites de documentos?',
+        'answer' => 'No. Puedes crear tantos presupuestos y facturas como necesites.',
         'landing' => true,
     ],
     [
@@ -33,7 +33,7 @@ return [
     ],
     [
         'question' => '¿Puedo personalizar facturas y presupuestos?',
-        'answer' => 'Sí. En Configuración puedes añadir tu logo, datos fiscales, IBAN, prefijos de numeración, IVA por defecto y días de vencimiento. Los recordatorios también son configurables (plan Pro).',
+        'answer' => 'Sí. En Configuración puedes añadir tu logo, datos fiscales, IBAN, prefijos de numeración, IVA por defecto, días de vencimiento y recordatorios automáticos.',
         'landing' => false,
     ],
     [
@@ -43,7 +43,7 @@ return [
     ],
     [
         'question' => '¿Cómo cobro más rápido con PresuFactura?',
-        'answer' => 'Envía la factura por email con PDF, comparte el enlace público con tu IBAN visible y activa recordatorios Pro. Tus clientes también pueden pulsar «He pagado» para avisarte.',
+        'answer' => 'Envía la factura por email con PDF, comparte el enlace público con tu IBAN visible y activa recordatorios. Tus clientes también pueden pulsar «He pagado» para avisarte.',
         'landing' => false,
     ],
     [

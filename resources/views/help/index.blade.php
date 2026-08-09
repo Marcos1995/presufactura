@@ -1,14 +1,14 @@
 @extends('layouts.marketing')
 
 @section('title', 'Centro de ayuda — ' . config('app.name'))
-@section('meta_description', 'Preguntas frecuentes sobre PresuFactura: Verifactu, planes Free y Pro, cancelación, privacidad y uso para autónomos.')
+@section('meta_description', 'Preguntas frecuentes sobre PresuFactura: Verifactu, gratuidad, privacidad y uso para autónomos.')
 @section('og_title', 'Ayuda PresuFactura — FAQ para autónomos')
 
 @section('content')
 <section class="help-page">
     <div class="help-intro">
         <h1>Centro de ayuda</h1>
-        <p class="section-sub">Respuestas claras sobre PresuFactura, planes, Veri*Factu y tus datos.</p>
+        <p class="section-sub">Respuestas claras sobre PresuFactura, Veri*Factu y tus datos.</p>
     </div>
 
     <div class="help-verifactu card card-narrow">

@@ -182,7 +182,7 @@ class ProfileController extends Controller
         $email = $user->email;
         $name = $user->name;
 
-        if ($user->isPro()) {
+        if ($user->stripe_subscription_id) {
             try {
                 $stripe->cancelSubscription($user);
             } catch (\Throwable) {

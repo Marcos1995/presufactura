@@ -107,9 +107,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->sifConfig?->enabled === true;
     }
 
+    /**
+     * Historicamente distinguía plan Pro. La app es 100% gratuita: todas las funciones están incluidas.
+     */
     public function isPro(): bool
     {
-        return $this->plan === 'pro';
+        return true;
     }
 
     public function documentsThisMonthCount(): int
@@ -122,11 +125,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function canCreateDocument(): bool
     {
-        if ($this->isPro()) {
-            return true;
-        }
-
-        return $this->documentsThisMonthCount() < 3;
+        return true;
     }
 
     public function isProfileComplete(): bool

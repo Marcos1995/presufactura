@@ -1,9 +1,9 @@
 @extends('layouts.marketing')
 
 @section('title', config('app.name') . ' — Presupuestos y facturas para autónomos con Veri*Factu')
-@section('meta_description', 'Presupuestos, facturas proforma o fiscales con Veri*Factu, PDF con QR y envío a AEAT. Para autónomos y pymes en España. Empieza gratis, sin tarjeta.')
+@section('meta_description', 'Presupuestos, facturas proforma o fiscales con Veri*Factu, PDF con QR y envío a AEAT. Para autónomos y pymes en España. Completamente gratis, sin tarjeta.')
 @section('og_title', 'PresuFactura — De presupuesto a cobro en minutos')
-@section('og_description', 'Presupuestos con enlace público, facturas con Veri*Factu opcional, recordatorios automáticos. Diseñado para autónomos en España.')
+@section('og_description', 'Presupuestos con enlace público, facturas con Veri*Factu opcional, recordatorios automáticos. Todo gratis para autónomos en España.')
 
 @section('content')
 <section class="landing-hero">
@@ -14,16 +14,16 @@
     </div>
     <p class="hero-badge reveal">Para autónomos y pymes en España</p>
     <h1 class="reveal reveal-delay-1">De presupuesto a cobro<br>en minutos, no en horas</h1>
-    <p class="hero-sub reveal reveal-delay-2">Crea presupuestos y facturas, envíalos por email con PDF y activa Veri*Factu cuando quieras cumplir con Hacienda. Sin instalaciones. Empieza gratis.</p>
+    <p class="hero-sub reveal reveal-delay-2">Crea presupuestos y facturas, envíalos por email con PDF y activa Veri*Factu cuando quieras cumplir con Hacienda. Sin instalaciones. Completamente gratis.</p>
     <div class="hero-actions reveal reveal-delay-3">
         @if ($loggedIn)
             <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
         @else
-            <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Empezar gratis — 3 docs/mes</a>
-            <a href="#precios" class="btn btn-secondary btn-lg">Ver precios</a>
+            <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Empezar gratis</a>
+            <a href="#precios" class="btn btn-secondary btn-lg">Ver qué incluye</a>
         @endif
     </div>
-    <p class="hero-note reveal reveal-delay-3">Sin tarjeta · Configuración en 3 minutos · Veri*Factu opcional</p>
+    <p class="hero-note reveal reveal-delay-3">Sin tarjeta · Sin límites · Veri*Factu opcional</p>
     <div class="trust-strip reveal reveal-delay-4">
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> IVA incluido</span>
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> PDF + email</span>
@@ -53,7 +53,7 @@
                         <div class="mock-stat"><span>Por cobrar</span><strong data-count-to="2450" data-count-prefix="" data-count-suffix=" €" data-count-decimals="0">0 €</strong></div>
                         <div class="mock-stat danger"><span>Vencido</span><strong data-count-to="380" data-count-suffix=" €" data-count-decimals="0">0 €</strong></div>
                         <div class="mock-stat success"><span>Cobrado mes</span><strong data-count-to="5120" data-count-suffix=" €" data-count-decimals="0">0 €</strong></div>
-                        <div class="mock-stat"><span>Docs mes</span><strong>2 / 3</strong></div>
+                        <div class="mock-stat"><span>Docs mes</span><strong data-count-to="12" data-count-decimals="0">0</strong></div>
                     </div>
                     <div class="mock-table">
                         <div class="mock-row head"><span>Número</span><span>Cliente</span><span>Estado</span><span>Total</span></div>
@@ -100,7 +100,7 @@
         </div>
         <div class="feature-card reveal reveal-delay-2">
             <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
-            <h3>Recordatorios Pro</h3>
+            <h3>Recordatorios automáticos</h3>
             <p>Avisos al cliente + email «¿cobraste?» para que no se te escape ningún pago.</p>
         </div>
         <div class="feature-card reveal reveal-delay-3">
@@ -112,41 +112,25 @@
 </section>
 
 <section class="landing-pricing reveal" id="precios">
-    <h2>Precios claros</h2>
-    <p class="section-sub">Empieza gratis. Escala cuando tu negocio crece.</p>
-    <div class="pricing-grid">
-        <div class="pricing-card">
-            <h3>Free</h3>
+    <h2>Gratis, con todo incluido</h2>
+    <p class="section-sub">Sin planes de pago. Todas las funciones para todos los usuarios.</p>
+    <div class="pricing-grid pricing-grid--single">
+        <div class="pricing-card pricing-pro">
+            <span class="pricing-badge">Todo incluido</span>
+            <h3>Gratis</h3>
             <p class="price">0 €<span>/mes</span></p>
             <ul>
-                <li>3 documentos al mes</li>
-                <li>Clientes ilimitados</li>
-                <li>PDF proforma + email</li>
-                <li>Enlace público presupuestos y facturas</li>
-            </ul>
-            @if (!$loggedIn)
-                <a href="{{ route('register') }}" class="btn btn-secondary btn-block">Empezar gratis</a>
-            @endif
-        </div>
-        <div class="pricing-card pricing-pro">
-            <span class="pricing-badge">Recomendado</span>
-            <h3>Pro</h3>
-            <p class="price">12 €<span>/mes</span></p>
-            <ul>
                 <li>Documentos ilimitados</li>
+                <li>Clientes ilimitados</li>
+                <li>PDF + email + enlace público</li>
                 <li>Recordatorios automáticos al cliente</li>
-                <li>Email «¿cobraste?» día +10</li>
-                <li>Botón «He pagado» para clientes</li>
+                <li>Email «¿cobraste?» y botón «He pagado»</li>
+                <li>Veri*Factu opcional (certificado + AEAT)</li>
             </ul>
-            @if ($loggedIn && !auth()->user()->isPro())
-                <form method="POST" action="{{ route('stripe.checkout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-primary btn-block">Actualizar a Pro</button>
-                </form>
-            @elseif ($loggedIn)
-                <span class="badge badge-paid">Plan activo</span>
+            @if ($loggedIn)
+                <a href="{{ route('dashboard') }}" class="btn btn-primary btn-block">Ir al panel</a>
             @else
-                <a href="{{ route('register') }}" class="btn btn-primary btn-block">Registrarse</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-block">Crear cuenta gratis</a>
             @endif
         </div>
     </div>
@@ -162,7 +146,7 @@
 
 <section class="landing-cta reveal">
     <h2>Empieza a facturar más ágil hoy</h2>
-    <p>Registro gratuito. Sin permanencia. Cancela Pro cuando quieras.</p>
+    <p>Registro gratuito. Sin tarjeta. Sin permanencia.</p>
     @if (!$loggedIn)
         <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Crear cuenta gratis</a>
     @else

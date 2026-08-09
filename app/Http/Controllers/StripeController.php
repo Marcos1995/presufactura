@@ -22,7 +22,7 @@ class StripeController extends Controller
         $user = auth()->user();
 
         if ($user->isPro()) {
-            return redirect()->route('subscription.index')->with('status', 'Ya tienes el plan Pro.');
+            return redirect()->route('dashboard')->with('status', 'PresuFactura es gratuito: ya tienes acceso completo.');
         }
 
         try {

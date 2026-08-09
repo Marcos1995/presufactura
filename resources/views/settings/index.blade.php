@@ -93,9 +93,8 @@
             </div>
         </div>
 
-        <h2 class="form-section-title">Recordatorios (plan Pro)</h2>
+        <h2 class="form-section-title">Recordatorios automáticos</h2>
 
-        @if ($user->isPro())
         <div class="form-row form-row-4">
             <div class="form-group">
                 <label for="reminder_day_1">Cliente día +</label>
@@ -117,14 +116,6 @@
                 <input type="number" id="owner_reminder_day" name="owner_reminder_day" min="1" max="90" value="{{ old('owner_reminder_day', $user->owner_reminder_day) }}" required>
                 @error('owner_reminder_day')<span class="form-error">{{ $message }}</span>@enderror
             </div>
-        </div>
-        @else
-        <p class="text-muted">Los recordatorios automáticos y el botón «He pagado» están disponibles en el plan Pro. <a href="{{ route('subscription.index') }}">Actualizar plan</a></p>
-        @endif
-
-        <div class="settings-plan-box">
-            <strong>Plan:</strong> {{ $user->isPro() ? 'Pro' : 'Free (3 docs/mes)' }}
-            <a href="{{ route('subscription.index') }}" class="btn btn-secondary btn-sm">Gestionar suscripción</a>
         </div>
 
         <div class="form-actions">

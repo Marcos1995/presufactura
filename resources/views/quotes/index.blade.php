@@ -5,11 +5,7 @@
 
 @section('content')
 <div class="page-toolbar">
-    @if (auth()->user()->canCreateDocument())
-        <a href="{{ route('quotes.create') }}" class="btn btn-primary">Nuevo presupuesto</a>
-    @else
-        <span class="text-muted">Límite Free alcanzado (3 docs/mes)</span>
-    @endif
+    <a href="{{ route('quotes.create') }}" class="btn btn-primary">Nuevo presupuesto</a>
 </div>
 
 @if ($quotes->isEmpty())
@@ -19,11 +15,9 @@
         </div>
         <h2>Sin presupuestos</h2>
         <p>Crea presupuestos y conviértelos en facturas con un click.</p>
-        @if (auth()->user()->canCreateDocument())
         <div class="empty-actions">
             <a href="{{ route('quotes.create') }}" class="btn btn-primary">Nuevo presupuesto</a>
         </div>
-        @endif
     </div>
 @else
     <div class="card">

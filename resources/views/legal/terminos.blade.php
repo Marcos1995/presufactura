@@ -16,8 +16,8 @@
     <h2>3. Registro y cuenta</h2>
     <p>Debes proporcionar datos veraces. Eres responsable de la confidencialidad de tu contraseña y de toda actividad en tu cuenta.</p>
 
-    <h2>4. Planes y pagos</h2>
-    <p>El plan Free permite 3 documentos al mes. El plan Pro (12 €/mes) ofrece documentos ilimitados y recordatorios automáticos. Los pagos se procesan mediante Stripe. Puedes cancelar en cualquier momento desde el portal de suscripción.</p>
+    <h2>4. Gratuidad del servicio</h2>
+    <p>PresuFactura es un servicio gratuito. Todas las funciones (documentos ilimitados, recordatorios automáticos, Veri*Factu opcional) están incluidas sin suscripción ni pago. No se requiere tarjeta para registrarse ni para usar el servicio.</p>
 
     <h2>5. Uso aceptable</h2>
     <p>Queda prohibido usar el servicio para actividades ilegales, suplantación de identidad, envío de spam o cualquier uso que perjudique a terceros o al servicio.</p>

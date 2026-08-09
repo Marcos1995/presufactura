@@ -166,7 +166,7 @@ class QuoteController extends Controller
         abort_unless($quote->canConvert(), 403);
 
         if (! auth()->user()->canCreateDocument()) {
-            return back()->with('error', 'Has alcanzado el límite de 3 documentos al mes del plan Free.');
+            return back()->with('error', 'No se puede crear el documento en este momento.');
         }
 
         $invoice = DB::transaction(function () use ($quote) {

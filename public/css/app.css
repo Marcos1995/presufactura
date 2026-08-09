@@ -819,6 +819,9 @@ a:hover { text-decoration: underline; }
     max-width: 680px;
     margin: 0 auto;
 }
+.pricing-grid--single {
+    max-width: 420px;
+}
 .pricing-card {
     border: 1px solid var(--gray-200);
     border-radius: var(--radius-lg);

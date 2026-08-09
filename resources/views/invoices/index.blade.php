@@ -5,11 +5,7 @@
 
 @section('content')
 <div class="page-toolbar">
-    @if (auth()->user()->canCreateDocument())
-        <a href="{{ route('invoices.create') }}" class="btn btn-primary">Nueva factura</a>
-    @else
-        <span class="text-muted">Límite Free alcanzado (3 docs/mes)</span>
-    @endif
+    <a href="{{ route('invoices.create') }}" class="btn btn-primary">Nueva factura</a>
 </div>
 
 @if ($invoices->isEmpty())
@@ -19,11 +15,9 @@
         </div>
         <h2>Sin facturas</h2>
         <p>Crea tu primera factura proforma y envíala a tu cliente por email.</p>
-        @if (auth()->user()->canCreateDocument())
         <div class="empty-actions">
             <a href="{{ route('invoices.create') }}" class="btn btn-primary">Nueva factura</a>
         </div>
-        @endif
     </div>
 @else
     <div class="card">

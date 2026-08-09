@@ -31,7 +31,7 @@ class DashboardController extends Controller
             ->sum('total');
 
         $docsThisMonth = $user->documentsThisMonthCount();
-        $docsLimit = $user->isPro() ? null : 3;
+        $docsLimit = null;
 
         $recentDocuments = $user->documents()
             ->with('client')

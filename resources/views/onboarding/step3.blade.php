@@ -43,7 +43,7 @@
         </div>
 
         <div class="onboarding-reminders">
-            <h2 class="form-section-title">Recordatorios automáticos (plan Pro)</h2>
+            <h2 class="form-section-title">Recordatorios automáticos</h2>
             <div class="form-row form-row-4">
                 <div class="form-group">
                     <label for="reminder_day_1">Cliente día +</label>

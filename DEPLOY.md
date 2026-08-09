@@ -158,13 +158,11 @@ SENTRY_LARAVEL_DSN=
 * * * * * cd /home/USUARIO/domains/presufactura.es/public_html/laravel && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-## 6. Stripe
+## 6. Stripe (legado, opcional)
 
-1. **Checkout** — Pro 12 €/mes recurrente → `STRIPE_PRICE_ID`
-2. Claves **live** en `.env`
-3. Tras editar `.env`: `php artisan config:cache`
-4. **Webhook** — `https://presufactura.es/stripe/webhook`
-5. **Customer Portal** activo en Stripe
+La app es gratuita: no hace falta configurar Stripe para producción.
+Si quedan variables `STRIPE_*` en `.env`, puedes dejarlas vacías o eliminarlas.
+El webhook y Customer Portal solo aplican si hubiera suscripciones antiguas.
 
 ## 7. Deploy rutinario
 

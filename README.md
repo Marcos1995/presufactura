@@ -2,7 +2,11 @@
 
 Micro-SaaS para autónomos: presupuesto → factura → recordatorios de cobro.
 
-**Stack:** PHP 8.3, Laravel 11, MySQL, HTML/CSS/jQuery, Dompdf, SMTP, Stripe.
+**Stack:** PHP 8.3, Laravel 11, MySQL, HTML/CSS/jQuery, Dompdf, SMTP.
+
+**Producto:** completamente gratis (documentos ilimitados, recordatorios y Veri*Factu incluidos).
+
+Documentación: [PROJECT.md](PROJECT.md) · [AGENTS.md](AGENTS.md) · [FEATURES.md](FEATURES.md)
 
 ## Requisitos
 
@@ -28,9 +32,9 @@ Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
 | Fase | Contenido |
 |------|-----------|
 | F1 | Laravel, migraciones, auth, layout panel |
-| F2 | CRUD clientes + facturas, PDF, límite Free |
+| F2 | CRUD clientes + facturas, PDF |
 | F3 | Emails, estados, cron recordatorios, dashboard |
-| F4 | Presupuestos, link público, Stripe Pro, landing |
+| F4 | Presupuestos, link público, landing |
 | F6 | Perfil editable, onboarding, legal, suscripción, producto usable |
 | F7 | DEPLOY.md, deploy.sh, smoke-test, Stripe payment_failed |
 | F8 | Landing comercial, /ayuda, WelcomeMail, emails branded, SEO |
@@ -60,7 +64,7 @@ php artisan presufactura:smoke-test
 | `/onboarding/{1-3}` | Wizard configuración inicial |
 | `/dashboard` | Panel KPIs |
 | `/configuracion` | Editar perfil fiscal y preferencias |
-| `/suscripcion` | Plan actual + Stripe Customer Portal |
+| `/suscripcion` | Info de cuenta (gratis, todo incluido) |
 | `/clientes` | CRUD clientes |
 | `/facturas`, `/presupuestos` | CRUD documentos |
 | `/facturas/{id}/pdf`, `/presupuestos/{id}/pdf` | Descargar PDF |
@@ -68,25 +72,11 @@ php artisan presufactura:smoke-test
 | `/p/{token}/he-pagado` | Cliente indica pago |
 | `/terminos`, `/privacidad`, `/cookies` | Páginas legales RGPD |
 
-## Stripe
+## Modelo gratuito
 
-`.env`: `STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID`
+No hay planes de pago ni límites de documentos. Stripe queda como código legado (no necesario para operar).
 
-Webhook: `https://presufactura.es/stripe/webhook`
-
-Eventos: `checkout.session.completed`, `customer.subscription.deleted`, `invoice.payment_failed`
-
-Activa Customer Portal en Stripe Dashboard → Settings → Billing → Customer portal.
-Usuarios Pro acceden desde `/suscripcion`.
-
-### Probar planes sin Stripe
-
-```bash
-php artisan presufactura:set-plan tu@email.com pro
-php artisan presufactura:set-plan tu@email.com free
-```
-
-Tras migrar/seed local también hay `free@example.com` y `pro@example.com` (password: `password`).
+Seed local: `demo@example.com` (password: `password`).
 
 ## Cron producción
 
@@ -106,10 +96,10 @@ Módulo SIF implementado: registros encadenados, QR en PDF, envío AEAT, anulaci
 - Comandos: `presufactura:verifactu-retry-failed`, `presufactura:verifactu-export {user}`
 
 ## Notas
-- Plan Free: 3 docs/mes. Pro: 12 €/mes, documentos ilimitados.
+- App 100% gratis: sin paywall.
 - **Nunca** commitear `.env`.
 
-## Checklist tests manuales (Fase 6)
+## Checklist tests manuales
 
 <!-- Ejecutar tras deploy o en local con mail/log driver -->
 
@@ -120,7 +110,7 @@ Módulo SIF implementado: registros encadenados, QR en PDF, envío AEAT, anulaci
 - [ ] Cliente abre `/p/{token}` presupuesto → Aceptar → estado accepted
 - [ ] Enviar factura → cliente abre mismo `/p/{token}` → ve IBAN → «He pagado»
 - [ ] «He pagado» → estado payment_pending + email al autónomo
-- [ ] Free: crear 4º doc/mes → modal upgrade (no redirect error)
-- [ ] `/precios`, `/suscripcion`, Stripe Portal (usuario Pro)
+- [ ] Crear 4+ documentos en el mes → sin bloqueo
+- [ ] `/precios` muestra plan único gratis
 - [ ] Footer links legales en landing, panel y guest
 - [ ] `/terminos`, `/privacidad`, `/cookies` cargan contenido español

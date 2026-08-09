@@ -9,5 +9,5 @@
     <p style="margin:0 0 24px;">
         <a href="{{ route('onboarding.step', ['step' => 1]) }}" style="display:inline-block;padding:12px 24px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:600;">Configurar mi perfil</a>
     </p>
-    <p style="margin:0;font-size:13px;color:#6b7280;">Plan Free: 3 documentos al mes sin tarjeta. Actualiza a Pro cuando necesites más.</p>
+    <p style="margin:0;font-size:13px;color:#6b7280;">PresuFactura es completamente gratis: documentos ilimitados, recordatorios y Veri*Factu opcional. Sin tarjeta.</p>
 @endsection

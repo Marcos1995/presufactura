@@ -1,47 +1,31 @@
 @extends('layouts.marketing')
 
 @section('title', 'Precios — ' . config('app.name'))
-@section('meta_description', 'Planes Free y Pro de PresuFactura. Empieza gratis con 3 documentos al mes o Pro por 12 €/mes con recordatorios automáticos.')
+@section('meta_description', 'PresuFactura es completamente gratis: documentos ilimitados, recordatorios automáticos y Veri*Factu opcional. Sin tarjeta ni suscripción.')
 
 @section('content')
 <section class="landing-pricing landing-pricing-page reveal">
-    <h1>Precios simples, sin sorpresas</h1>
-    <p class="hero-sub">Empieza gratis. Actualiza cuando lo necesites.</p>
-    <div class="pricing-grid">
-        <div class="pricing-card">
-            <h3>Free</h3>
+    <h1>Gratis, con todo incluido</h1>
+    <p class="hero-sub">Sin planes de pago. Todas las funciones para todos los usuarios.</p>
+    <div class="pricing-grid pricing-grid--single">
+        <div class="pricing-card pricing-pro">
+            <span class="pricing-badge">Todo incluido</span>
+            <h3>Gratis</h3>
             <p class="price">0 €<span>/mes</span></p>
             <ul>
-                <li>3 documentos al mes</li>
+                <li>Documentos ilimitados (presupuestos y facturas)</li>
                 <li>Clientes ilimitados</li>
-                <li>PDF proforma</li>
-                <li>Enlace público presupuestos y facturas</li>
-                <li>Email al enviar documentos</li>
-            </ul>
-            @if (!$loggedIn)
-                <a href="{{ route('register') }}" class="btn btn-secondary btn-block">Empezar gratis</a>
-            @endif
-        </div>
-        <div class="pricing-card pricing-pro">
-            <span class="pricing-badge">Recomendado</span>
-            <h3>Pro</h3>
-            <p class="price">12 €<span>/mes</span></p>
-            <ul>
-                <li>Documentos ilimitados</li>
+                <li>PDF proforma o fiscal + email</li>
+                <li>Enlace público de presupuestos y facturas</li>
                 <li>Recordatorios automáticos al cliente (+3/+7/+14 días)</li>
                 <li>Email «¿cobraste?» día +10</li>
                 <li>Botón «He pagado» para clientes</li>
-                <li>Todo lo del plan Free</li>
+                <li>Veri*Factu opcional (certificado + envío AEAT)</li>
             </ul>
-            @if ($loggedIn && !auth()->user()->isPro())
-                <form method="POST" action="{{ route('stripe.checkout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-primary btn-block">Actualizar a Pro</button>
-                </form>
-            @elseif ($loggedIn)
-                <a href="{{ route('subscription.index') }}" class="btn btn-secondary btn-block">Gestionar suscripción</a>
+            @if ($loggedIn)
+                <a href="{{ route('dashboard') }}" class="btn btn-primary btn-block">Ir al panel</a>
             @else
-                <a href="{{ route('register') }}" class="btn btn-primary btn-block">Registrarse</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-block">Crear cuenta gratis</a>
             @endif
         </div>
     </div>

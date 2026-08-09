@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Document;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,7 +10,7 @@ class DocumentLimitTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_free_plan_blocks_fourth_document_in_month(): void
+    public function test_all_users_can_create_documents_without_monthly_limit(): void
     {
         $user = User::factory()->onboarded()->create(['plan' => 'free']);
         $client = $this->createClient($user);
@@ -24,26 +23,8 @@ class DocumentLimitTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = $this->get(route('invoices.create'));
-
-        $response->assertRedirect();
-        $response->assertSessionHas('show_upgrade_modal', true);
-        $this->assertSame(3, $user->fresh()->documentsThisMonthCount());
-    }
-
-    public function test_pro_plan_allows_fourth_document_in_month(): void
-    {
-        $user = User::factory()->onboarded()->pro()->create();
-        $client = $this->createClient($user);
-
-        for ($i = 0; $i < 3; $i++) {
-            $this->createDocument($user, $client, [
-                'number' => 'FAC-00'.$i,
-            ]);
-        }
-
-        $this->actingAs($user);
-
         $this->get(route('invoices.create'))->assertOk();
+        $this->assertTrue($user->canCreateDocument());
+        $this->assertTrue($user->isPro());
     }
 }

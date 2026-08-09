@@ -15,9 +15,7 @@
         <aside class="sidebar">
             <div class="sidebar-brand">
                 @include('layouts.partials.logo', ['href' => route('dashboard'), 'variant' => 'sidebar'])
-                <span class="sidebar-plan-badge sidebar-plan-badge--{{ auth()->user()->isPro() ? 'pro' : 'free' }}">
-                    {{ auth()->user()->isPro() ? 'Pro' : 'Free' }}
-                </span>
+                <span class="sidebar-plan-badge sidebar-plan-badge--free">Gratis</span>
             </div>
             <nav class="sidebar-nav">
                 <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -39,10 +37,6 @@
                 <a href="{{ route('settings.index') }}" class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                     <svg class="nav-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                     Configuración
-                </a>
-                <a href="{{ route('subscription.index') }}" class="nav-link {{ request()->routeIs('subscription.*') ? 'active' : '' }}">
-                    <svg class="nav-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
-                    Suscripción
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -71,25 +65,6 @@
             </footer>
         </div>
     </div>
-    @include('layouts.partials.upgrade-modal')
-    @if (session('show_upgrade_modal'))
-    <script>
-        $(function() {
-            $('#upgrade-modal').show();
-            $('#upgrade-modal-close, #upgrade-modal').on('click', function(e) {
-                if (e.target === this) $('#upgrade-modal').hide();
-            });
-        });
-    </script>
-    @else
-    <script>
-        $(function() {
-            $('#upgrade-modal-close, #upgrade-modal').on('click', function(e) {
-                if (e.target === this) $('#upgrade-modal').hide();
-            });
-        });
-    </script>
-    @endif
     @include('layouts.partials.cookie-banner')
     <script src="{{ asset('js/app.js') }}"></script>
     @stack('scripts')
