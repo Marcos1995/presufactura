@@ -194,10 +194,29 @@ class Document extends Model
             && ! Document::where('converted_from_id', $this->id)->exists();
     }
 
+    public function isFiscal(): bool
+    {
+        if (! $this->isInvoice() || ! VerifactuSchema::hasBillingRecordsTable()) {
+            return false;
+        }
+
+        $record = $this->relationLoaded('billingRecord')
+            ? $this->billingRecord
+            : $this->billingRecord()->first();
+
+        return $record
+            && $record->isAlta()
+            && in_array($this->status, [
+                self::STATUS_SENT,
+                self::STATUS_PAID,
+                self::STATUS_EXPIRED,
+                self::STATUS_PAYMENT_PENDING,
+            ], true);
+    }
+
     public function canClaimPaid(): bool
     {
         return $this->isInvoice()
-            && $this->user?->isPro()
             && in_array($this->status, [self::STATUS_SENT, self::STATUS_EXPIRED], true);
     }
 

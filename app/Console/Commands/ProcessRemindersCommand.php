@@ -86,10 +86,6 @@ class ProcessRemindersCommand extends Command
             $daysOverdue = (int) $document->due_date->startOfDay()->diffInDays(now()->startOfDay());
             $user = $document->user;
 
-            if (! $user->isPro()) {
-                continue;
-            }
-
             $this->maybeSendClientReminder($document, $daysOverdue, Reminder::TYPE_CLIENT_DAY_3, $user->reminder_day_1);
             $this->maybeSendClientReminder($document, $daysOverdue, Reminder::TYPE_CLIENT_DAY_7, $user->reminder_day_2);
             $this->maybeSendClientReminder($document, $daysOverdue, Reminder::TYPE_CLIENT_DAY_14, $user->reminder_day_3);

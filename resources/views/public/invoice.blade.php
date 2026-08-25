@@ -26,7 +26,11 @@
                 <div class="public-doc-header">
                     <div>
                         <h1 style="margin:0 0 0.35rem;">Factura {{ $invoice->number }}</h1>
-                        <p class="proforma-tag">Documento proforma — sin validez fiscal</p>
+                        @if ($invoice->isFiscal())
+                            <p class="fiscal-tag">Factura verificable — Veri*Factu</p>
+                        @else
+                            <p class="proforma-tag">Documento proforma — sin validez fiscal</p>
+                        @endif
                     </div>
                     <span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span>
                 </div>

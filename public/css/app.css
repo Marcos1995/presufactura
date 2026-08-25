@@ -612,7 +612,8 @@ a:hover { text-decoration: underline; }
 .public-quote-page { justify-content: flex-start; padding-top: 2rem; }
 .public-quote-main { max-width: 720px; }
 .public-quote-card { max-width: none; }
-.proforma-tag {
+.proforma-tag,
+.fiscal-tag {
     display: inline-block;
     background: #fef3c7;
     color: #92400e;
@@ -620,6 +621,10 @@ a:hover { text-decoration: underline; }
     border-radius: 4px;
     font-size: 0.8rem;
     margin-bottom: 1rem;
+}
+.fiscal-tag {
+    background: #dcfce7;
+    color: #166534;
 }
 .accept-form { margin-top: 1.5rem; }
 
@@ -1533,4 +1538,232 @@ a:hover { text-decoration: underline; }
     .line-items-table .col-total { width: auto; }
     .line-items-table input { max-width: 100%; }
     .totals-box { max-width: none; margin-left: 0; }
+}
+
+/* Cinematic marketing (Lusion-like motion, still readable) */
+.page-grain {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.cursor-glow {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 70;
+    background: radial-gradient(circle, rgba(96,165,250,0.22) 0%, rgba(124,58,237,0.08) 42%, transparent 70%);
+    will-change: transform;
+}
+.has-cursor-glow .cursor-glow { display: block; }
+
+.landing-body {
+    background: #07090f;
+    color: #e8eef8;
+}
+.landing-body .brand-logo { color: #fff; }
+.landing-body .brand-logo:hover { color: #fff; opacity: 0.9; }
+.landing-header {
+    background: rgba(7, 9, 15, 0.72);
+    border-bottom-color: transparent;
+}
+.landing-header.is-scrolled {
+    border-bottom-color: rgba(255,255,255,0.08);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+}
+.landing-nav > a:not(.btn) { color: #cbd5e1; }
+.landing-nav > a:not(.btn):hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+.nav-toggle {
+    border-color: rgba(255,255,255,0.2);
+    color: #e8eef8;
+}
+.landing-hero {
+    background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(37,99,235,0.35), transparent 55%),
+        linear-gradient(180deg, #07090f 0%, #0b1220 55%, #07090f 100%);
+    padding: 6.5rem 2rem 5rem;
+}
+.landing-hero h1 {
+    background: linear-gradient(135deg, #fff 20%, #93c5fd 70%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: clamp(2.4rem, 6.5vw, 4.15rem);
+}
+.hero-sub { color: #94a3b8; font-size: 1.2rem; }
+.hero-note { color: #64748b; }
+.trust-item { color: #cbd5e1; }
+.trust-strip { border-top-color: rgba(147,197,253,0.18); }
+.hero-orb { opacity: 0.42; filter: blur(70px); }
+.hero-orb--1 { background: #3b82f6; }
+.hero-orb--2 { background: #7c3aed; }
+.hero-orb--3 { background: #38bdf8; }
+.landing-hero .hero-bg-orbs { transition: transform 0.4s ease-out; }
+
+.landing-marquee {
+    overflow: hidden;
+    border-block: 1px solid rgba(255,255,255,0.08);
+    padding: 0.85rem 0;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+    display: flex;
+    gap: 2.5rem;
+    width: max-content;
+    animation: marquee-slide 28s linear infinite;
+    color: #64748b;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+}
+.marquee-track span { white-space: nowrap; }
+@keyframes marquee-slide {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.landing-flow {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+}
+.landing-flow h2, .landing-features h2, .landing-pricing h2, .faq-section-inner h2, .help-page h1, .help-page h2, .landing-pricing-page h1 {
+    color: #fff;
+}
+.landing-body .section-sub { color: #94a3b8; }
+.flow-track {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    text-align: left;
+}
+.flow-step {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 1.6rem 1.4rem;
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.flow-step:hover {
+    transform: translateY(-8px);
+    border-color: rgba(147,197,253,0.45);
+    box-shadow: 0 24px 50px rgba(15,23,42,0.45);
+}
+.flow-num {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    color: #60a5fa;
+    margin-bottom: 0.75rem;
+}
+.flow-step h3 { margin: 0 0 0.5rem; color: #fff; }
+.flow-step p { margin: 0; color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
+
+.landing-features, .landing-pricing { color: #e8eef8; }
+.feature-card, .pricing-card, .faq-item, .help-page .card, .help-verifactu {
+    background: rgba(255,255,255,0.04) !important;
+    border-color: rgba(255,255,255,0.1) !important;
+    color: #e8eef8;
+}
+.feature-card h3 { color: #fff; }
+.feature-card p, .faq-item p, .help-page p { color: #94a3b8; }
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 50px rgba(15,23,42,0.4);
+}
+.screenshot-mock {
+    transform-style: preserve-3d;
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+}
+.landing-body .btn-secondary {
+    background: rgba(255,255,255,0.08);
+    color: #e8eef8;
+    border-color: rgba(255,255,255,0.14);
+}
+.landing-body .btn-secondary:hover {
+    background: rgba(255,255,255,0.14);
+    color: #fff;
+}
+.pricing-pro {
+    background: linear-gradient(180deg, rgba(37,99,235,0.22) 0%, rgba(255,255,255,0.04) 42%) !important;
+}
+.pricing-card h3, .pricing-card .price { color: #fff; }
+.pricing-card ul { color: #cbd5e1; text-align: left; }
+.faq-item summary { color: #fff; }
+.faq-item[open] { border-color: rgba(96,165,250,0.45) !important; }
+.help-page, .landing-pricing-page { color: #e8eef8; }
+.landing-footer {
+    color: #64748b;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    background: #05070c;
+}
+.landing-footer a { color: #93c5fd; }
+.landing-cta {
+    background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.45), transparent 50%), linear-gradient(135deg, #0b1220, #1e3a8a 80%);
+}
+.help-contact { color: #94a3b8; }
+.help-intro .section-sub { color: #94a3b8; }
+
+.landing-body .landing-flash .alert { margin: 1rem auto; max-width: 720px; }
+
+@media (max-width: 768px) {
+    .flow-track { grid-template-columns: 1fr; }
+    .landing-nav {
+        background: #0b1220;
+        border-bottom-color: rgba(255,255,255,0.08);
+    }
+}
+
+.guest-body { position: relative; overflow-x: hidden; }
+.guest-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.guest-container { position: relative; z-index: 1; }
+.auth-card {
+    backdrop-filter: blur(10px);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.auth-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+.panel-main .stat-card,
+.panel-main > .card,
+.panel-main > .empty-state {
+    animation: panel-enter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.panel-main .stat-card:nth-child(2) { animation-delay: 0.06s; }
+.panel-main .stat-card:nth-child(3) { animation-delay: 0.12s; }
+.panel-main .stat-card:nth-child(4) { animation-delay: 0.18s; }
+@keyframes panel-enter {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.stat-card { transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease; }
+.nav-link { transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
+
+.btn-magnetic { will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .hero-orb, .marquee-track, .panel-main .stat-card, .panel-main > .card, .panel-main > .empty-state {
+        animation: none !important;
+    }
+    .feature-card:hover, .flow-step:hover, .pricing-card:hover, .stat-card:hover, .auth-card:hover {
+        transform: none;
+    }
+    .cursor-glow, .page-grain { display: none !important; }
 }

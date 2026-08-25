@@ -71,6 +71,7 @@
                 @if ($invoice->rectifiesDocument)
                     <br><strong>Rectifica:</strong> {{ $invoice->rectifiesDocument->number }}
                 @endif
+                @if ($invoice->paid_at)
                     <br><strong>Pagada:</strong> {{ $invoice->paid_at->format('d/m/Y H:i') }}
                 @endif
                 @if ($invoice->sent_at)

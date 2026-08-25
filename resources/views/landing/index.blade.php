@@ -19,8 +19,8 @@
         @if ($loggedIn)
             <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
         @else
-            <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Empezar gratis</a>
-            <a href="#precios" class="btn btn-secondary btn-lg">Ver qué incluye</a>
+                    <a href="{{ route('register') }}" class="btn btn-primary btn-lg btn-magnetic">Empezar gratis</a>
+                    <a href="#precios" class="btn btn-secondary btn-lg">Ver qué incluye</a>
         @endif
     </div>
     <p class="hero-note reveal reveal-delay-3">Sin tarjeta · Sin límites · Veri*Factu opcional</p>
@@ -36,7 +36,7 @@
     <div class="screenshots-inner">
         <h2 class="reveal">Todo tu flujo de cobro en un solo sitio</h2>
         <p class="section-sub reveal">Dashboard, documentos y recordatorios pensados para autónomos que facturan solos. <em>Pulsa las pestañas ↓</em></p>
-        <div class="screenshot-mock reveal">
+        <div class="screenshot-mock mock-tilt reveal">
             <div class="mock-sidebar">
                 <span class="mock-brand">
                     <img src="{{ asset('images/logo-icon.svg') }}" alt="" width="24" height="24">
@@ -83,6 +83,43 @@
             </div>
         </div>
     </div>
+</section>
+
+<div class="landing-marquee" aria-hidden="true">
+    <div class="marquee-track">
+        @foreach (range(1, 2) as $loop)
+            <span>Presupuestos</span>
+            <span>Facturas</span>
+            <span>PDF + QR</span>
+            <span>Veri*Factu</span>
+            <span>Recordatorios</span>
+            <span>He pagado</span>
+            <span>IBAN</span>
+            <span>Gratis</span>
+        @endforeach
+    </div>
+</div>
+
+<section class="landing-flow">
+    <h2 class="reveal">Tres pasos. Cobras.</h2>
+    <p class="section-sub reveal">El flujo de un autónomo, sin Excel ni plantillas sueltas.</p>
+    <ol class="flow-track">
+        <li class="flow-step reveal">
+            <span class="flow-num">01</span>
+            <h3>Presupuesto</h3>
+            <p>Líneas, IVA e IBAN. El cliente lo ve y lo acepta en un enlace público.</p>
+        </li>
+        <li class="flow-step reveal reveal-delay-1">
+            <span class="flow-num">02</span>
+            <h3>Factura</h3>
+            <p>Un clic la convierte a borrador. PDF por email. Veri*Factu si lo activas.</p>
+        </li>
+        <li class="flow-step reveal reveal-delay-2">
+            <span class="flow-num">03</span>
+            <h3>Cobro</h3>
+            <p>Recordatorios al cliente y «¿cobraste?» a ti. El cliente puede pulsar «He pagado».</p>
+        </li>
+    </ol>
 </section>
 
 <section class="landing-features">
@@ -148,7 +185,7 @@
     <h2>Empieza a facturar más ágil hoy</h2>
     <p>Registro gratuito. Sin tarjeta. Sin permanencia.</p>
     @if (!$loggedIn)
-        <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Crear cuenta gratis</a>
+        <a href="{{ route('register') }}" class="btn btn-primary btn-lg btn-magnetic">Crear cuenta gratis</a>
     @else
         <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
     @endif

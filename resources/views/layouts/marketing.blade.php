@@ -27,6 +27,8 @@
     @stack('head')
 </head>
 <body class="landing-body">
+    <div class="page-grain" aria-hidden="true"></div>
+    <div class="cursor-glow" aria-hidden="true"></div>
     <header class="landing-header">
         <div class="landing-header-inner">
             @include('layouts.partials.logo', ['href' => route('landing')])

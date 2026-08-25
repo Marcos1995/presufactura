@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Models\DocumentEvent;
 use App\Services\EmailService;
+use App\Support\VerifactuSchema;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -16,8 +17,13 @@ class PublicQuoteController extends Controller
 
     public function show(string $token): View
     {
+        $with = ['client', 'lineItems', 'user'];
+        if (VerifactuSchema::hasBillingRecordsTable()) {
+            $with[] = 'billingRecord';
+        }
+
         $document = Document::where('public_token', $token)
-            ->with(['client', 'lineItems', 'user'])
+            ->with($with)
             ->firstOrFail();
 
         if ($document->isQuote()) {

@@ -31,4 +31,20 @@ class PanelPagesTest extends TestCase
         $this->actingAs($user)->get('/dashboard')->assertOk();
         $this->actingAs($user)->get('/clientes')->assertOk();
     }
+
+    public function test_sent_invoice_show_page_works_without_paid_at(): void
+    {
+        $user = $this->verifiedUser();
+        $client = $this->createClient($user);
+        $invoice = $this->createDocument($user, $client, [
+            'status' => \App\Models\Document::STATUS_SENT,
+            'sent_at' => now(),
+            'paid_at' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('invoices.show', $invoice))
+            ->assertOk()
+            ->assertDontSee('Pagada:');
+    }
 }

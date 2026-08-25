@@ -57,3 +57,16 @@ Cron obligatorio:
 - Estados factura: draft, sent, expired, paid, payment_pending, cancelled
 - Estados presupuesto: draft, sent, accepted, expired
 - Factura sin Veri*Factu = proforma + disclaimer
+<!-- managed-by-telegram-cursor-bot:agent-kit -->
+
+## Produccion
+-
+
+
+## Comandos utiles
+-
+
+
+## Notas para el agente
+-
+

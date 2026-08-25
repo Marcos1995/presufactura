@@ -11,7 +11,10 @@ class SmokeTest extends TestCase
 
     public function test_landing_page_returns_200(): void
     {
-        $this->get('/')->assertOk();
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Tres pasos. Cobras.')
+            ->assertSee('Empezar gratis');
     }
 
     public function test_pricing_page_returns_200(): void

@@ -44,7 +44,7 @@
     </table>
 
     <h2>3. Cookies de terceros</h2>
-    <p>Stripe puede establecer cookies durante el proceso de pago. Consulta la <a href="https://stripe.com/es/privacy">política de privacidad de Stripe</a>.</p>
+    <p>PresuFactura no usa pasarela de pago. El producto es gratuito y no establece cookies de cobro de terceros.</p>
 
     <h2>4. Gestión</h2>
     <p>Al visitar el sitio verás un banner donde puedes elegir <strong>Aceptar</strong> o <strong>Solo necesarias</strong>. Guardamos tu elección en el almacenamiento local del navegador (<code>localStorage</code>, clave <code>cookie_consent</code>). En ambos casos el servicio funciona con normalidad; no bloqueamos el acceso si no aceptas cookies opcionales.</p>
