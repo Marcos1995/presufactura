@@ -2,8 +2,14 @@ User-agent: *
 Allow: /
 Allow: /precios
 Allow: /ayuda
-Allow: /registro
-Allow: /login
+Allow: /guias
+Allow: /terminos
+Allow: /privacidad
+Allow: /cookies
+Disallow: /login
+Disallow: /registro
+Disallow: /password
+Disallow: /email
 Disallow: /dashboard
 Disallow: /configuracion
 Disallow: /clientes
@@ -12,5 +18,8 @@ Disallow: /presupuestos
 Disallow: /onboarding
 Disallow: /suscripcion
 Disallow: /stripe/
+Disallow: /embudo
+Disallow: /feedback
+Disallow: /a/
 
 Sitemap: https://presufactura.es/sitemap.xml

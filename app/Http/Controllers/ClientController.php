@@ -32,14 +32,14 @@ class ClientController extends Controller
 
     public function edit(Client $client): View
     {
-        $this->authorizeClient($client);
+        $this->authorize('update', $client);
 
         return view('clients.form', compact('client'));
     }
 
     public function update(Request $request, Client $client): RedirectResponse
     {
-        $this->authorizeClient($client);
+        $this->authorize('update', $client);
 
         $client->update($this->validated($request));
 
@@ -48,7 +48,7 @@ class ClientController extends Controller
 
     public function destroy(Client $client): RedirectResponse
     {
-        $this->authorizeClient($client);
+        $this->authorize('delete', $client);
 
         if ($client->documents()->exists()) {
             return back()->with('error', 'No se puede eliminar un cliente con documentos asociados.');
@@ -72,10 +72,5 @@ class ClientController extends Controller
             'email.required' => 'El email es obligatorio.',
             'email.email' => 'Introduce un email válido.',
         ]);
-    }
-
-    private function authorizeClient(Client $client): void
-    {
-        abort_unless($client->user_id === auth()->id(), 403);
     }
 }

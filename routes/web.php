@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\AnalyticsEventController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentActionController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\FunnelController;
+use App\Http\Controllers\GuideController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LandingController;
@@ -13,6 +17,7 @@ use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicQuoteController;
+use App\Http\Controllers\QuickStartController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeController;
@@ -22,14 +27,22 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/precios', [PricingController::class, 'index'])->name('pricing');
 Route::get('/ayuda', [HelpController::class, 'index'])->name('help');
+Route::get('/guias', [GuideController::class, 'index'])->name('guides.index');
+Route::get('/guias/{slug}', [GuideController::class, 'show'])->name('guides.show');
+Route::get('/robots.txt', function () {
+    return response(file_get_contents(public_path('robots.txt')), 200, [
+        'Content-Type' => 'text/plain; charset=UTF-8',
+    ]);
+})->name('robots');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/terminos', [LegalController::class, 'terminos'])->name('legal.terminos');
 Route::get('/privacidad', [LegalController::class, 'privacidad'])->name('legal.privacidad');
 Route::get('/cookies', [LegalController::class, 'cookies'])->name('legal.cookies');
+Route::post('/a/e', [AnalyticsEventController::class, 'store'])->middleware('throttle:analytics')->name('analytics.event');
 
-Route::get('/p/{token}', [PublicQuoteController::class, 'show'])->name('quotes.public');
-Route::post('/p/{token}/aceptar', [PublicQuoteController::class, 'accept'])->name('quotes.public.accept');
-Route::post('/p/{token}/he-pagado', [PublicQuoteController::class, 'claimPaid'])->name('invoices.public.claim-paid');
+Route::get('/p/{token}', [PublicQuoteController::class, 'show'])->middleware('throttle:public-doc')->name('quotes.public');
+Route::post('/p/{token}/aceptar', [PublicQuoteController::class, 'accept'])->middleware('throttle:public-doc')->name('quotes.public.accept');
+Route::post('/p/{token}/he-pagado', [PublicQuoteController::class, 'claimPaid'])->middleware('throttle:public-doc')->name('invoices.public.claim-paid');
 
 Route::get('/accion/{token}/cobrada', [DocumentActionController::class, 'confirmPaid'])
     ->name('documents.confirm-paid')
@@ -39,9 +52,9 @@ Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('stri
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
     Route::get('/registro', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/registro', [AuthController::class, 'register']);
+    Route::post('/registro', [AuthController::class, 'register'])->middleware('throttle:register');
     Route::get('/password/olvidada', [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/password/olvidada', [AuthController::class, 'sendResetLinkEmail'])->middleware('throttle:6,1')->name('password.email');
     Route::get('/password/restablecer/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
@@ -65,10 +78,13 @@ Route::middleware('auth')->group(function () {
 
         Route::middleware('onboarding')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('/dashboard/presupuesto-prueba', [QuickStartController::class, 'sampleQuote'])->middleware('doc.limit')->name('quickstart.quote');
+        Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+        Route::get('/embudo', [FunnelController::class, 'index'])->name('funnel.index');
         Route::get('/configuracion', [ProfileController::class, 'edit'])->name('settings.index');
         Route::put('/configuracion', [ProfileController::class, 'update'])->name('settings.update');
         Route::put('/configuracion/verifactu', [ProfileController::class, 'updateVerifactu'])->name('settings.verifactu.update');
-        Route::post('/configuracion/exportar', [ProfileController::class, 'export'])->name('settings.export');
+        Route::post('/configuracion/exportar', [ProfileController::class, 'export'])->middleware('throttle:export')->name('settings.export');
         Route::post('/configuracion/eliminar-cuenta', [ProfileController::class, 'destroy'])->name('settings.destroy');
         Route::get('/suscripcion', [SubscriptionController::class, 'index'])->name('subscription.index');
         Route::post('/suscripcion/portal', [SubscriptionController::class, 'portal'])->name('subscription.portal');
@@ -86,8 +102,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/facturas/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
         Route::put('/facturas/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
         Route::delete('/facturas/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
-        Route::get('/facturas/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
-        Route::post('/facturas/{invoice}/enviar', [InvoiceController::class, 'send'])->name('invoices.send');
+        Route::get('/facturas/{invoice}/pdf', [InvoiceController::class, 'pdf'])->middleware('throttle:pdf')->name('invoices.pdf');
+        Route::post('/facturas/{invoice}/enviar', [InvoiceController::class, 'send'])->middleware('throttle:mail-send')->name('invoices.send');
         Route::post('/facturas/{invoice}/pagada', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
         Route::post('/facturas/{invoice}/anular', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
         Route::post('/facturas/{invoice}/rectificativa', [InvoiceController::class, 'createRectificativa'])->middleware('doc.limit')->name('invoices.rectificativa');
@@ -98,8 +114,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/presupuestos/{quote}', [QuoteController::class, 'show'])->name('quotes.show');
         Route::put('/presupuestos/{quote}', [QuoteController::class, 'update'])->name('quotes.update');
         Route::delete('/presupuestos/{quote}', [QuoteController::class, 'destroy'])->name('quotes.destroy');
-        Route::get('/presupuestos/{quote}/pdf', [QuoteController::class, 'pdf'])->name('quotes.pdf');
-        Route::post('/presupuestos/{quote}/enviar', [QuoteController::class, 'send'])->name('quotes.send');
+        Route::get('/presupuestos/{quote}/pdf', [QuoteController::class, 'pdf'])->middleware('throttle:pdf')->name('quotes.pdf');
+        Route::post('/presupuestos/{quote}/enviar', [QuoteController::class, 'send'])->middleware('throttle:mail-send')->name('quotes.send');
         Route::post('/presupuestos/{quote}/convertir', [QuoteController::class, 'convert'])->middleware('doc.limit')->name('quotes.convert');
 
         Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');

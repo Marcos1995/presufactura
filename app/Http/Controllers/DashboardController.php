@@ -39,6 +39,8 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
+        $showFeedbackPrompt = $recentDocuments->isNotEmpty() && ! $user->feedback()->exists();
+
         return view('dashboard.index', compact(
             'pendingTotal',
             'overdueTotal',
@@ -46,6 +48,7 @@ class DashboardController extends Controller
             'docsThisMonth',
             'docsLimit',
             'recentDocuments',
+            'showFeedbackPrompt',
         ));
     }
 }

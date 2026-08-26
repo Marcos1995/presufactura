@@ -19,7 +19,8 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 - CRUD, estados: draft, sent, accepted, expired
 - PDF + email al publicar
 - Enlace público `/p/{token}` con aceptación online
-- Conversión a factura borrador
+- Conversión a factura borrador (desde borrador, enviado o aceptado)
+- Presupuesto de prueba desde el dashboard (primer valor sin Veri*Factu)
 
 ## Facturas
 
@@ -35,6 +36,14 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 - Recordatorios al cliente (días configurables, p. ej. +3/+7/+14)
 - Aviso al autónomo «¿cobraste?» (día configurable, p. ej. +10)
 - Dashboard: por cobrar, vencido, cobrado mes, docs del mes
+- Feedback opcional tras el primer documento
+
+## Analítica (sin datos personales)
+
+- Eventos de embudo: visita, clic, registro, primer presupuesto, primera factura, PDF, email, Veri*Factu
+- No se registran nombres, NIF, importes, emails ni contenido de facturas
+- Separación de portada, zona autenticada, tráfico propio, bots y errores 4xx/5xx
+- Panel `/embudo` (cuenta demo) y `php artisan presufactura:funnel`
 
 ## Veri*Factu (opcional por usuario)
 
@@ -49,9 +58,10 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 
 ## Marketing y legal
 
-- Landing, /precios (plan único gratis), /ayuda (FAQ)
+- Landing, /precios, /ayuda, /guias (contenido público)
 - Términos, privacidad, cookies
 - Emails branded (welcome, documentos, recordatorios)
+- Login, registro, dashboard y documentos privados: noindex
 
 ## Legado (no expuesto como producto de pago)
 

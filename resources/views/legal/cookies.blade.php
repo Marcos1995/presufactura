@@ -1,6 +1,9 @@
 @extends('layouts.guest', ['mainClass' => 'guest-main-wide'])
 
 @section('title', 'Política de cookies — ' . config('app.name'))
+@section('robots', 'index, follow')
+@section('canonical', route('legal.cookies'))
+@section('meta_description', 'Política de cookies de PresuFactura: qué cookies usamos y para qué.')
 
 @section('content')
 <div class="legal-page">

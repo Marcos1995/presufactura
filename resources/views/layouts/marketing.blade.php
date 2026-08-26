@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
     @include('layouts.partials.fonts')
     <meta name="description" content="@yield('meta_description', 'PresuFactura: presupuestos y facturas para autónomos en España. Veri*Factu opcional, PDF con QR, envío a AEAT. Empieza gratis.')">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="@yield('robots', 'index, follow')">
     <link rel="canonical" href="@yield('canonical', url()->current())">
 
     <meta property="og:type" content="website">
@@ -33,6 +34,7 @@
             <button type="button" class="nav-toggle" aria-label="Menú" aria-expanded="false">☰</button>
             <nav class="landing-nav">
                 <a href="{{ url('/#verifactu') }}">Veri*Factu</a>
+                <a href="{{ route('guides.index') }}">Guías</a>
                 <a href="{{ route('pricing') }}">Precios</a>
                 <a href="{{ route('help') }}">Ayuda</a>
                 @if (auth()->check())

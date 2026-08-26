@@ -151,4 +151,25 @@
         });
         applySidebar(document.documentElement.classList.contains('sidebar-collapsed'));
     }
+
+    /* Analytics CTA (sin PII) */
+    var csrf = document.querySelector('meta[name="csrf-token"]');
+    document.querySelectorAll('[data-analytics]').forEach(function (el) {
+        el.addEventListener('click', function () {
+            var name = el.getAttribute('data-analytics');
+            if (!name || !csrf) return;
+            try {
+                fetch('/a/e', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrf.getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ name: name }),
+                    keepalive: true
+                });
+            } catch (err) {}
+        });
+    });
 })(window.jQuery);

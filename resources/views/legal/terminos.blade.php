@@ -1,6 +1,9 @@
 @extends('layouts.guest', ['mainClass' => 'guest-main-wide'])
 
 @section('title', 'Términos de uso — ' . config('app.name'))
+@section('robots', 'index, follow')
+@section('canonical', route('legal.terminos'))
+@section('meta_description', 'Términos de uso de PresuFactura, servicio gratuito de presupuestos y facturas para autónomos en España.')
 
 @section('content')
 <div class="legal-page">

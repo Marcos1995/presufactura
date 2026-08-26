@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AccountDeletedMail;
+use App\Models\AnalyticsEvent;
 use App\Models\UserSifConfig;
+use App\Services\AnalyticsService;
 use App\Support\VerifactuProductionCheck;
 use App\Support\VerifactuSchema;
 use App\Services\DataExportService;
@@ -97,6 +99,7 @@ class ProfileController extends Controller
         ]);
 
         $config = $user->sifConfig ?? new UserSifConfig(['user_id' => $user->id]);
+        $wasEnabled = (bool) $config->enabled;
         $config->user_id = $user->id;
         $config->enabled = $request->boolean('verifactu_enabled');
         $config->mode = $data['verifactu_mode'];
@@ -143,6 +146,10 @@ class ProfileController extends Controller
 
         $config->save();
 
+        if ($config->enabled && ! $wasEnabled) {
+            app(AnalyticsService::class)->record(AnalyticsEvent::VERIFACTU_ENABLED);
+        }
+
         return redirect()->route('settings.index')->with('status', 'Configuración Veri*Factu guardada.');
     }
 
@@ -167,7 +174,6 @@ class ProfileController extends Controller
 
         Log::info('RGPD data export', [
             'user_id' => $user->id,
-            'email' => $user->email,
         ]);
 
         return response()->download($zipPath, $exporter->filename(), [

@@ -4,6 +4,9 @@
 @section('heading', 'Configuración')
 
 @section('content')
+@if (auth()->user()->isDemoAdmin())
+    <p class="text-muted"><a href="{{ route('funnel.index') }}">Embudo de conversión (30 días)</a></p>
+@endif
 <div class="card card-narrow">
     <form method="POST" action="{{ route('settings.update') }}" class="form" enctype="multipart/form-data">
         @csrf

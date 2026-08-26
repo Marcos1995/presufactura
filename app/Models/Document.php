@@ -190,7 +190,7 @@ class Document extends Model
     public function canConvert(): bool
     {
         return $this->isQuote()
-            && $this->status === self::STATUS_ACCEPTED
+            && in_array($this->status, [self::STATUS_DRAFT, self::STATUS_SENT, self::STATUS_ACCEPTED], true)
             && ! Document::where('converted_from_id', $this->id)->exists();
     }
 

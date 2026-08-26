@@ -10,7 +10,7 @@ class DocumentNumberService
     public function nextInvoiceNumber(User $user): string
     {
         $year = now()->year;
-        $prefix = $user->invoice_prefix;
+        $prefix = $user->invoice_prefix ?: 'FAC';
 
         $lastNumber = Document::query()
             ->where('user_id', $user->id)
@@ -51,7 +51,7 @@ class DocumentNumberService
     public function nextQuoteNumber(User $user): string
     {
         $year = now()->year;
-        $prefix = $user->quote_prefix;
+        $prefix = $user->quote_prefix ?: 'PRE';
 
         $lastNumber = Document::query()
             ->where('user_id', $user->id)

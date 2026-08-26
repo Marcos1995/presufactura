@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnalyticsEvent;
 use App\Models\User;
+use App\Services\AnalyticsService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,8 +43,10 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function showRegister(): View
+    public function showRegister(AnalyticsService $analytics): View
     {
+        $analytics->record(AnalyticsEvent::REGISTRATION_STARTED);
+
         return view('auth.register');
     }
 
@@ -70,6 +74,8 @@ class AuthController extends Controller
         Auth::login($user);
 
         $user->sendEmailVerificationNotification();
+
+        app(AnalyticsService::class)->record(AnalyticsEvent::REGISTRATION_COMPLETED);
 
         return redirect()->route('verification.notice');
     }

@@ -51,6 +51,7 @@ Crea **`public_html/.htaccess`**:
 
     # Assets desde laravel/public/ (no copiar css/js a public_html/)
     RewriteRule ^favicon\.ico$ laravel/public/favicon.ico [L]
+    RewriteRule ^robots\.txt$ laravel/public/robots.txt [L]
     RewriteRule ^css/(.*)$ laravel/public/css/$1 [L]
     RewriteRule ^js/(.*)$ laravel/public/js/$1 [L]
     RewriteRule ^images/(.*)$ laravel/public/images/$1 [L]
@@ -149,6 +150,9 @@ Recomendado en producción:
 ```env
 LOG_STACK=daily
 LOG_LEVEL=warning
+SESSION_SECURE_COOKIE=true
+ANALYTICS_ENABLED=true
+ANALYTICS_INTERNAL_IPS=
 SENTRY_LARAVEL_DSN=
 ```
 
@@ -327,3 +331,26 @@ php artisan presufactura:verifactu-prove
 ### Cola
 
 El envío AEAT usa jobs (`SubmitBillingRecordJob`). Asegurar que el worker de cola está activo (`QUEUE_CONNECTION=database`).
+
+## Checklist hPanel (no automatizar a ciegas)
+
+Revisar en el sitio `presufactura.es` **antes** de tocar DNS, PHP o caché:
+
+- SSL activo y redirección HTTPS.
+- Copias de seguridad y prueba de restauración en un entorno seguro (nunca `migrate:fresh` en producción).
+- PHP 8.3 y extensiones: openssl, soap, pdo_mysql, mbstring, fileinfo, curl, zip, gd.
+- Uso de disco, logs de error y acceso SSH.
+- Cron: `* * * * * cd .../laravel && php artisan schedule:run`.
+- Correo SMTP + SPF/DKIM. DMARC puede quedarse en `p=none` hasta revisar informes; no pasar a `quarantine`/`reject` sin comprobar emisores.
+- Caché/CDN: no cachear `/login`, `/registro`, `/dashboard` ni cookies de sesión.
+- Search Console: verificar dominio y enviar `https://presufactura.es/sitemap.xml`.
+
+Embudo (sin PII): `php artisan presufactura:funnel` o `/embudo` (solo cuenta demo admin).
+
+## Nunca en producción
+
+- `migrate:fresh` / borrar tablas para probar.
+- Subir `.env` o certificados `.p12` al repositorio.
+- Desactivar CSRF.
+- Dejar `APP_DEBUG=true`.
+- Cambiar DNS sin guardar los valores actuales.

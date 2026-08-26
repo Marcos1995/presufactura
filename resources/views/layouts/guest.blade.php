@@ -3,9 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
     @include('layouts.partials.fonts')
+    <meta name="description" content="@yield('meta_description', '')">
+    <meta name="robots" content="@yield('robots', 'noindex, nofollow')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="guest-body {{ ($mainClass ?? '') === 'guest-main-wide' ? 'guest-body-top' : '' }}">

@@ -1,6 +1,9 @@
 @extends('layouts.guest', ['mainClass' => 'guest-main-wide'])
 
 @section('title', 'Política de privacidad — ' . config('app.name'))
+@section('robots', 'index, follow')
+@section('canonical', route('legal.privacidad'))
+@section('meta_description', 'Política de privacidad de PresuFactura: qué datos tratamos y cómo ejercer tus derechos.')
 
 @section('content')
 <div class="legal-page">

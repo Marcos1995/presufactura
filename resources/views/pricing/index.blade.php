@@ -25,7 +25,7 @@
             @if ($loggedIn)
                 <a href="{{ route('dashboard') }}" class="btn btn-primary btn-block">Ir al panel</a>
             @else
-                <a href="{{ route('register') }}" class="btn btn-primary btn-block">Crear cuenta gratis</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-block" data-analytics="signup_cta_click">Crear cuenta gratis</a>
             @endif
         </div>
     </div>

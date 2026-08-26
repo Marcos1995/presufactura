@@ -45,4 +45,25 @@ class AuthTest extends TestCase
         $response->assertRedirect(route('dashboard'));
         $this->assertAuthenticatedAs($user);
     }
+
+    public function test_user_can_logout(): void
+    {
+        $user = User::factory()->onboarded()->create();
+
+        $this->actingAs($user)->post('/logout')->assertRedirect(route('login'));
+        $this->assertGuest();
+    }
+
+    public function test_user_can_verify_email(): void
+    {
+        $user = User::factory()->unverified()->create();
+        $url = \Illuminate\Support\Facades\URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+
+        $this->actingAs($user)->get($url)->assertRedirect();
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+    }
 }

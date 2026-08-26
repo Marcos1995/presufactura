@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnalyticsEvent;
 use App\Models\Document;
 use App\Models\DocumentEvent;
+use App\Services\AnalyticsService;
 use App\Services\DocumentCalculatorService;
 use App\Services\DocumentNumberService;
 use App\Services\EmailService;
@@ -16,6 +18,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class InvoiceController extends Controller
@@ -26,6 +29,7 @@ class InvoiceController extends Controller
         private DocumentNumberService $numberService,
         private EmailService $emailService,
         private BillingRecordService $billingRecordService,
+        private AnalyticsService $analytics,
     ) {}
 
     public function index(): View
@@ -91,6 +95,8 @@ class InvoiceController extends Controller
 
             return $invoice;
         });
+
+        $this->analytics->record(AnalyticsEvent::FIRST_INVOICE_CREATED);
 
         return redirect()->route('invoices.show', $invoice)->with('status', 'Factura creada.');
     }
@@ -178,6 +184,8 @@ class InvoiceController extends Controller
         ]);
 
         $this->billingRecordService->createAltaRecord($invoice->fresh(['user', 'client', 'lineItems']));
+
+        $this->analytics->record(AnalyticsEvent::INVOICE_EMAIL_SENT);
 
         return back()->with('status', 'Factura enviada por email al cliente.');
     }
@@ -270,6 +278,7 @@ class InvoiceController extends Controller
         $this->authorizeInvoice($invoice);
 
         $pdf = $this->pdfGenerator->generateInvoicePdf($invoice);
+        $this->analytics->record(AnalyticsEvent::PDF_GENERATED);
         $filename = 'factura-'.$invoice->number.'.pdf';
 
         return response($pdf, 200, [
@@ -281,7 +290,7 @@ class InvoiceController extends Controller
     private function validated(Request $request): array
     {
         return $request->validate([
-            'client_id' => ['required', 'exists:clients,id'],
+            'client_id' => ['required', Rule::exists('clients', 'id')->where(fn ($q) => $q->where('user_id', auth()->id()))],
             'issue_date' => ['required', 'date'],
             'due_date' => ['required', 'date', 'after_or_equal:issue_date'],
             'notes' => ['nullable', 'string', 'max:2000'],
@@ -335,10 +344,8 @@ class InvoiceController extends Controller
 
     private function authorizeInvoice(Document $invoice): void
     {
-        abort_unless(
-            $invoice->user_id === auth()->id() && $invoice->type === Document::TYPE_INVOICE,
-            403
-        );
+        abort_unless($invoice->type === Document::TYPE_INVOICE, 403);
+        $this->authorize('view', $invoice);
     }
 
     private function ensureMutable(Document $invoice): void

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnalyticsEvent;
 use App\Models\Document;
 use App\Models\DocumentEvent;
+use App\Services\AnalyticsService;
 use App\Services\DocumentCalculatorService;
 use App\Services\DocumentNumberService;
 use App\Services\EmailService;
@@ -13,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class QuoteController extends Controller
@@ -22,6 +25,7 @@ class QuoteController extends Controller
         private DocumentNumberService $numberService,
         private EmailService $emailService,
         private PdfGeneratorService $pdfGenerator,
+        private AnalyticsService $analytics,
     ) {}
 
     public function index(): View
@@ -76,6 +80,8 @@ class QuoteController extends Controller
 
             return $quote;
         });
+
+        $this->analytics->record(AnalyticsEvent::FIRST_QUOTE_CREATED);
 
         return redirect()->route('quotes.show', $quote)->with('status', 'Presupuesto creado.');
     }
@@ -152,6 +158,7 @@ class QuoteController extends Controller
         $this->authorizeQuote($quote);
 
         $pdf = $this->pdfGenerator->generateQuotePdf($quote);
+        $this->analytics->record(AnalyticsEvent::PDF_GENERATED);
         $filename = 'presupuesto-'.$quote->number.'.pdf';
 
         return response($pdf, 200, [
@@ -206,6 +213,9 @@ class QuoteController extends Controller
             return $invoice;
         });
 
+        $this->analytics->record(AnalyticsEvent::QUOTE_TO_INVOICE);
+        $this->analytics->record(AnalyticsEvent::FIRST_INVOICE_CREATED);
+
         return redirect()->route('invoices.show', $invoice)
             ->with('status', 'Factura creada desde presupuesto '.$quote->number.'.');
     }
@@ -213,7 +223,7 @@ class QuoteController extends Controller
     private function validated(Request $request): array
     {
         return $request->validate([
-            'client_id' => ['required', 'exists:clients,id'],
+            'client_id' => ['required', Rule::exists('clients', 'id')->where(fn ($q) => $q->where('user_id', auth()->id()))],
             'issue_date' => ['required', 'date'],
             'valid_until' => ['required', 'date', 'after_or_equal:issue_date'],
             'notes' => ['nullable', 'string', 'max:2000'],
@@ -266,9 +276,7 @@ class QuoteController extends Controller
 
     private function authorizeQuote(Document $quote): void
     {
-        abort_unless(
-            $quote->user_id === auth()->id() && $quote->type === Document::TYPE_QUOTE,
-            403
-        );
+        abort_unless($quote->type === Document::TYPE_QUOTE, 403);
+        $this->authorize('view', $quote);
     }
 }

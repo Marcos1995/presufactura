@@ -15,10 +15,19 @@ return Application::configure(basePath: dirname(__DIR__))
             'doc.limit' => \App\Http\Middleware\CheckDocumentLimit::class,
             'onboarding' => \App\Http\Middleware\CheckOnboarding::class,
         ]);
+        $middleware->trustProxies(at: '*');
+        $middleware->append(\App\Http\Middleware\ForceHttps::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\RecordHttpErrors::class);
         $middleware->validateCsrfTokens(except: [
             'stripe/webhook',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response) {
+            if ($response->getStatusCode() >= 400) {
+                app(\App\Services\AnalyticsService::class)->recordHttpStatus(request(), $response->getStatusCode());
+            }
+
+            return $response;
+        });
     })->create();

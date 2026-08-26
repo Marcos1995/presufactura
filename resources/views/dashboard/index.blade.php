@@ -83,11 +83,16 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
     </div>
     <h2>Bienvenido a PresuFactura</h2>
-    <p>Configura tu perfil fiscal y crea tu primera factura o presupuesto.</p>
+    <p>Crea un presupuesto de prueba, conviértelo en factura, descarga el PDF y envíalo. Veri*Factu se activa después, cuando quieras.</p>
     <div class="empty-actions">
-        <a href="{{ route('settings.index') }}" class="btn btn-secondary">Configuración</a>
-        <a href="{{ route('clients.index') }}" class="btn btn-primary">Añadir cliente</a>
+        <form method="POST" action="{{ route('quickstart.quote') }}">
+            @csrf
+            <button type="submit" class="btn btn-primary">Crear presupuesto de prueba</button>
+        </form>
+        <a href="{{ route('clients.index') }}" class="btn btn-secondary">Añadir cliente</a>
     </div>
 </div>
 @endif
+
+@include('partials.feedback-prompt')
 @endsection

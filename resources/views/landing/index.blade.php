@@ -5,6 +5,25 @@
 @section('og_title', 'PresuFactura — De presupuesto a cobro en minutos')
 @section('og_description', 'Presupuestos con enlace público, facturas con Veri*Factu opcional, recordatorios automáticos. Todo gratis para autónomos en España.')
 
+@push('head')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PresuFactura",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "url": "https://presufactura.es",
+    "description": "Presupuestos y facturas para autónomos en España, con Veri*Factu opcional.",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+    }
+}
+</script>
+@endpush
+
 @section('content')
 <section class="landing-hero">
     <div class="hero-bg-orbs" aria-hidden="true">
@@ -19,7 +38,7 @@
         @if ($loggedIn)
             <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
         @else
-            <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Empezar gratis</a>
+            <a href="{{ route('register') }}" class="btn btn-primary btn-lg" data-analytics="signup_cta_click">Empezar gratis</a>
             <a href="#precios" class="btn btn-secondary btn-lg">Ver qué incluye</a>
         @endif
     </div>
@@ -47,7 +66,7 @@
         @if ($loggedIn)
             <a href="{{ route('settings.index') }}" class="btn btn-primary">Activar en Configuración</a>
         @else
-            <a href="{{ route('register') }}" class="btn btn-primary">Crear cuenta y activarlo</a>
+            <a href="{{ route('register') }}" class="btn btn-primary" data-analytics="signup_cta_click">Crear cuenta y activarlo</a>
         @endif
     </div>
     </div>
@@ -183,7 +202,7 @@
     <div class="faq-section-inner">
         <h2>Preguntas frecuentes</h2>
         @include('partials.faq-list', ['faqs' => $landingFaqs])
-        <p class="faq-more"><a href="{{ route('help') }}">Ver todas las preguntas →</a></p>
+        <p class="faq-more"><a href="{{ route('help') }}">Ver todas las preguntas →</a> · <a href="{{ route('guides.index') }}">Guías para autónomos →</a></p>
     </div>
 </section>
 
@@ -191,7 +210,7 @@
     <h2>Empieza a facturar más ágil hoy</h2>
     <p>Registro gratuito. Sin tarjeta. Sin permanencia.</p>
     @if (!$loggedIn)
-        <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Crear cuenta gratis</a>
+        <a href="{{ route('register') }}" class="btn btn-primary btn-lg" data-analytics="signup_cta_click">Crear cuenta gratis</a>
     @else
         <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
     @endif

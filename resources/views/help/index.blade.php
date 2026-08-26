@@ -21,7 +21,8 @@
     <div class="help-contact">
         <h2>¿No encuentras lo que buscas?</h2>
         <p>Escríbenos a <a href="mailto:facturas@presufactura.es">facturas@presufactura.es</a></p>
-        <p><a href="{{ route('register') }}" class="btn btn-primary">Probar PresuFactura gratis</a></p>
+        <p><a href="{{ route('guides.index') }}">Guías para autónomos</a></p>
+        <p><a href="{{ route('register') }}" class="btn btn-primary" data-analytics="signup_cta_click">Probar PresuFactura gratis</a></p>
     </div>
 </section>
 @endsection

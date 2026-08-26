@@ -16,7 +16,11 @@
         <h2>Sin presupuestos</h2>
         <p>Crea presupuestos y conviértelos en facturas con un click.</p>
         <div class="empty-actions">
-            <a href="{{ route('quotes.create') }}" class="btn btn-primary">Nuevo presupuesto</a>
+            <form method="POST" action="{{ route('quickstart.quote') }}">
+                @csrf
+                <button type="submit" class="btn btn-primary">Crear presupuesto de prueba</button>
+            </form>
+            <a href="{{ route('quotes.create') }}" class="btn btn-secondary">Nuevo presupuesto</a>
         </div>
     </div>
 @else

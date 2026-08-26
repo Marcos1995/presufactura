@@ -6,10 +6,16 @@ use App\Models\Client;
 use App\Models\Document;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 abstract class TestCase extends BaseTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Cache::flush();
+    }
     protected function createClient(User $user, array $attributes = []): Client
     {
         return $user->clients()->create(array_merge([
@@ -40,6 +46,23 @@ abstract class TestCase extends BaseTestCase
             'client_id' => $clientId,
             'issue_date' => now()->toDateString(),
             'due_date' => now()->addDays(30)->toDateString(),
+            'lines' => [
+                [
+                    'description' => 'Servicio de consultoría',
+                    'quantity' => 1,
+                    'unit_price' => 100,
+                    'vat_rate' => 21,
+                ],
+            ],
+        ];
+    }
+
+    protected function quotePayload(int $clientId): array
+    {
+        return [
+            'client_id' => $clientId,
+            'issue_date' => now()->toDateString(),
+            'valid_until' => now()->addDays(15)->toDateString(),
             'lines' => [
                 [
                     'description' => 'Servicio de consultoría',
