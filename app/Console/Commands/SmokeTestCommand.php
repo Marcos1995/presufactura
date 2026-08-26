@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\VerifactuSchema;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -23,6 +24,7 @@ class SmokeTestCommand extends Command
         $failed = ! $this->checkStorageWritable() || $failed;
         $failed = ! $this->checkScheduleRegistered() || $failed;
         $failed = ! $this->checkWebAssets() || $failed;
+        $failed = ! $this->checkVerifactuSchema() || $failed;
 
         if ($failed) {
             $this->error('Smoke test FALLIDO.');
@@ -195,6 +197,25 @@ class SmokeTestCommand extends Command
         } else {
             $this->line('✓ Assets web');
         }
+
+        return true;
+    }
+
+    private function checkVerifactuSchema(): bool
+    {
+        if (! VerifactuSchema::hasSifConfigTable() || ! VerifactuSchema::hasBillingRecordsTable()) {
+            $this->error('✗ Veri*Factu: faltan tablas. php artisan migrate --force');
+
+            return false;
+        }
+
+        if (! VerifactuSchema::hasDevCertColumn()) {
+            $this->error('✗ Veri*Factu: falta columna is_dev_cert. php artisan migrate --force');
+
+            return false;
+        }
+
+        $this->line('✓ Veri*Factu schema');
 
         return true;
     }

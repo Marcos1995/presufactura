@@ -17,9 +17,18 @@ final class VerifactuSchema
         return Schema::hasTable('billing_records');
     }
 
+    public static function hasDevCertColumn(): bool
+    {
+        return self::hasSifConfigTable() && Schema::hasColumn('user_sif_config', 'is_dev_cert');
+    }
+
     public static function ensureDevCertColumn(): void
     {
-        if (! self::hasSifConfigTable() || Schema::hasColumn('user_sif_config', 'is_dev_cert')) {
+        if (self::hasDevCertColumn()) {
+            return;
+        }
+
+        if (! self::hasSifConfigTable()) {
             return;
         }
 

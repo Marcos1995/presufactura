@@ -126,6 +126,7 @@ class VerifactuProveTest extends TestCase
     {
         $this->artisan('presufactura:verifactu-prove')
             ->expectsOutputToContain('Veri*Factu: demostración OK.')
+            ->expectsOutputToContain('Sandbox acepta sin enviar a AEAT')
             ->assertSuccessful();
 
         $this->assertDatabaseCount('users', 0);

@@ -281,7 +281,18 @@ Después recarga `/configuracion`, marca Veri*Factu y sube el `.p12`. Catálogo 
 
 ```bash
 php artisan presufactura:prepare-test-user
+php artisan presufactura:verifactu-check
 ```
+
+`verifactu-check` confirma schema, certificado de desarrollo, DEMO-F-FIS y «Aceptada (pruebas)». No habla con Hacienda.
+
+Para el pipeline SIF con rollback (tampoco envía a AEAT):
+
+```bash
+php artisan presufactura:verifactu-prove
+```
+
+En el panel (`/configuracion` y factura DEMO-F-FIS) debe verse «Aceptada (pruebas)». Envío real a AEAT: solo con .p12 FNMT del autónomo.
 
 ### Requisitos PHP
 
@@ -309,6 +320,8 @@ VERIFACTU_SOFTWARE_VERSION=2.0.0
 ```bash
 php artisan presufactura:verifactu-retry-failed [--user=ID]
 php artisan presufactura:verifactu-export {user}
+php artisan presufactura:verifactu-check
+php artisan presufactura:verifactu-prove
 ```
 
 ### Cola

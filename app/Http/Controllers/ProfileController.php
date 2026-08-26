@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\AccountDeletedMail;
 use App\Models\UserSifConfig;
+use App\Support\VerifactuProductionCheck;
 use App\Support\VerifactuSchema;
 use App\Services\DataExportService;
 use App\Services\StripeService;
@@ -29,6 +30,7 @@ class ProfileController extends Controller
             'user' => $user,
             'sif' => $sif,
             'verifactuAvailable' => VerifactuSchema::hasSifConfigTable(),
+            'sandboxCheck' => $user->isDemoAdmin() ? VerifactuProductionCheck::run() : null,
         ]);
     }
 

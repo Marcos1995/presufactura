@@ -74,6 +74,18 @@ class VerifactuProveCommand extends Command
             $encadenada = $billing->createAltaRecord($this->makeInvoice($user, $client, 'F-PROVE-C'));
             $ok = $this->check('Hash encadenado (factura 2 apunta a 1)', $encadenada?->hash_previous === $alta?->hash_current) && $ok;
 
+            $queued = Queue::size();
+            config(['demo.admin_email' => $user->email]);
+            $user->sifConfig->update(['is_dev_cert' => true]);
+            $user->unsetRelation('sifConfig');
+            $sandbox = $billing->createAltaRecord($this->makeInvoice($user, $client, 'F-PROVE-S'));
+            $ok = $this->check(
+                'Sandbox acepta sin enviar a AEAT',
+                $sandbox?->aeat_status === BillingRecord::STATUS_ACCEPTED
+                    && ($sandbox->aeat_response['sandbox'] ?? false) === true
+            ) && $ok;
+            $ok = $this->check('Sandbox no encola SOAP', Queue::size() === $queued) && $ok;
+
             $this->newLine();
             if ($alta) {
                 $this->line('Hash alta: '.$alta->hash_current);
@@ -88,7 +100,7 @@ class VerifactuProveCommand extends Command
         DB::rollBack();
         $this->newLine();
         $this->line('Datos de prueba revertidos (transacción deshecha).');
-        $this->line('El envío real a AEAT requiere el .p12 del autónomo; el SOAP se cubre en tests con mock.');
+        $this->line('El envío real a AEAT requiere el .p12 FNMT del autónomo; Hacienda no acepta el certificado de desarrollo.');
 
         if (! $ok) {
             $this->error('Veri*Factu: hay fallos en la demostración.');

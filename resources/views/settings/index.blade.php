@@ -159,6 +159,14 @@
             <p class="alert alert-info">Certificado de desarrollo (autofirmado). Sirve para XML, hash y QR en el panel. Hacienda no lo acepta: no existe un .p12 público de AEAT. Para preprod real sube tu certificado FNMT de pruebas.</p>
         @endif
 
+        @if ($sandboxCheck)
+            @if ($sandboxCheck['ok'])
+                <p class="alert alert-success">Prueba Veri*Factu en este servidor: OK. Abre la factura DEMO-F-FIS: debe verse «Aceptada (pruebas)». Hacienda no recibe nada.</p>
+            @else
+                <p class="alert alert-warning">Sandbox incompleto. En SSH: <code>php artisan presufactura:prepare-test-user</code> y luego <code>php artisan presufactura:verifactu-check</code>.</p>
+            @endif
+        @endif
+
         @if ($sif?->enabled && ! $sif?->hasValidCertificate())
             <p class="form-error">Veri*Factu está activo pero falta un certificado válido. Sube un .p12 vigente para enviar a AEAT.</p>
         @endif

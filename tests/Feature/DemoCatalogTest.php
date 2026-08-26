@@ -21,6 +21,13 @@ class DemoCatalogTest extends TestCase
             ->assertFailed();
     }
 
+    public function test_verifactu_check_fails_without_demo_user(): void
+    {
+        $this->artisan('presufactura:verifactu-check')
+            ->expectsOutputToContain('Veri*Factu pruebas: FALLIDO')
+            ->assertFailed();
+    }
+
     public function test_seed_command_creates_catalog_only_for_demo_admin(): void
     {
         $admin = User::factory()->onboarded()->create([
@@ -75,6 +82,14 @@ class DemoCatalogTest extends TestCase
         $this->actingAs($other)->get('/dashboard')
             ->assertOk()
             ->assertDontSee('Catálogo de ejemplo');
+
+        $this->artisan('presufactura:verifactu-check')
+            ->expectsOutputToContain('Veri*Factu pruebas: OK')
+            ->assertSuccessful();
+
+        $this->actingAs($admin)->get('/configuracion')
+            ->assertOk()
+            ->assertSee('Prueba Veri*Factu en este servidor: OK');
     }
 
     public function test_marcos_gmail_is_the_demo_admin(): void
