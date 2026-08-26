@@ -17,65 +17,6 @@
         revealEls.forEach(function (el) { el.classList.add('is-visible'); });
     }
 
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var finePointer = window.matchMedia('(pointer: fine)').matches;
-
-    /* Cursor glow + magnetic buttons (marketing, pointer fino) */
-    var glow = document.querySelector('.cursor-glow');
-    if (glow && !reduceMotion && finePointer) {
-        document.body.classList.add('has-cursor-glow');
-        var gx = 0, gy = 0, tx = 0, ty = 0;
-        document.addEventListener('pointermove', function (e) {
-            tx = e.clientX;
-            ty = e.clientY;
-        }, { passive: true });
-        var tickGlow = function () {
-            gx += (tx - gx) * 0.18;
-            gy += (ty - gy) * 0.18;
-            glow.style.transform = 'translate3d(' + (gx - 180) + 'px,' + (gy - 180) + 'px,0)';
-            requestAnimationFrame(tickGlow);
-        };
-        requestAnimationFrame(tickGlow);
-    }
-
-    if (!reduceMotion && finePointer) {
-        document.querySelectorAll('.btn-magnetic').forEach(function (btn) {
-            btn.addEventListener('pointermove', function (e) {
-                var r = btn.getBoundingClientRect();
-                var x = e.clientX - r.left - r.width / 2;
-                var y = e.clientY - r.top - r.height / 2;
-                btn.style.transform = 'translate(' + (x * 0.18) + 'px,' + (y * 0.22) + 'px)';
-            });
-            btn.addEventListener('pointerleave', function () {
-                btn.style.transform = '';
-            });
-        });
-    }
-
-    /* Hero orb parallax */
-    var orbs = document.querySelector('.landing-hero .hero-bg-orbs');
-    if (orbs && !reduceMotion && finePointer) {
-        document.addEventListener('pointermove', function (e) {
-            var px = (e.clientX / window.innerWidth - 0.5) * 24;
-            var py = (e.clientY / window.innerHeight - 0.5) * 16;
-            orbs.style.transform = 'translate(' + px + 'px,' + py + 'px)';
-        }, { passive: true });
-    }
-
-    /* 3D tilt on product mock */
-    var tilt = document.querySelector('.mock-tilt');
-    if (tilt && !reduceMotion && finePointer) {
-        tilt.addEventListener('pointermove', function (e) {
-            var r = tilt.getBoundingClientRect();
-            var rx = ((e.clientY - r.top) / r.height - 0.5) * -8;
-            var ry = ((e.clientX - r.left) / r.width - 0.5) * 10;
-            tilt.style.transform = 'perspective(1100px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
-        });
-        tilt.addEventListener('pointerleave', function () {
-            tilt.style.transform = '';
-        });
-    }
-
     var header = document.querySelector('.landing-header');
     var navToggle = document.querySelector('.nav-toggle');
     var landingNav = document.querySelector('.landing-nav');

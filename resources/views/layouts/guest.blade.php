@@ -9,11 +9,6 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="guest-body {{ ($mainClass ?? '') === 'guest-main-wide' ? 'guest-body-top' : '' }}">
-    <div class="hero-bg-orbs guest-orbs" aria-hidden="true">
-        <div class="hero-orb hero-orb--1"></div>
-        <div class="hero-orb hero-orb--2"></div>
-        <div class="hero-orb hero-orb--3"></div>
-    </div>
     <div class="guest-container">
         <header class="guest-header">
             @include('layouts.partials.logo')
