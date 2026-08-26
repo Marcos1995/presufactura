@@ -41,6 +41,7 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 - Activación por defecto al registrarse; certificado .p12 para emitir fiscales y enviar a AEAT
 - Comando `php artisan presufactura:verifactu-prove` (demostración con rollback, sin AEAT real)
 - Catálogo de ejemplo (`DEMO_ADMIN_EMAIL=marcospc1995@gmail.com` + `php artisan presufactura:seed-demo`)
+- Certificado de desarrollo autofirmado (`php artisan presufactura:verifactu-dev-cert`): flujo interno, no AEAT
 - Hash encadenado, XML SIF, QR en PDF
 - Envío AEAT (SOAP), reintentos, badges de estado
 - Export SIF, entorno de pruebas documentado en `docs/`

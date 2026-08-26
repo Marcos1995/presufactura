@@ -128,6 +128,7 @@ class ProfileController extends Controller
             Storage::disk('local')->put($path, encrypt($p12Content));
             $config->cert_path = $path;
             $config->cert_expires_at = $expiresAt;
+            $config->is_dev_cert = false;
         }
 
         if (filled($data['cert_password'] ?? null)) {

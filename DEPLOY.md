@@ -281,6 +281,7 @@ Después recarga `/configuracion`, marca Veri*Factu y sube el `.p12`. Catálogo 
 
 ```bash
 php artisan presufactura:seed-demo
+php artisan presufactura:verifactu-dev-cert
 ```
 
 ### Requisitos PHP

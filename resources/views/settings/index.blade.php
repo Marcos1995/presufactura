@@ -153,6 +153,10 @@
             @endif
         @endif
 
+        @if ($sif?->is_dev_cert)
+            <p class="alert alert-info">Certificado de desarrollo (autofirmado). Sirve para XML, hash y QR en el panel. Hacienda no lo acepta: no existe un .p12 público de AEAT. Para preprod real sube tu certificado FNMT de pruebas.</p>
+        @endif
+
         @if ($sif?->enabled && ! $sif?->hasValidCertificate())
             <p class="form-error">Veri*Factu está activo pero falta un certificado válido. Sube un .p12 vigente para enviar a AEAT.</p>
         @endif

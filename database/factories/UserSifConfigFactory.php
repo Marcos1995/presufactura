@@ -21,6 +21,7 @@ class UserSifConfigFactory extends Factory
             'cert_path' => null,
             'cert_expires_at' => null,
             'enabled' => false,
+            'is_dev_cert' => false,
         ];
     }
 

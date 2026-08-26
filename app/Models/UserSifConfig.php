@@ -23,6 +23,7 @@ class UserSifConfig extends Model
         'cert_path',
         'cert_expires_at',
         'enabled',
+        'is_dev_cert',
     ];
 
     protected function casts(): array
@@ -30,6 +31,7 @@ class UserSifConfig extends Model
         return [
             'cert_expires_at' => 'datetime',
             'enabled' => 'boolean',
+            'is_dev_cert' => 'boolean',
         ];
     }
 
@@ -107,7 +109,7 @@ class UserSifConfig extends Model
             'missing' => 'Sin certificado',
             'expired' => 'Certificado caducado',
             'expiring' => 'Caduca pronto',
-            'valid' => 'Certificado válido',
+            'valid' => $this->is_dev_cert ? 'Desarrollo (no AEAT)' : 'Certificado válido',
             default => 'Estado desconocido',
         };
     }

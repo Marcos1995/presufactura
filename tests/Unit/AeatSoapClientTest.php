@@ -61,6 +61,25 @@ class AeatSoapClientTest extends TestCase
         }
     }
 
+    public function test_submit_rejects_dev_certificate(): void
+    {
+        if (! extension_loaded('soap')) {
+            $this->markTestSkipped('ext-soap no disponible');
+        }
+
+        $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
+        $this->activateVerifactuCertificate($user);
+        $user->sifConfig->update(['is_dev_cert' => true]);
+        Storage::disk('local')->put('sif/certs/user_'.$user->id.'.p12.enc', encrypt('x'));
+
+        $record = $this->makeBillingRecord($user, '<RegistroAlta/>');
+        $result = (new AeatSoapClient)->submit($record, 'secret');
+
+        $this->assertFalse($result['success']);
+        $this->assertTrue($result['permanent']);
+        $this->assertStringContainsString('desarrollo', $result['message']);
+    }
+
     public function test_submit_sends_envelope_via_soap_client(): void
     {
         if (! extension_loaded('soap')) {

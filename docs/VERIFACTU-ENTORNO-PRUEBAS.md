@@ -27,7 +27,7 @@ VERIFACTU_SOFTWARE_NAME=PresuFactura
 VERIFACTU_SOFTWARE_VERSION=2.0.0
 ```
 
-5. Certificado **de pruebas** AEAT (`.p12`) del obligado tributario de test — no usar certificado de producción en preprod.
+5. Certificado **de pruebas** AEAT (`.p12`) del obligado tributario — **no existe un .p12 público de Hacienda**. Un certificado autofirmado (`php artisan presufactura:verifactu-dev-cert`, solo el usuario demo) sirve para el flujo interno (XML, hash, QR), no para SOAP AEAT.
 
 ## Checklist de prueba (preprod)
 

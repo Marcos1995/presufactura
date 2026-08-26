@@ -75,4 +75,28 @@ class DemoCatalogTest extends TestCase
             ->assertOk()
             ->assertSee('Catálogo de ejemplo');
     }
+
+    public function test_dev_cert_command_installs_self_signed_p12_for_demo_admin(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('local');
+
+        $user = User::factory()->onboarded()->create([
+            'email' => 'marcospc1995@gmail.com',
+            'tax_id' => '89890001K',
+        ]);
+
+        $this->artisan('presufactura:verifactu-dev-cert')
+            ->expectsOutputToContain('Certificado de desarrollo instalado')
+            ->assertSuccessful();
+
+        $config = $user->fresh()->sifConfig;
+        $this->assertTrue($config->is_dev_cert);
+        $this->assertTrue($config->hasValidCertificate());
+        $this->assertTrue($user->fresh()->canEmitFiscalInvoices());
+        \Illuminate\Support\Facades\Storage::disk('local')->assertExists($config->cert_path);
+
+        $this->actingAs($user)->get('/configuracion')
+            ->assertOk()
+            ->assertSee('Certificado de desarrollo');
+    }
 }

@@ -35,6 +35,13 @@ class AeatSoapClient
             return $this->failure('Certificado no configurado', permanent: true);
         }
 
+        if ($sifConfig->is_dev_cert) {
+            return $this->failure(
+                'Certificado de desarrollo: Hacienda no acepta .p12 autofirmados. Usa un certificado FNMT de pruebas.',
+                permanent: true
+            );
+        }
+
         $env = config('verifactu.env', 'preprod');
         $wsdl = config("verifactu.wsdl.{$env}");
 
