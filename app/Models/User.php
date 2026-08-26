@@ -98,6 +98,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserSifConfig::class);
     }
 
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            $user->ensureDefaultVerifactu();
+        });
+    }
+
+    public function ensureDefaultVerifactu(): void
+    {
+        if (! VerifactuSchema::hasSifConfigTable()) {
+            return;
+        }
+
+        UserSifConfig::firstOrCreate(
+            ['user_id' => $this->id],
+            [
+                'mode' => UserSifConfig::MODE_VERIFACTU,
+                'enabled' => true,
+            ]
+        );
+    }
+
     public function hasVerifactuEnabled(): bool
     {
         if (! VerifactuSchema::hasSifConfigTable()) {
@@ -105,6 +127,12 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $this->sifConfig?->enabled === true;
+    }
+
+    public function canEmitFiscalInvoices(): bool
+    {
+        return $this->hasVerifactuEnabled()
+            && $this->sifConfig?->hasValidCertificate() === true;
     }
 
     /**

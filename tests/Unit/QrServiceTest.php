@@ -146,8 +146,7 @@ class QrServiceTest extends TestCase
     private function makeBillingRecord(string $mode = UserSifConfig::MODE_VERIFACTU): BillingRecord
     {
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
-        UserSifConfig::create([
-            'user_id' => $user->id,
+        $user->sifConfig->update([
             'mode' => $mode,
             'enabled' => true,
         ]);

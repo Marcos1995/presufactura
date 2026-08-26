@@ -28,6 +28,8 @@ class AuthTest extends TestCase
 
         $user = User::where('email', 'nuevo@example.com')->first();
         $this->assertNotNull($user);
+        $this->assertTrue($user->hasVerifactuEnabled());
+        $this->assertSame(\App\Models\UserSifConfig::MODE_VERIFACTU, $user->sifConfig->mode);
         Notification::assertSentTo($user, VerifyEmailNotification::class);
     }
 

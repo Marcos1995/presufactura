@@ -7,7 +7,6 @@ use App\Models\BillingRecord;
 use App\Models\Client;
 use App\Models\Document;
 use App\Models\User;
-use App\Models\UserSifConfig;
 use App\Services\Verifactu\BillingRecordService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
@@ -31,11 +30,7 @@ class BillingRecordServiceTest extends TestCase
     public function test_create_alta_record_stores_xml_and_hash(): void
     {
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $document = $this->makeInvoice($user);
 
@@ -53,11 +48,7 @@ class BillingRecordServiceTest extends TestCase
     public function test_second_record_chains_to_previous_hash(): void
     {
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $first = $this->service->createAltaRecord($this->makeInvoice($user, 'F2026-001'));
         $second = $this->service->createAltaRecord($this->makeInvoice($user, 'F2026-002'));
@@ -69,20 +60,29 @@ class BillingRecordServiceTest extends TestCase
     public function test_skips_when_verifactu_disabled(): void
     {
         $user = User::factory()->onboarded()->create();
+        $user->sifConfig->update(['enabled' => false]);
+        $user->unsetRelation('sifConfig');
         $record = $this->service->createAltaRecord($this->makeInvoice($user));
 
         $this->assertNull($record);
         $this->assertDatabaseCount('billing_records', 0);
     }
 
+    public function test_skips_when_enabled_without_certificate(): void
+    {
+        $user = User::factory()->onboarded()->create();
+        $this->assertTrue($user->hasVerifactuEnabled());
+        $this->assertFalse($user->canEmitFiscalInvoices());
+
+        $record = $this->service->createAltaRecord($this->makeInvoice($user));
+
+        $this->assertNull($record);
+    }
+
     public function test_skips_non_invoice_documents(): void
     {
         $user = User::factory()->onboarded()->create();
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,

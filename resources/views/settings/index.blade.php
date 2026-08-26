@@ -131,7 +131,7 @@
         @method('PUT')
 
         <h2 class="form-section-title">Veri*Factu</h2>
-        <p class="text-muted">Activa la facturación fiscal conforme RRSIF. Requiere certificado electrónico .p12 del obligado tributario.</p>
+        <p class="text-muted">Va activado al crear la cuenta. Sube tu certificado electrónico .p12 para emitir facturas fiscales con QR y envío a AEAT. Sin certificado, los PDF siguen siendo proforma.</p>
         <p>
             <strong>Entorno AEAT:</strong>
             <span class="badge {{ \App\Support\VerifactuEnv::badgeClass() }}">{{ \App\Support\VerifactuEnv::label() }}</span>

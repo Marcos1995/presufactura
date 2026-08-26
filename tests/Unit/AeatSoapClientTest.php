@@ -45,12 +45,6 @@ class AeatSoapClientTest extends TestCase
     public function test_submit_returns_permanent_error_without_certificate(): void
     {
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
-
         $record = $this->makeBillingRecord($user, '<RegistroAlta/>');
         $client = new AeatSoapClient;
 
@@ -78,13 +72,7 @@ class AeatSoapClientTest extends TestCase
             'business_name' => 'Empresa Test SL',
         ]);
 
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-            'cert_path' => 'sif/certs/user_'.$user->id.'.p12.enc',
-            'cert_expires_at' => now()->addYear(),
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         Storage::disk('local')->put('sif/certs/user_'.$user->id.'.p12.enc', encrypt($this->makeTestP12('secret')));
 

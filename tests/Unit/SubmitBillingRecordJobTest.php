@@ -123,13 +123,7 @@ class SubmitBillingRecordJobTest extends TestCase
     private function makePendingRecord(): array
     {
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-            'cert_path' => 'sif/certs/user_'.$user->id.'.p12.enc',
-            'cert_expires_at' => now()->addYear(),
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,

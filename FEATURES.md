@@ -38,7 +38,8 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 
 ## Veri*Factu (opcional por usuario)
 
-- Activación + certificado electrónico en Configuración
+- Activación por defecto al registrarse; certificado .p12 para emitir fiscales y enviar a AEAT
+- Comando `php artisan presufactura:verifactu-prove` (demostración con rollback, sin AEAT real)
 - Hash encadenado, XML SIF, QR en PDF
 - Envío AEAT (SOAP), reintentos, badges de estado
 - Export SIF, entorno de pruebas documentado en `docs/`

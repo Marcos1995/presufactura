@@ -28,11 +28,7 @@ class VerifactuTest extends TestCase
         Mail::fake();
 
         $user = User::factory()->onboarded()->create();
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,
@@ -122,11 +118,7 @@ class VerifactuTest extends TestCase
         Queue::fake();
 
         $user = User::factory()->onboarded()->create();
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,
@@ -216,11 +208,7 @@ class VerifactuTest extends TestCase
     public function test_invoice_without_aeat_acceptance_cannot_be_cancelled(): void
     {
         $user = User::factory()->onboarded()->create();
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,
@@ -265,11 +253,7 @@ class VerifactuTest extends TestCase
         Storage::fake('local');
 
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,
@@ -370,11 +354,7 @@ class VerifactuTest extends TestCase
     public function test_create_rectificativa_uses_series_r_and_links_original(): void
     {
         $user = User::factory()->onboarded()->create();
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,
@@ -435,11 +415,7 @@ class VerifactuTest extends TestCase
         Storage::fake('local');
 
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
-        UserSifConfig::create([
-            'user_id' => $user->id,
-            'mode' => UserSifConfig::MODE_VERIFACTU,
-            'enabled' => true,
-        ]);
+        $this->activateVerifactuCertificate($user);
 
         $client = Client::create([
             'user_id' => $user->id,

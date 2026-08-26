@@ -22,7 +22,9 @@ class BillingRecordService
             return null;
         }
 
-        if (! $document->user->hasVerifactuEnabled()) {
+        $document->loadMissing(['user.sifConfig']);
+
+        if (! $document->user->canEmitFiscalInvoices()) {
             return null;
         }
 

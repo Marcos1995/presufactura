@@ -23,9 +23,11 @@ class VerifactuModelsTest extends TestCase
     public function test_user_sif_config_relationship(): void
     {
         $user = User::factory()->create();
-        $config = UserSifConfig::factory()->for($user)->enabled()->create();
+        $config = $user->sifConfig;
 
-        $this->assertTrue($user->fresh()->sifConfig->is($config));
+        $this->assertNotNull($config);
+        $this->assertTrue($config->enabled);
+        $this->assertSame(UserSifConfig::MODE_VERIFACTU, $config->mode);
         $this->assertTrue($user->hasVerifactuEnabled());
     }
 

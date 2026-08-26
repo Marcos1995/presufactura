@@ -50,4 +50,16 @@ abstract class TestCase extends BaseTestCase
             ],
         ];
     }
+
+    protected function activateVerifactuCertificate(User $user): void
+    {
+        $user->ensureDefaultVerifactu();
+        $user->sifConfig->update([
+            'mode' => \App\Models\UserSifConfig::MODE_VERIFACTU,
+            'enabled' => true,
+            'cert_path' => 'sif/certs/user_'.$user->id.'.p12.enc',
+            'cert_expires_at' => now()->addYear(),
+        ]);
+        $user->unsetRelation('sifConfig');
+    }
 }
