@@ -63,4 +63,16 @@ class DemoCatalogTest extends TestCase
             ->assertOk()
             ->assertDontSee('Catálogo de ejemplo');
     }
+
+    public function test_marcos_gmail_is_the_demo_admin(): void
+    {
+        $user = User::factory()->onboarded()->create([
+            'email' => 'marcospc1995@gmail.com',
+        ]);
+
+        $this->assertTrue($user->isDemoAdmin());
+        $this->actingAs($user)->get('/dashboard')
+            ->assertOk()
+            ->assertSee('Catálogo de ejemplo');
+    }
 }
