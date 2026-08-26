@@ -28,7 +28,14 @@ class PanelPagesTest extends TestCase
         $this->actingAs($user)->get('/facturas')->assertOk();
         $this->actingAs($user)->get('/presupuestos')->assertOk();
         $this->actingAs($user)->get('/configuracion')->assertOk();
-        $this->actingAs($user)->get('/dashboard')->assertOk();
+        $this->actingAs($user)->get('/dashboard')
+            ->assertOk()
+            ->assertSee('id="sidebar-toggle"', false)
+            ->assertSee('class="menu-fold"', false)
+            ->assertSee('appearance:none', false)
+            ->assertSee('css/app.css?v=', false)
+            ->assertSee('js/app.js?v=', false)
+            ->assertDontSee('class="sidebar-toggle"', false);
         $this->actingAs($user)->get('/clientes')->assertOk();
     }
 

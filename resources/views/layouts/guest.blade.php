@@ -10,7 +10,7 @@
     <meta name="description" content="@yield('meta_description', '')">
     <meta name="robots" content="@yield('robots', 'noindex, nofollow')">
     <link rel="canonical" href="@yield('canonical', url()->current())">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @include('layouts.partials.app-css')
 </head>
 <body class="guest-body {{ ($mainClass ?? '') === 'guest-main-wide' ? 'guest-body-top' : '' }}">
     <div class="guest-container">
@@ -29,6 +29,6 @@
     </div>
     @include('layouts.partials.cookie-banner')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    @include('layouts.partials.app-js')
 </body>
 </html>

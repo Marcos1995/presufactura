@@ -8,7 +8,7 @@
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
     @include('layouts.partials.fonts')
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @include('layouts.partials.app-css')
     <script>
         try { if (localStorage.getItem('pf-sidebar') === 'collapsed') document.documentElement.classList.add('sidebar-collapsed'); } catch (e) {}
     </script>
@@ -20,8 +20,8 @@
         <aside class="sidebar">
             <div class="sidebar-brand">
                 @include('layouts.partials.logo', ['href' => route('dashboard'), 'variant' => 'sidebar'])
-                <button type="button" class="sidebar-toggle" aria-expanded="true" aria-label="Plegar menú" title="Plegar menú">
-                    <svg class="sidebar-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                <button type="button" class="menu-fold" id="sidebar-toggle" aria-expanded="true" aria-label="Plegar menú" title="Plegar menú" style="appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#fff;width:32px;height:32px;padding:0;border-radius:8px;cursor:pointer;flex-shrink:0">
+                    <svg class="menu-fold__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
                 </button>
             </div>
             <nav class="sidebar-nav">
@@ -79,7 +79,26 @@
         </div>
     </div>
     @include('layouts.partials.cookie-banner')
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+    (function () {
+        var btn = document.getElementById('sidebar-toggle');
+        if (!btn || btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+        var apply = function (collapsed) {
+            document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
+            var label = collapsed ? 'Mostrar menú' : 'Plegar menú';
+            btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            btn.setAttribute('aria-label', label);
+            btn.setAttribute('title', label);
+            try { localStorage.setItem('pf-sidebar', collapsed ? 'collapsed' : 'expanded'); } catch (e) {}
+        };
+        btn.addEventListener('click', function () {
+            apply(!document.documentElement.classList.contains('sidebar-collapsed'));
+        });
+        apply(document.documentElement.classList.contains('sidebar-collapsed'));
+    })();
+    </script>
+    @include('layouts.partials.app-js')
     @stack('scripts')
 </body>
 </html>

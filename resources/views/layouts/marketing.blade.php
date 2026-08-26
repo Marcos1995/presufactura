@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="@yield('og_description', trim($__env->yieldContent('meta_description')))">
     <meta name="twitter:image" content="@yield('og_image', asset('images/og-presufactura.svg'))">
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ @filemtime(public_path('css/app.css')) ?: 1 }}">
+    @include('layouts.partials.app-css')
     @stack('head')
 </head>
 <body class="landing-body">
@@ -61,7 +61,7 @@
     </footer>
     @include('layouts.partials.cookie-banner')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/app.js') }}?v={{ @filemtime(public_path('js/app.js')) ?: 1 }}"></script>
+    @include('layouts.partials.app-js')
     @stack('scripts')
 </body>
 </html>

@@ -108,49 +108,38 @@
     });
 
     /* Modal: close on Escape */
-    $(document).on('keydown', function (e) {
-        if (e.key === 'Escape') {
-            $('#upgrade-modal').hide();
-        }
-    });
-
-    /* Copy public link */
-    $(document).on('click', '[data-copy]', function () {
-        var sel = $(this).attr('data-copy');
-        var input = document.querySelector(sel);
-        if (!input) return;
-        input.select();
-        input.setSelectionRange(0, 99999);
-        var btn = $(this);
-        var orig = btn.text();
-        navigator.clipboard.writeText(input.value).then(function () {
-            btn.text('¡Copiado!');
-            setTimeout(function () { btn.text(orig); }, 2000);
+    if ($) {
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape') {
+                $('#upgrade-modal').hide();
+            }
         });
-    });
+
+        /* Copy public link */
+        $(document).on('click', '[data-copy]', function () {
+            var sel = $(this).attr('data-copy');
+            var input = document.querySelector(sel);
+            if (!input) return;
+            input.select();
+            input.setSelectionRange(0, 99999);
+            var btn = $(this);
+            var orig = btn.text();
+            navigator.clipboard.writeText(input.value).then(function () {
+                btn.text('¡Copiado!');
+                setTimeout(function () { btn.text(orig); }, 2000);
+            });
+        });
+    }
 
     /* Table row click-through */
-    $('.data-table tbody tr[data-href]').on('click', function (e) {
-        if ($(e.target).closest('a, button, form').length) return;
-        window.location = $(this).data('href');
-    });
-
-    /* Collapsible sidebar (desktop) */
-    var sidebarToggle = document.querySelector('.sidebar-toggle');
-    if (sidebarToggle) {
-        var applySidebar = function (collapsed) {
-            document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
-            sidebarToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-            var label = collapsed ? 'Mostrar menú' : 'Plegar menú';
-            sidebarToggle.setAttribute('aria-label', label);
-            sidebarToggle.setAttribute('title', label);
-            try { localStorage.setItem('pf-sidebar', collapsed ? 'collapsed' : 'expanded'); } catch (err) {}
-        };
-        sidebarToggle.addEventListener('click', function () {
-            applySidebar(!document.documentElement.classList.contains('sidebar-collapsed'));
+    if ($) {
+        $('.data-table tbody tr[data-href]').on('click', function (e) {
+            if ($(e.target).closest('a, button, form').length) return;
+            window.location = $(this).data('href');
         });
-        applySidebar(document.documentElement.classList.contains('sidebar-collapsed'));
     }
+
+    /* Collapsible sidebar is bound in layouts/panel.blade.php so a stale app.js cannot double-toggle. */
 
     /* Analytics CTA (sin PII) */
     var csrf = document.querySelector('meta[name="csrf-token"]');
