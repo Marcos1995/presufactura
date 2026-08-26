@@ -926,57 +926,6 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
 }
 .landing-footer p { margin: 0.25rem 0; }
 
-.landing-verifactu {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 2.5rem clamp(1.25rem, 5vw, 2rem) 1.5rem;
-}
-.verifactu-inner {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0;
-}
-.verifactu-panel {
-    max-width: 100%;
-    margin: 0 auto;
-    background: #fff;
-    border: 1px solid var(--primary);
-    box-shadow: 0 0 0 1px var(--primary), var(--shadow-lg);
-    border-radius: var(--radius-lg);
-    padding: 2rem clamp(1.15rem, 4vw, 2rem);
-    text-align: center;
-    background-image: linear-gradient(180deg, #eff6ff 0%, #fff 42%);
-    box-sizing: border-box;
-}
-.verifactu-panel h2 {
-    margin: 0.75rem auto;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    text-wrap: balance;
-    max-width: 22rem;
-}
-.verifactu-lead {
-    margin: 0 auto 1.25rem;
-    max-width: 36rem;
-    color: var(--gray-500);
-    line-height: 1.65;
-    text-wrap: pretty;
-}
-.verifactu-points {
-    list-style: none;
-    padding: 0;
-    margin: 0 auto 1.5rem;
-    width: fit-content;
-    max-width: 100%;
-    text-align: left;
-}
-.verifactu-points li {
-    padding: 0.4rem 0 0.4rem 0.15rem;
-    color: var(--gray-700);
-}
-.verifactu-points li::before { content: "✓ "; color: var(--success); }
-
 /* Landing F8 — screenshots, FAQ, CTA */
 .hero-badge {
     display: inline-block;
@@ -1496,8 +1445,6 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
     .panel-main { padding: 1rem; }
     .landing-hero { padding: 3.25rem 1.25rem 2.5rem; }
     .landing-hero h1 { font-size: 2rem; }
-    .landing-verifactu { padding: 1.75rem 1.25rem 1.25rem; }
-    .verifactu-panel { padding: 1.5rem 1.15rem; }
     .landing-cta { padding: 3.5rem 1.25rem; }
     .mock-stats { grid-template-columns: repeat(2, 1fr); }
     .mock-row { grid-template-columns: 1fr 1fr; font-size: 0.75rem; }
