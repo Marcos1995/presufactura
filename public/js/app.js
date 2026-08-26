@@ -134,4 +134,21 @@
         if ($(e.target).closest('a, button, form').length) return;
         window.location = $(this).data('href');
     });
+
+    /* Collapsible sidebar (desktop) */
+    var sidebarToggle = document.querySelector('.sidebar-toggle');
+    if (sidebarToggle) {
+        var applySidebar = function (collapsed) {
+            document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
+            sidebarToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            var label = collapsed ? 'Mostrar menú' : 'Plegar menú';
+            sidebarToggle.setAttribute('aria-label', label);
+            sidebarToggle.setAttribute('title', label);
+            try { localStorage.setItem('pf-sidebar', collapsed ? 'collapsed' : 'expanded'); } catch (err) {}
+        };
+        sidebarToggle.addEventListener('click', function () {
+            applySidebar(!document.documentElement.classList.contains('sidebar-collapsed'));
+        });
+        applySidebar(document.documentElement.classList.contains('sidebar-collapsed'));
+    }
 })(window.jQuery);

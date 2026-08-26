@@ -127,15 +127,10 @@
         letter-spacing: 0.4px;
     }
 
-    .badge-proforma {
+    .badge-proforma,
+    .badge-fiscal {
         background: #ffffff;
         color: #111111;
-        border: 1px solid #111111;
-    }
-
-    .badge-fiscal {
-        background: #111111;
-        color: #ffffff;
         border: 1px solid #111111;
     }
 
@@ -216,18 +211,19 @@
     .lines-table {
         width: 100%;
         border-collapse: collapse;
-        border: 1px solid #111111;
+        border: 1px solid #dddddd;
     }
 
     .lines-table thead th {
-        background: #111111;
-        color: #ffffff;
+        background: #ffffff;
+        color: #111111;
         font-size: 8px;
         font-weight: bold;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        padding: 10px 12px;
+        padding: 8px 12px;
         text-align: left;
+        border-bottom: 1px solid #111111;
     }
 
     .lines-table thead th.r { text-align: right; }
@@ -282,11 +278,10 @@
     .totals-table {
         width: 100%;
         border-collapse: collapse;
-        border: 1px solid #111111;
     }
 
     .totals-table td {
-        padding: 9px 14px;
+        padding: 6px 0 6px 14px;
         font-size: 9.5px;
     }
 
@@ -299,20 +294,21 @@
     }
 
     .totals-table .grand td {
-        background: #111111;
-        color: #ffffff;
+        background: #ffffff;
+        color: #111111;
         font-size: 11px;
         font-weight: bold;
-        padding: 12px 14px;
+        padding: 10px 0 6px 14px;
+        border-top: 1px solid #111111;
     }
 
-    .totals-table .grand .lbl { color: #ffffff; }
+    .totals-table .grand .lbl { color: #111111; }
 
-    .totals-table .grand .val { color: #ffffff; }
+    .totals-table .grand .val { color: #111111; }
 
     .iban-inner {
-        background: #f7f7f7;
-        border: 1px solid #111111;
+        background: #ffffff;
+        border: 1px solid #dddddd;
         padding: 14px 16px;
         font-size: 9px;
         color: #111111;

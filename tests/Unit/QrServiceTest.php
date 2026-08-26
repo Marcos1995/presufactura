@@ -108,6 +108,7 @@ class QrServiceTest extends TestCase
         $this->assertStringContainsString($qrDataUri, $html);
         $this->assertStringNotContainsString('#2563eb', $html);
         $this->assertStringNotContainsString('#1e40af', $html);
+        $this->assertStringNotContainsString('background: #111111', $html);
     }
 
     public function test_invoice_view_keeps_proforma_disclaimer_without_billing_record(): void
