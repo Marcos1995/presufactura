@@ -20,7 +20,7 @@ class SmokeTestCommand extends Command
 
         $failed = ! $this->checkDatabase() || $failed;
         $failed = ! $this->checkMailConfig() || $failed;
-        $failed = ! $this->checkStripeConfig() || $failed;
+        $this->checkStripeConfig();
         $failed = ! $this->checkStorageWritable() || $failed;
         $failed = ! $this->checkScheduleRegistered() || $failed;
         $failed = ! $this->checkWebAssets() || $failed;
@@ -83,49 +83,47 @@ class SmokeTestCommand extends Command
 
     private function checkStripeConfig(): bool
     {
-        $secret = config('services.stripe.secret');
-        $key = config('services.stripe.key');
-        $priceId = config('services.stripe.price_id');
+        $secret = (string) config('services.stripe.secret');
+        $key = (string) config('services.stripe.key');
+        $priceId = (string) config('services.stripe.price_id');
+
+        if ($key === '' && $secret === '' && $priceId === '') {
+            $this->line('✓ Stripe omitido (legado; la app es gratuita)');
+
+            return true;
+        }
+
         $ok = true;
 
-        if (empty($key)) {
-            $this->error('✗ Stripe: STRIPE_KEY vacío en .env');
-            $ok = false;
+        if ($key === '') {
+            $this->warn('⚠ Stripe: STRIPE_KEY vacío (opcional)');
         }
-        if (empty($secret)) {
-            $this->error('✗ Stripe: STRIPE_SECRET vacío en .env');
-            $ok = false;
+        if ($secret === '') {
+            $this->warn('⚠ Stripe: STRIPE_SECRET vacío (opcional)');
         }
-        if (empty($priceId)) {
-            $this->error('✗ Stripe: STRIPE_PRICE_ID vacío en .env');
-            $ok = false;
+        if ($priceId === '') {
+            $this->warn('⚠ Stripe: STRIPE_PRICE_ID vacío (opcional)');
         }
 
-        if (! $ok) {
-            $this->line('  → Edita .env y ejecuta: php artisan config:cache');
-
-            return false;
-        }
-
-        if (! str_starts_with($priceId, 'price_')) {
+        if ($priceId !== '' && ! str_starts_with($priceId, 'price_')) {
             $this->error('✗ Stripe: STRIPE_PRICE_ID debe empezar por price_');
-
-            return false;
+            $ok = false;
         }
 
-        if (app()->environment('production') && str_starts_with($secret, 'sk_test_')) {
-            $this->error('✗ Stripe: sk_test_ en producción — usa claves live');
-
-            return false;
+        if ($ok && $secret !== '' && app()->environment('production') && str_starts_with($secret, 'sk_test_')) {
+            $this->error('✗ Stripe: sk_test_ en producción — usa claves live o déjalo vacío');
+            $ok = false;
         }
 
-        if (app()->environment('production') && str_starts_with($key, 'pk_test_')) {
+        if ($ok && $key !== '' && app()->environment('production') && str_starts_with($key, 'pk_test_')) {
             $this->warn('⚠ Stripe: pk_test_ en producción');
         }
 
-        $this->line('✓ Stripe config (price configurado)');
+        if ($ok) {
+            $this->line('✓ Stripe config (legado, opcional)');
+        }
 
-        return true;
+        return $ok;
     }
 
     private function checkStorageWritable(): bool
