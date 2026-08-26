@@ -39,4 +39,12 @@ class SmokeTest extends TestCase
     {
         $this->get('/ayuda')->assertOk();
     }
+
+    public function test_privacy_does_not_advertise_stripe_payments(): void
+    {
+        $this->get('/privacidad')
+            ->assertOk()
+            ->assertDontSee('Stripe (pagos)')
+            ->assertSee('Veri*Factu');
+    }
 }

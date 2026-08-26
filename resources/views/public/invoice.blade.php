@@ -6,12 +6,12 @@
     @include('layouts.partials.favicon')
     <title>Factura {{ $invoice->number }}</title>
     @include('layouts.partials.fonts')
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @include('layouts.partials.app-css')
 </head>
 <body class="guest-body">
     <div class="guest-container public-quote-page">
         <header class="guest-header">
-            <span class="logo" style="color: var(--gray-900); font-weight: 800;">{{ $invoice->user->business_name ?: $invoice->user->name }}</span>
+            <span class="public-issuer">{{ $invoice->user->business_name ?: $invoice->user->name }}</span>
         </header>
 
         <main class="guest-main public-quote-main">
@@ -25,7 +25,7 @@
             <div class="auth-card public-quote-card">
                 <div class="public-doc-header">
                     <div>
-                        <h1 style="margin:0 0 0.35rem;">Factura {{ $invoice->number }}</h1>
+                        <h1>Factura {{ $invoice->number }}</h1>
                         @if ($invoice->isFiscal())
                             <p class="fiscal-tag">Factura verificable — Veri*Factu</p>
                         @else

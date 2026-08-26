@@ -6,12 +6,12 @@
     @include('layouts.partials.favicon')
     <title>Presupuesto {{ $quote->number }}</title>
     @include('layouts.partials.fonts')
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @include('layouts.partials.app-css')
 </head>
 <body class="guest-body">
     <div class="guest-container public-quote-page">
         <header class="guest-header">
-            <span class="logo" style="color: var(--gray-900); font-weight: 800;">{{ $quote->user->business_name ?: $quote->user->name }}</span>
+            <span class="public-issuer">{{ $quote->user->business_name ?: $quote->user->name }}</span>
         </header>
 
         <main class="guest-main public-quote-main">
@@ -25,7 +25,7 @@
             <div class="auth-card public-quote-card">
                 <div class="public-doc-header">
                     <div>
-                        <h1 style="margin:0 0 0.35rem;">Presupuesto {{ $quote->number }}</h1>
+                        <h1>Presupuesto {{ $quote->number }}</h1>
                         <p class="proforma-tag">Documento proforma — sin validez fiscal</p>
                     </div>
                     <span class="badge badge-{{ $quote->status }}">{{ $quote->statusLabel() }}</span>

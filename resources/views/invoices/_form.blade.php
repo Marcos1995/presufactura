@@ -96,7 +96,7 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ $invoice ? route('invoices.index') : route('invoices.index') }}" class="btn btn-secondary">Cancelar</a>
+            <a href="{{ route('invoices.index') }}" class="btn btn-secondary">Cancelar</a>
             <button type="submit" class="btn btn-primary">{{ $invoice ? 'Guardar cambios' : 'Crear factura' }}</button>
         </div>
     </form>

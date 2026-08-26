@@ -112,6 +112,7 @@ a:hover { text-decoration: underline; }
     transition: box-shadow var(--transition), transform var(--transition);
 }
 .auth-card:hover { box-shadow: var(--shadow-lg); }
+.auth-card--center { text-align: center; }
 .auth-card h1 {
     margin: 0 0 1.5rem;
     font-size: 1.5rem;
@@ -627,6 +628,7 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
     border-bottom: 1px solid var(--gray-100);
 }
 .data-table .text-right { text-align: right; }
+.text-center { text-align: center; }
 .table-actions {
     text-align: right;
     white-space: nowrap;
@@ -1240,6 +1242,12 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
     gap: 1rem;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
+}
+.public-doc-header h1 { margin: 0 0 0.35rem; }
+.public-issuer {
+    color: var(--gray-900);
+    font-weight: 800;
+    font-size: 1.15rem;
 }
 .public-doc-total {
     background: linear-gradient(135deg, var(--primary-light), #ede9fe);

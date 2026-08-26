@@ -8,7 +8,7 @@
 @section('content')
 <div class="legal-page">
     <h1>Política de privacidad</h1>
-    <p><em>Última actualización: julio 2026</em></p>
+    <p><em>Última actualización: agosto 2026</em></p>
 
     <h2>1. Responsable del tratamiento</h2>
     <p>PresuFactura (presufactura.es)<br>
@@ -19,7 +19,7 @@
         <li><strong>Datos de cuenta:</strong> nombre, email, contraseña (cifrada).</li>
         <li><strong>Datos fiscales:</strong> nombre comercial, NIF/CIF, dirección, IBAN, logo.</li>
         <li><strong>Datos de clientes:</strong> los que introduces para emitir documentos.</li>
-        <li><strong>Datos de facturación:</strong> gestionados por Stripe (no almacenamos datos de tarjeta).</li>
+        <li><strong>Datos de documentos:</strong> presupuestos y facturas que emites, con sus líneas e importes.</li>
     </ul>
 
     <h2>3. Finalidad y base legal</h2>
@@ -31,8 +31,8 @@
     <h2>5. Destinatarios</h2>
     <ul>
         <li>Proveedor de hosting (servidores en UE).</li>
-        <li>Stripe (pagos).</li>
         <li>Proveedor SMTP (envío de emails).</li>
+        <li>AEAT, solo si activas Veri*Factu (registros SIF de facturación).</li>
     </ul>
 
     <h2>6. Tus derechos</h2>

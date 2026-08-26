@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex">
     <title>Error del servidor — PresuFactura</title>
     <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @include('layouts.partials.app-css')
 </head>
 <body class="guest-body">
     <div class="guest-container">
@@ -17,7 +17,7 @@
             </a>
         </header>
         <main class="guest-main">
-            <div class="auth-card" style="text-align:center">
+            <div class="auth-card auth-card--center">
                 <h1>Ha ocurrido un error</h1>
                 <p>Estamos trabajando para solucionarlo. Vuelve a intentarlo en unos minutos.</p>
                 <p><a href="{{ url('/') }}" class="btn btn-primary">Volver al inicio</a></p>

@@ -97,6 +97,6 @@
 
 @if ($quote->status === 'draft')
 @push('scripts')
-<script src="{{ asset('js/invoice-lines.js') }}"></script>
+@include('layouts.partials.invoice-lines-js')
 @endpush
 @endif

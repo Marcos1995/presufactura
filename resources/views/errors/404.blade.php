@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex">
     <title>Página no encontrada — PresuFactura</title>
     <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @include('layouts.partials.app-css')
 </head>
 <body class="guest-body">
     <div class="guest-container">
@@ -17,7 +17,7 @@
             </a>
         </header>
         <main class="guest-main">
-            <div class="auth-card" style="text-align:center">
+            <div class="auth-card auth-card--center">
                 <h1>Página no encontrada</h1>
                 <p>El enlace no existe o ya no está disponible.</p>
                 <p><a href="{{ url('/') }}" class="btn btn-primary">Volver al inicio</a></p>

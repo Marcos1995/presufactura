@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="dashboard-grid">
-    <div class="stat-card stat-card--pending reveal">
+    <div class="stat-card stat-card--pending">
         <div class="stat-card__top">
             <span class="stat-label">Por cobrar</span>
             <span class="stat-icon stat-icon--pending">
@@ -14,7 +14,7 @@
         </div>
         <span class="stat-value">{{ number_format($pendingTotal, 2, ',', '.') }} €</span>
     </div>
-    <div class="stat-card stat-card--danger reveal reveal-delay-1">
+    <div class="stat-card stat-card--danger">
         <div class="stat-card__top">
             <span class="stat-label">Vencido</span>
             <span class="stat-icon stat-icon--danger">
@@ -23,7 +23,7 @@
         </div>
         <span class="stat-value stat-danger">{{ number_format($overdueTotal, 2, ',', '.') }} €</span>
     </div>
-    <div class="stat-card stat-card--success reveal reveal-delay-2">
+    <div class="stat-card stat-card--success">
         <div class="stat-card__top">
             <span class="stat-label">Cobrado este mes</span>
             <span class="stat-icon stat-icon--success">
@@ -32,7 +32,7 @@
         </div>
         <span class="stat-value stat-success">{{ number_format($collectedMonth, 2, ',', '.') }} €</span>
     </div>
-    <div class="stat-card stat-card--docs reveal reveal-delay-3">
+    <div class="stat-card stat-card--docs">
         <div class="stat-card__top">
             <span class="stat-label">Documentos este mes</span>
             <span class="stat-icon stat-icon--docs">
@@ -44,7 +44,7 @@
 </div>
 
 @if ($recentDocuments->isNotEmpty())
-<div class="card reveal">
+<div class="card">
     <h2 class="section-title">Últimos documentos</h2>
     <table class="data-table data-table-list">
         <thead>

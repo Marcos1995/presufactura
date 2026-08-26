@@ -1,6 +1,10 @@
 (function ($) {
     'use strict';
 
+    if (!$) {
+        return;
+    }
+
     function formatMoney(n) {
         return n.toFixed(2).replace('.', ',') + ' €';
     }
@@ -66,4 +70,4 @@
 
         updateTotals();
     });
-})(jQuery);
+})(window.jQuery);

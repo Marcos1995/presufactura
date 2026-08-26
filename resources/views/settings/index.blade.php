@@ -238,7 +238,7 @@ php artisan migrate --force</pre>
 <div class="modal-overlay" id="delete-account-modal" style="display:none">
     <div class="modal-card">
         <h2>Eliminar cuenta</h2>
-        <p>Se cancelará tu suscripción Pro si la tienes activa. Escribe tu email (<strong>{{ $user->email }}</strong>) o <strong>ELIMINAR</strong> para confirmar.</p>
+        <p>Se eliminarán clientes, documentos y configuración fiscal. Escribe tu email (<strong>{{ $user->email }}</strong>) o <strong>ELIMINAR</strong> para confirmar.</p>
         <form method="POST" action="{{ route('settings.destroy') }}" id="delete-account-form" class="form">
             @csrf
             <div class="form-group">
