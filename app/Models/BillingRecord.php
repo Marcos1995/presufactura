@@ -61,11 +61,15 @@ class BillingRecord extends Model
 
     public function aeatStatusLabel(): string
     {
+        if ($this->aeat_status === self::STATUS_ACCEPTED && ($this->aeat_response['sandbox'] ?? false)) {
+            return 'Aceptada (pruebas)';
+        }
+
         return match ($this->aeat_status) {
             self::STATUS_PENDING => 'Pendiente AEAT',
             self::STATUS_ACCEPTED => 'Aceptada AEAT',
             self::STATUS_REJECTED => 'Rechazada AEAT',
-            default => ucfirst($this->aeat_status),
+            default => ucfirst((string) $this->aeat_status),
         };
     }
 }

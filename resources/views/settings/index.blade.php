@@ -134,8 +134,10 @@
         <p class="text-muted">Va activado al crear la cuenta. Sube tu certificado electrónico .p12 para emitir facturas fiscales con QR y envío a AEAT. Sin certificado, los PDF siguen siendo proforma.</p>
         <p>
             <strong>Entorno AEAT:</strong>
-            <span class="badge {{ \App\Support\VerifactuEnv::badgeClass() }}">{{ \App\Support\VerifactuEnv::label() }}</span>
-            @if (\App\Support\VerifactuEnv::isPreprod())
+            <span class="badge {{ \App\Support\VerifactuEnv::badgeClass() }}">{{ \App\Support\VerifactuEnv::labelFor($sif ?? null) }}</span>
+            @if ($sif?->is_dev_cert)
+                <span class="text-muted">— facturas fiscales de prueba en este usuario, sin envío a Hacienda.</span>
+            @elseif (\App\Support\VerifactuEnv::isPreprod())
                 <span class="text-muted">— usa certificado de pruebas. Guía: docs/VERIFACTU-ENTORNO-PRUEBAS.md</span>
             @endif
         </p>

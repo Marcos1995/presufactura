@@ -61,12 +61,8 @@ class AeatSoapClientTest extends TestCase
         }
     }
 
-    public function test_submit_rejects_dev_certificate(): void
+    public function test_submit_accepts_dev_certificate_in_sandbox(): void
     {
-        if (! extension_loaded('soap')) {
-            $this->markTestSkipped('ext-soap no disponible');
-        }
-
         $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
         $this->activateVerifactuCertificate($user);
         $user->sifConfig->update(['is_dev_cert' => true]);
@@ -75,9 +71,9 @@ class AeatSoapClientTest extends TestCase
         $record = $this->makeBillingRecord($user, '<RegistroAlta/>');
         $result = (new AeatSoapClient)->submit($record, 'secret');
 
-        $this->assertFalse($result['success']);
-        $this->assertTrue($result['permanent']);
-        $this->assertStringContainsString('desarrollo', $result['message']);
+        $this->assertTrue($result['success']);
+        $this->assertTrue($result['sandbox']);
+        $this->assertStringContainsString('TEST-SANDBOX', $result['csv']);
     }
 
     public function test_submit_sends_envelope_via_soap_client(): void

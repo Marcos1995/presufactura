@@ -24,6 +24,15 @@ class VerifactuEnv
         return config('verifactu.env_labels.'.self::current(), self::current());
     }
 
+    public static function labelFor(?\App\Models\UserSifConfig $sif = null): string
+    {
+        if ($sif?->is_dev_cert) {
+            return 'Entorno de pruebas (sandbox)';
+        }
+
+        return self::label();
+    }
+
     public static function badgeClass(): string
     {
         return self::isPreprod() ? 'badge-env-preprod' : 'badge-env-prod';

@@ -8,7 +8,6 @@ use App\Models\Document;
 use App\Models\User;
 use App\Services\Verifactu\BillingRecordService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 
 class SeedDemoCatalogCommand extends Command
@@ -44,10 +43,10 @@ class SeedDemoCatalogCommand extends Command
             ['name' => 'Cliente catálogo demo', 'tax_id' => 'B87654321']
         );
 
-        if (Document::query()->where('user_id', $user->id)->where('number', 'DEMO-P-001')->exists()) {
-            $this->info('El catálogo de ejemplo ya existe para '.$user->email);
-
-            return self::SUCCESS;
+        if (! $user->canEmitFiscalInvoices()) {
+            $this->call('presufactura:verifactu-dev-cert');
+            $user->unsetRelation('sifConfig');
+            $user->load('sifConfig');
         }
 
         $this->makeDocument($user, $client, [
@@ -80,35 +79,13 @@ class SeedDemoCatalogCommand extends Command
             'sent_at' => now(),
         ]);
 
-        Queue::fake();
-        $user->load('sifConfig');
-        $config = $user->sifConfig;
-        $originalPath = $config?->cert_path;
-        $originalExpiry = $config?->cert_expires_at;
-
-        if ($config) {
-            $config->update([
-                'enabled' => true,
-                'mode' => \App\Models\UserSifConfig::MODE_VERIFACTU,
-                'cert_path' => $originalPath ?: 'sif/certs/demo-catalog.p12.enc',
-                'cert_expires_at' => $originalExpiry ?: now()->addYear(),
-            ]);
-        }
-
         $alta = $billing->createAltaRecord($fiscal->fresh(['user.sifConfig', 'client', 'lineItems']));
-
-        if ($config && ! $originalPath) {
-            $config->update([
-                'cert_path' => null,
-                'cert_expires_at' => null,
-            ]);
-        }
 
         $this->line('Cliente: '.$client->name);
         $this->line('Presupuesto aceptado: DEMO-P-001');
         $this->line('Factura proforma: DEMO-F-PRO');
         $this->line('Factura pagada: '.$paid->number);
-        $this->line('Factura Veri*Factu (XML+hash, sin AEAT): '.($alta instanceof BillingRecord ? 'DEMO-F-FIS' : 'no creada'));
+        $this->line('Factura Veri*Factu sandbox: '.($alta instanceof BillingRecord ? $alta->aeat_status : 'no creada'));
         $this->info('Catálogo de ejemplo listo para '.$user->email);
 
         return self::SUCCESS;
@@ -119,6 +96,15 @@ class SeedDemoCatalogCommand extends Command
      */
     private function makeDocument(User $user, Client $client, array $attributes): Document
     {
+        $existing = Document::query()
+            ->where('user_id', $user->id)
+            ->where('number', $attributes['number'])
+            ->first();
+
+        if ($existing) {
+            return $existing->load(['user.sifConfig', 'client', 'lineItems']);
+        }
+
         $document = Document::create(array_merge([
             'user_id' => $user->id,
             'client_id' => $client->id,

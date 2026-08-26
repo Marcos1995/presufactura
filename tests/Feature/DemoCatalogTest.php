@@ -31,11 +31,13 @@ class DemoCatalogTest extends TestCase
             'email' => 'otro@example.com',
         ]);
         config(['demo.admin_email' => 'admin-demo@example.com']);
+        \Illuminate\Support\Facades\Storage::fake('local');
 
-        $this->artisan('presufactura:seed-demo')
-            ->expectsOutputToContain('Catálogo de ejemplo listo')
+        $this->artisan('presufactura:prepare-test-user')
+            ->expectsOutputToContain('Usuario de pruebas listo')
             ->assertSuccessful();
 
+        $this->assertTrue($admin->fresh()->usesVerifactuSandbox());
         $this->assertTrue($admin->fresh()->isDemoAdmin());
         $this->assertFalse($other->fresh()->isDemoAdmin());
         $this->assertSame(1, $admin->clients()->count());
@@ -53,8 +55,19 @@ class DemoCatalogTest extends TestCase
         $this->assertDatabaseHas('billing_records', [
             'user_id' => $admin->id,
             'record_type' => BillingRecord::TYPE_ALTA,
+            'aeat_status' => BillingRecord::STATUS_ACCEPTED,
         ]);
-        $this->assertNull($admin->fresh()->sifConfig->cert_path);
+        $this->assertNotNull($admin->fresh()->sifConfig->cert_path);
+
+        $fiscal = Document::query()->where('user_id', $admin->id)->where('number', 'DEMO-F-FIS')->first();
+        $this->assertTrue($fiscal->fresh()->isFiscal());
+
+        $this->actingAs($admin)->get(route('invoices.show', $fiscal))
+            ->assertOk()
+            ->assertSee('Aceptada (pruebas)');
+        $this->get(route('quotes.public', ['token' => $fiscal->public_token]))
+            ->assertOk()
+            ->assertSee('Factura verificable');
 
         $this->actingAs($admin)->get('/dashboard')
             ->assertOk()

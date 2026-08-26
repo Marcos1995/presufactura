@@ -280,8 +280,7 @@ En hPanel → PHP → Extensiones: activa **soap** y **openssl**.
 Después recarga `/configuracion`, marca Veri*Factu y sube el `.p12`. Catálogo demo (solo marcospc1995@gmail.com):
 
 ```bash
-php artisan presufactura:seed-demo
-php artisan presufactura:verifactu-dev-cert
+php artisan presufactura:prepare-test-user
 ```
 
 ### Requisitos PHP

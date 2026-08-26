@@ -74,7 +74,7 @@ class BillingRecordService
                 ],
             ]);
 
-            SubmitBillingRecordJob::dispatch($record->id);
+            $this->queueOrAccept($record, $user);
 
             return $record;
         });
@@ -137,10 +137,32 @@ class BillingRecordService
                 ],
             ]);
 
-            SubmitBillingRecordJob::dispatch($record->id);
+            $this->queueOrAccept($record, $user);
 
             return $record;
         });
+    }
+
+    private function queueOrAccept(BillingRecord $record, \App\Models\User $user): void
+    {
+        $user->loadMissing('sifConfig');
+
+        if ($user->usesVerifactuSandbox()) {
+            $record->update([
+                'aeat_status' => BillingRecord::STATUS_ACCEPTED,
+                'aeat_response' => [
+                    'success' => true,
+                    'message' => 'Aceptada en sandbox de pruebas (no enviada a AEAT)',
+                    'csv' => 'TEST-SANDBOX-'.$record->id,
+                    'sandbox' => true,
+                ],
+                'sent_at' => now(),
+            ]);
+
+            return;
+        }
+
+        SubmitBillingRecordJob::dispatch($record->id);
     }
 
     private function storeXml(int $userId, string $number, string $type, string $xml): string

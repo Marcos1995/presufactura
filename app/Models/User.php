@@ -143,6 +143,17 @@ class User extends Authenticatable implements MustVerifyEmail
             && strcasecmp((string) $this->email, $email) === 0;
     }
 
+    public function usesVerifactuSandbox(): bool
+    {
+        if (! $this->isDemoAdmin()) {
+            return false;
+        }
+
+        $this->loadMissing('sifConfig');
+
+        return $this->sifConfig?->is_dev_cert === true;
+    }
+
     /**
      * Historicamente distinguía plan Pro. La app es 100% gratuita: todas las funciones están incluidas.
      */

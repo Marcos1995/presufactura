@@ -24,22 +24,24 @@ class AeatSoapClient
 
     public function submit(BillingRecord $record, string $certPassword): array
     {
+        $record->loadMissing(['user.sifConfig', 'document']);
+        $sifConfig = $record->user->sifConfig;
+
+        if ($sifConfig?->is_dev_cert) {
+            return [
+                'success' => true,
+                'message' => 'Aceptada en sandbox de pruebas (no enviada a AEAT)',
+                'csv' => 'TEST-SANDBOX-'.$record->id,
+                'sandbox' => true,
+            ];
+        }
+
         if (! extension_loaded('soap')) {
             return $this->failure('ext-soap no disponible en este servidor', permanent: true);
         }
 
-        $record->loadMissing(['user.sifConfig', 'document']);
-        $sifConfig = $record->user->sifConfig;
-
         if (! $sifConfig?->cert_path || ! Storage::disk('local')->exists($sifConfig->cert_path)) {
             return $this->failure('Certificado no configurado', permanent: true);
-        }
-
-        if ($sifConfig->is_dev_cert) {
-            return $this->failure(
-                'Certificado de desarrollo: Hacienda no acepta .p12 autofirmados. Usa un certificado FNMT de pruebas.',
-                permanent: true
-            );
         }
 
         $env = config('verifactu.env', 'preprod');
