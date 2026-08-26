@@ -1196,6 +1196,18 @@ a:hover { text-decoration: underline; }
 .settings-export-box { margin-top: 1.5rem; }
 .settings-export-box .form-section-title { border-top: none; margin-top: 0; }
 .settings-export-box p { color: var(--gray-700); margin-bottom: 0.75rem; }
+.settings-cli {
+    display: block;
+    margin: 0.75rem 0;
+    padding: 0.85rem 1rem;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+}
 .danger-zone {
     margin-top: 1.5rem;
     border: 1px solid #fecaca;

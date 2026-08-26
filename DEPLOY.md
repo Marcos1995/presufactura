@@ -251,8 +251,37 @@ Si falla `presufactura:process-reminders` (cron horario), se envía un email a *
 | CSS/JS 404 | Actualiza `public_html/.htaccess` (reglas css/js arriba) |
 | Logos 404 | `php artisan storage:link` en laravel/ |
 | Emails no llegan | SMTP en `.env` |
+| Veri*Factu pide `php artisan migrate` | SSH/PuTTY: `cd laravel` y `php artisan migrate --force` (o `./deploy.sh`) |
 
 ## Veri*Factu
+
+### Qué hacer ahora (Hostinger, PuTTY o Terminal SSH)
+
+No se ejecuta en el administrador de archivos. Entra por **SSH** (hPanel → Avanzado → Acceso SSH, o PuTTY).
+
+```bash
+cd ~/domains/presufactura.es/public_html/laravel
+php -v
+php artisan migrate --force
+php artisan config:cache
+```
+
+`php -v` debe ser **8.3**. Si no, elige PHP 8.3 en hPanel (Selector PHP) y vuelve a intentar.
+
+Para actualizar código **y** migrar de una vez:
+
+```bash
+cd ~/domains/presufactura.es/public_html/laravel
+./deploy.sh
+```
+
+En hPanel → PHP → Extensiones: activa **soap** y **openssl**.
+
+Después recarga `/configuracion`, marca Veri*Factu y sube el `.p12`. Catálogo demo (solo marcospc1995@gmail.com):
+
+```bash
+php artisan presufactura:seed-demo
+```
 
 ### Requisitos PHP
 

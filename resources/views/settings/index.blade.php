@@ -194,7 +194,10 @@
     </form>
     @else
     <h2 class="form-section-title">Veri*Factu</h2>
-    <p class="text-muted">Disponible tras ejecutar las migraciones del sistema (php artisan migrate).</p>
+    <p class="text-muted">Faltan las tablas en la base de datos. En Hostinger ábrelo por SSH (PuTTY o Terminal de hPanel), no desde el administrador de archivos:</p>
+    <pre class="settings-cli">cd ~/domains/presufactura.es/public_html/laravel
+php artisan migrate --force</pre>
+    <p class="text-muted">Si el código no está al día, usa <code>./deploy.sh</code> (hace git pull y migrate). Luego recarga esta página y sube tu certificado .p12.</p>
     @endif
 </div>
 
