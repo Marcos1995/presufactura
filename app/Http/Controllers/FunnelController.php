@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AnalyticsService;
+use App\Services\AdminOverviewService;
 use Illuminate\View\View;
 
 class FunnelController extends Controller
 {
-    public function index(AnalyticsService $analytics): View
+    public function index(AdminOverviewService $overview): View
     {
         abort_unless(auth()->user()?->isDemoAdmin(), 403);
 
-        $from = now()->subDays(30);
-
-        return view('funnel.index', [
-            'funnel' => $analytics->funnelCounts($from),
-            'traffic' => $analytics->trafficSplit($from),
-            'from' => $from,
-        ]);
+        return view('funnel.index', $overview->build());
     }
 }

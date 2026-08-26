@@ -117,6 +117,60 @@ class AnalyticsService
         ];
     }
 
+    public function uniqueSessions(?\DateTimeInterface $from = null): int
+    {
+        if (! Schema::hasTable('analytics_events')) {
+            return 0;
+        }
+
+        $query = AnalyticsEvent::query()
+            ->whereNotIn('source', [AnalyticsEvent::SOURCE_BOT, AnalyticsEvent::SOURCE_INTERNAL])
+            ->whereNotNull('visitor_hash');
+
+        if ($from) {
+            $query->where('created_at', '>=', $from);
+        }
+
+        return (int) $query->selectRaw('COUNT(DISTINCT visitor_hash) as c')->value('c');
+    }
+
+    /**
+     * @return array<string, array{human: int, bot: int}>
+     */
+    public function dailyLandingViews(?\DateTimeInterface $from = null): array
+    {
+        if (! Schema::hasTable('analytics_events')) {
+            return [];
+        }
+
+        $start = \Illuminate\Support\Carbon::parse($from ?? now()->subDays(13))->startOfDay();
+        $rows = AnalyticsEvent::query()
+            ->where('name', AnalyticsEvent::LANDING_VIEW)
+            ->where('created_at', '>=', $start)
+            ->selectRaw('DATE(created_at) as day, source, COUNT(*) as total')
+            ->groupBy('day', 'source')
+            ->get();
+
+        $days = [];
+        for ($d = $start->copy(); $d->lte(now()->endOfDay()); $d->addDay()) {
+            $days[$d->toDateString()] = ['human' => 0, 'bot' => 0];
+        }
+
+        foreach ($rows as $row) {
+            $day = substr((string) $row->day, 0, 10);
+            if (! isset($days[$day])) {
+                continue;
+            }
+            if ($row->source === AnalyticsEvent::SOURCE_BOT) {
+                $days[$day]['bot'] += (int) $row->total;
+            } elseif ($row->source !== AnalyticsEvent::SOURCE_INTERNAL) {
+                $days[$day]['human'] += (int) $row->total;
+            }
+        }
+
+        return $days;
+    }
+
     private function source(Request $request): string
     {
         if ($this->isInternal($request)) {

@@ -70,5 +70,31 @@ class AnalyticsTest extends TestCase
     {
         $user = User::factory()->onboarded()->create();
         $this->actingAs($user)->get('/embudo')->assertForbidden();
+        $this->actingAs($user)->get('/admin')->assertForbidden();
+    }
+
+    public function test_admin_dashboard_is_only_for_marcospc_and_lists_users(): void
+    {
+        $admin = User::factory()->onboarded()->create([
+            'email' => 'marcospc1995@gmail.com',
+            'name' => 'Marcos',
+        ]);
+        $other = User::factory()->onboarded()->create([
+            'email' => 'otro@example.com',
+            'name' => 'Otro Usuario',
+            'business_name' => 'Otro SL',
+        ]);
+
+        $this->get('/', ['User-Agent' => 'Mozilla/5.0'])->assertOk();
+        $this->get('/', ['User-Agent' => 'Googlebot/2.1'])->assertOk();
+
+        $this->actingAs($admin)->get('/admin')
+            ->assertOk()
+            ->assertSee('otro@example.com')
+            ->assertSee('Otro SL')
+            ->assertSee('Sesiones únicas')
+            ->assertSee('Bots y rastreadores');
+
+        $this->actingAs($admin)->get('/embudo')->assertOk()->assertSee('otro@example.com');
     }
 }

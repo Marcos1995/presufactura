@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('/dashboard/presupuesto-prueba', [QuickStartController::class, 'sampleQuote'])->middleware('doc.limit')->name('quickstart.quote');
         Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+        Route::get('/admin', [FunnelController::class, 'index'])->name('admin.index');
         Route::get('/embudo', [FunnelController::class, 'index'])->name('funnel.index');
         Route::get('/configuracion', [ProfileController::class, 'edit'])->name('settings.index');
         Route::put('/configuracion', [ProfileController::class, 'update'])->name('settings.update');

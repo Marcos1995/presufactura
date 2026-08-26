@@ -45,6 +45,12 @@
                     <svg class="nav-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                     <span class="nav-link__label">Configuración</span>
                 </a>
+                @if (auth()->user()->isDemoAdmin())
+                <a href="{{ route('admin.index') }}" class="nav-link {{ request()->routeIs('admin.index', 'funnel.index') ? 'active' : '' }}" title="Admin">
+                    <svg class="nav-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+                    <span class="nav-link__label">Admin</span>
+                </a>
+                @endif
             </nav>
             <div class="sidebar-footer">
                 <span class="user-name">{{ auth()->user()->name }}</span>
