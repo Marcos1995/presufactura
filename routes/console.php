@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('presufactura:process-reminders')->hourly();
+Schedule::command('presufactura:verifactu-retry-failed')->everyFifteenMinutes();

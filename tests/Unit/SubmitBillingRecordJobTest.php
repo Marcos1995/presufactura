@@ -97,6 +97,28 @@ class SubmitBillingRecordJobTest extends TestCase
         $this->assertSame('Timeout AEAT', $record->aeat_response['message']);
     }
 
+    public function test_uses_stored_password_when_cache_empty(): void
+    {
+        [$record, $user] = $this->makePendingRecord();
+        $user->sifConfig->storeCertPassword('secret');
+
+        $client = $this->createMock(AeatSoapClient::class);
+        $client->expects($this->once())
+            ->method('submit')
+            ->with($this->anything(), 'secret')
+            ->willReturn([
+                'success' => true,
+                'message' => 'Enviado',
+                'csv' => 'CSV',
+            ]);
+
+        $job = new SubmitBillingRecordJob($record->id);
+        $job->handle($client);
+
+        $record->refresh();
+        $this->assertSame(BillingRecord::STATUS_ACCEPTED, $record->aeat_status);
+    }
+
     /** @return array{0: BillingRecord, 1: User} */
     private function makePendingRecord(): array
     {

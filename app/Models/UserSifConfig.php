@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class UserSifConfig extends Model
 {
@@ -67,6 +69,36 @@ class UserSifConfig extends Model
         }
 
         return 'valid';
+    }
+
+    public function certPasswordPath(): string
+    {
+        return 'sif/certs/user_'.$this->user_id.'.pass.enc';
+    }
+
+    public function storeCertPassword(string $password): void
+    {
+        Storage::disk('local')->put($this->certPasswordPath(), encrypt($password));
+        Cache::put("verifactu:cert_password:{$this->user_id}", $password, now()->addDays(30));
+    }
+
+    public function certPassword(): ?string
+    {
+        $path = $this->certPasswordPath();
+        if (Storage::disk('local')->exists($path)) {
+            try {
+                $password = decrypt(Storage::disk('local')->get($path));
+                if (filled($password)) {
+                    return $password;
+                }
+            } catch (\Throwable) {
+                // fallback to cache
+            }
+        }
+
+        $cached = Cache::get("verifactu:cert_password:{$this->user_id}");
+
+        return filled($cached) ? $cached : null;
     }
 
     public function certificateStatusLabel(): string

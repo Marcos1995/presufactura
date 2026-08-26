@@ -6,7 +6,6 @@ use App\Models\BillingRecord;
 use App\Services\Verifactu\AeatSoapClient;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
@@ -41,9 +40,9 @@ class SubmitBillingRecordJob implements ShouldQueue
             return;
         }
 
-        $password = Cache::get("verifactu:cert_password:{$record->user_id}");
+        $password = $sifConfig->certPassword();
         if (! $password) {
-            Log::info('Veri*Factu: envío omitido (contraseña certificado no en caché)', [
+            Log::info('Veri*Factu: envío omitido (contraseña certificado no disponible)', [
                 'billing_record_id' => $record->id,
             ]);
 

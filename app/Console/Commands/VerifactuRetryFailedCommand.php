@@ -15,7 +15,7 @@ class VerifactuRetryFailedCommand extends Command
     public function handle(): int
     {
         $query = BillingRecord::query()
-            ->whereIn('aeat_status', [BillingRecord::STATUS_PENDING, BillingRecord::STATUS_REJECTED]);
+            ->where('aeat_status', BillingRecord::STATUS_PENDING);
 
         if ($userId = $this->option('user')) {
             $query->where('user_id', $userId);

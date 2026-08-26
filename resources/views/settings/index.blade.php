@@ -185,7 +185,7 @@
         <div class="form-group">
             <label for="cert_password">Contraseña del certificado</label>
             <input type="password" id="cert_password" name="cert_password" autocomplete="new-password">
-            <p class="text-muted">Solo se usa para validar y enviar a AEAT; no se almacena.</p>
+            <p class="text-muted">Se guarda cifrada para el envío a AEAT. Vuelve a indicarla si activas Veri*Factu en otro dispositivo.</p>
         </div>
 
         <div class="form-actions">

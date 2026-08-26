@@ -89,7 +89,7 @@ class ProfileController extends Controller
             'verifactu_enabled' => ['nullable', 'boolean'],
             'verifactu_mode' => ['required', 'in:verifactu,no_verifactu'],
             'cert_file' => ['nullable', 'file', 'max:5120', 'extensions:p12,pfx'],
-            'cert_password' => ['nullable', 'required_with:cert_file', 'string', 'max:255'],
+            'cert_password' => ['nullable', 'string', 'max:255'],
         ], [
             'cert_password.required_with' => 'Indica la contraseña del certificado.',
         ]);
@@ -98,6 +98,10 @@ class ProfileController extends Controller
         $config->user_id = $user->id;
         $config->enabled = $request->boolean('verifactu_enabled');
         $config->mode = $data['verifactu_mode'];
+
+        if ($request->hasFile('cert_file') && ! filled($data['cert_password'] ?? null)) {
+            return back()->withErrors(['cert_password' => 'Indica la contraseña del certificado.']);
+        }
 
         if ($request->hasFile('cert_file') && filled($data['cert_password'])) {
             $p12Content = file_get_contents($request->file('cert_file')->getRealPath());
@@ -124,8 +128,14 @@ class ProfileController extends Controller
             Storage::disk('local')->put($path, encrypt($p12Content));
             $config->cert_path = $path;
             $config->cert_expires_at = $expiresAt;
+        }
 
-            Cache::put("verifactu:cert_password:{$user->id}", $data['cert_password'], now()->addHours(24));
+        if (filled($data['cert_password'] ?? null)) {
+            $config->storeCertPassword($data['cert_password']);
+        } elseif ($config->enabled && $config->hasValidCertificate() && ! filled($config->certPassword())) {
+            return back()->withErrors([
+                'cert_password' => 'Indica la contraseña del certificado para poder enviar a la AEAT.',
+            ]);
         }
 
         $config->save();

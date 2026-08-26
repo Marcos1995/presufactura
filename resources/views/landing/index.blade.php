@@ -12,7 +12,7 @@
         <div class="hero-orb hero-orb--2"></div>
         <div class="hero-orb hero-orb--3"></div>
     </div>
-    <p class="hero-badge reveal">Para autónomos y pymes en España</p>
+    <p class="hero-badge reveal">Veri*Factu opcional · Autónomos en España</p>
     <h1 class="reveal reveal-delay-1">De presupuesto a cobro<br>en minutos, no en horas</h1>
     <p class="hero-sub reveal reveal-delay-2">Crea presupuestos y facturas, envíalos por email con PDF y activa Veri*Factu cuando quieras cumplir con Hacienda. Sin instalaciones. Completamente gratis.</p>
     <div class="hero-actions reveal reveal-delay-3">
@@ -28,7 +28,26 @@
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> IVA incluido</span>
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> PDF + email</span>
         <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Enlace público</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Veri*Factu</span>
+        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> QR Veri*Factu</span>
+    </div>
+</section>
+
+<section class="landing-verifactu" id="verifactu">
+    <div class="verifactu-panel reveal">
+        <span class="pricing-badge">Veri*Factu</span>
+        <h2>Facturas verificables ante Hacienda</h2>
+        <p class="verifactu-lead">Actívalo en Configuración cuando quieras. Sin Veri*Factu los documentos son proforma; con certificado .p12 las facturas enviadas cumplen el RRSIF.</p>
+        <ul>
+            <li>Certificado electrónico .p12 del autónomo</li>
+            <li>Hash encadenado y registro SIF por factura</li>
+            <li>Código QR en el PDF y envío SOAP a la AEAT</li>
+            <li>Anulación y rectificativas cuando Hacienda acepta el alta</li>
+        </ul>
+        @if ($loggedIn)
+            <a href="{{ route('settings.index') }}" class="btn btn-primary">Activar en Configuración</a>
+        @else
+            <a href="{{ route('register') }}" class="btn btn-primary">Crear cuenta y activarlo</a>
+        @endif
     </div>
 </section>
 

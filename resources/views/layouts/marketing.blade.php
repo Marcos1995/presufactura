@@ -32,6 +32,7 @@
             @include('layouts.partials.logo', ['href' => route('landing')])
             <button type="button" class="nav-toggle" aria-label="Menú" aria-expanded="false">☰</button>
             <nav class="landing-nav">
+                <a href="{{ url('/#verifactu') }}">Veri*Factu</a>
                 <a href="{{ route('pricing') }}">Precios</a>
                 <a href="{{ route('help') }}">Ayuda</a>
                 @if (auth()->check())

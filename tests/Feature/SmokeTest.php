@@ -14,7 +14,9 @@ class SmokeTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Tres pasos. Cobras.')
-            ->assertSee('Empezar gratis');
+            ->assertSee('Facturas verificables ante Hacienda')
+            ->assertSee('Empezar gratis')
+            ->assertDontSee('landing-marquee', false);
     }
 
     public function test_pricing_page_returns_200(): void

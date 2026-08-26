@@ -20,7 +20,7 @@
                 <li>Recordatorios automáticos al cliente (+3/+7/+14 días)</li>
                 <li>Email «¿cobraste?» día +10</li>
                 <li>Botón «He pagado» para clientes</li>
-                <li>Veri*Factu opcional (certificado + envío AEAT)</li>
+                <li>Veri*Factu: certificado, QR, hash SIF y envío AEAT</li>
             </ul>
             @if ($loggedIn)
                 <a href="{{ route('dashboard') }}" class="btn btn-primary btn-block">Ir al panel</a>
