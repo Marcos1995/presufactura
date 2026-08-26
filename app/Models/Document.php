@@ -227,12 +227,14 @@ class Document extends Model
 
     public function statusLabel(): string
     {
+        $quote = $this->isQuote();
+
         return match ($this->status) {
             self::STATUS_DRAFT => 'Borrador',
-            self::STATUS_SENT => 'Enviada',
-            self::STATUS_EXPIRED => 'Vencida',
+            self::STATUS_SENT => $quote ? 'Enviado' : 'Enviada',
+            self::STATUS_EXPIRED => $quote ? 'Caducado' : 'Vencida',
             self::STATUS_PAID => 'Pagada',
-            self::STATUS_ACCEPTED => 'Aceptada',
+            self::STATUS_ACCEPTED => 'Aceptado',
             self::STATUS_PAYMENT_PENDING => 'Pago pendiente',
             self::STATUS_CANCELLED => 'Anulada',
             default => ucfirst($this->status),

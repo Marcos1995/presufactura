@@ -54,6 +54,7 @@ class SeoGuidesTest extends TestCase
     {
         $html = $this->get('/no-existe-esta-ruta')->assertNotFound()->getContent();
         $this->assertStringContainsString('Página no encontrada', $html);
+        $this->assertStringContainsString('Plus+Jakarta+Sans', $html);
         $this->assertStringNotContainsString('Stack trace', $html);
         $this->assertStringNotContainsString('Illuminate\\', $html);
     }

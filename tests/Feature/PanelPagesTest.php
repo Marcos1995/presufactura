@@ -40,7 +40,40 @@ class PanelPagesTest extends TestCase
         $css = file_get_contents(public_path('css/app.css'));
         $this->assertStringContainsString('position: sticky', $css);
         $this->assertStringContainsString('height: 100dvh', $css);
+        $this->assertStringContainsString('overflow-wrap: anywhere', $css);
+        $this->assertStringContainsString('.alert-warning', $css);
         $this->actingAs($user)->get('/clientes')->assertOk();
+        $this->actingAs($user)->get('/facturas/nueva')
+            ->assertOk()
+            ->assertSee('Crea un cliente primero');
+        $this->actingAs($user)->get('/presupuestos/nuevo')
+            ->assertOk()
+            ->assertSee('Crea un cliente primero');
+        $this->actingAs($user)->get('/stripe/cancel')
+            ->assertOk()
+            ->assertDontSee('Ver planes')
+            ->assertSee('Ir al dashboard');
+    }
+
+    public function test_quote_show_offers_pdf_and_quote_status_gender(): void
+    {
+        $user = $this->verifiedUser();
+        $client = $this->createClient($user);
+        $quote = $this->createDocument($user, $client, [
+            'type' => \App\Models\Document::TYPE_QUOTE,
+            'number' => 'PRE-TEST-001',
+            'status' => \App\Models\Document::STATUS_SENT,
+            'due_date' => null,
+            'valid_until' => now()->addDays(15)->toDateString(),
+            'sent_at' => now(),
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('quotes.show', $quote))
+            ->assertOk()
+            ->assertSee(route('quotes.pdf', $quote), false)
+            ->assertSee('Enviado')
+            ->assertDontSee('Enviada');
     }
 
     public function test_sent_invoice_show_page_works_without_paid_at(): void

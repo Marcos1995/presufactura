@@ -44,7 +44,10 @@
                     <td data-label="Válido hasta">{{ $quote->valid_until?->format('d/m/Y') ?? '—' }}</td>
                     <td data-label="Estado"><span class="badge badge-{{ $quote->status }}">{{ $quote->statusLabel() }}</span></td>
                     <td data-label="Total" class="text-right">{{ number_format($quote->total, 2, ',', '.') }} €</td>
-                    <td class="table-actions"><a href="{{ route('quotes.show', $quote) }}">Ver</a></td>
+                    <td class="table-actions">
+                        <a href="{{ route('quotes.show', $quote) }}">Ver</a>
+                        <a href="{{ route('quotes.pdf', $quote) }}">PDF</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

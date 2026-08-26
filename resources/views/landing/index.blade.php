@@ -98,7 +98,7 @@
                     <div class="mock-table">
                         <div class="mock-row head"><span>Número</span><span>Cliente</span><span>Estado</span><span>Total</span></div>
                         <div class="mock-row"><span>FAC-2026-012</span><span>Acme SL</span><span class="badge-sent">Enviada</span><span>1.210 €</span></div>
-                        <div class="mock-row"><span>PRE-2026-008</span><span>López Design</span><span class="badge-accepted">Aceptada</span><span>890 €</span></div>
+                        <div class="mock-row"><span>PRE-2026-008</span><span>López Design</span><span class="badge-accepted">Aceptado</span><span>890 €</span></div>
                         <div class="mock-row"><span>FAC-2026-011</span><span>Studio Norte</span><span class="badge-paid">Pagada</span><span>450 €</span></div>
                     </div>
                 </div>
@@ -115,9 +115,9 @@
                     <div class="mock-panel-title">Presupuestos activos</div>
                     <div class="mock-table">
                         <div class="mock-row head"><span>Número</span><span>Cliente</span><span>Estado</span><span>Total</span></div>
-                        <div class="mock-row"><span>PRE-2026-008</span><span>López Design</span><span class="badge-accepted">Aceptada</span><span>890 €</span></div>
-                        <div class="mock-row"><span>PRE-2026-007</span><span>TechStart</span><span class="badge-sent">Enviada</span><span>2.400 €</span></div>
-                        <div class="mock-row"><span>PRE-2026-006</span><span>Consulting Pro</span><span class="badge-sent">Enviada</span><span>650 €</span></div>
+                        <div class="mock-row"><span>PRE-2026-008</span><span>López Design</span><span class="badge-accepted">Aceptado</span><span>890 €</span></div>
+                        <div class="mock-row"><span>PRE-2026-007</span><span>TechStart</span><span class="badge-sent">Enviado</span><span>2.400 €</span></div>
+                        <div class="mock-row"><span>PRE-2026-006</span><span>Consulting Pro</span><span class="badge-sent">Enviado</span><span>650 €</span></div>
                     </div>
                 </div>
             </div>

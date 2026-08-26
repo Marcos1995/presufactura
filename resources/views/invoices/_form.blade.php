@@ -97,7 +97,7 @@
 
         <div class="form-actions">
             <a href="{{ route('invoices.index') }}" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary">{{ $invoice ? 'Guardar cambios' : 'Crear factura' }}</button>
+            <button type="submit" class="btn btn-primary" @disabled($clients->isEmpty())>{{ $invoice ? 'Guardar cambios' : 'Crear factura' }}</button>
         </div>
     </form>
 </div>

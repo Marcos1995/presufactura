@@ -5,6 +5,7 @@
 
 @section('content')
 <div class="page-toolbar">
+    <a href="{{ route('quotes.pdf', $quote) }}" class="btn btn-secondary">Descargar PDF</a>
     @if ($quote->canSend())
     <form method="POST" action="{{ route('quotes.send', $quote) }}" class="inline-form" onsubmit="return confirm('¿Enviar presupuesto por email al cliente?')">
         @csrf
@@ -33,7 +34,6 @@
     <div class="public-link-row">
         <input type="text" readonly id="quote-public-link" value="{{ $quote->publicUrl() }}" class="public-link-input" onclick="this.select()">
         <button type="button" class="btn btn-secondary btn-sm" data-copy="#quote-public-link">Copiar</button>
-        <a href="{{ route('quotes.pdf', $quote) }}" class="btn btn-secondary btn-sm">PDF</a>
     </div>
 </div>
 @endif

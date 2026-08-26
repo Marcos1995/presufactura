@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
     <title>Página no encontrada — PresuFactura</title>
-    <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
+    @include('layouts.partials.favicon')
+    @include('layouts.partials.fonts')
     @include('layouts.partials.app-css')
 </head>
 <body class="guest-body">

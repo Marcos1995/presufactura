@@ -17,6 +17,9 @@
                     @endforeach
                 </select>
                 @error('client_id')<span class="form-error">{{ $message }}</span>@enderror
+                @if ($clients->isEmpty())
+                    <span class="form-hint"><a href="{{ route('clients.create') }}">Crea un cliente primero</a></span>
+                @endif
             </div>
             <div class="form-group">
                 <label for="issue_date">Fecha emisión *</label>
@@ -94,7 +97,7 @@
 
         <div class="form-actions">
             <a href="{{ route('quotes.index') }}" class="btn btn-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary">{{ $quote ? 'Guardar cambios' : 'Crear presupuesto' }}</button>
+            <button type="submit" class="btn btn-primary" @disabled($clients->isEmpty())>{{ $quote ? 'Guardar cambios' : 'Crear presupuesto' }}</button>
         </div>
     </form>
 </div>
