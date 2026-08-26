@@ -79,8 +79,58 @@ Options -Indexes
 cd ~/domains/presufactura.es/public_html
 git clone <repo-url> laravel
 # o actualizar:
-cd laravel && ./deploy.sh
+cd laravel && bash deploy.sh
 ```
+
+### PuTTY (Hostinger) — si `./deploy.sh` falla
+
+Pega **una línea cada vez**. No copies las comillas de markdown.
+
+```bash
+find $HOME -name artisan 2>/dev/null
+```
+
+Entra en la carpeta que salga (suele ser `.../public_html/laravel`) y:
+
+```bash
+cd ~/domains/presufactura.es/public_html/laravel
+php -v
+git status
+git pull origin main
+php artisan migrate --force
+php artisan storage:link
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan presufactura:smoke-test
+```
+
+Si `cd` dice que no existe:
+
+```bash
+cd ~/public_html/laravel
+```
+
+Si `./deploy.sh` da *Permission denied*:
+
+```bash
+bash deploy.sh
+```
+
+Si `git pull` pide usuario: GitHub no acepta la contraseña de la cuenta. Usa un remote SSH o un token.
+
+Si `php` no es 8.3:
+
+```bash
+php8.3 artisan migrate --force
+```
+
+o:
+
+```bash
+/opt/alt/php83/usr/bin/php artisan migrate --force
+```
+
 
 ## 2. Assets (CSS/JS)
 
