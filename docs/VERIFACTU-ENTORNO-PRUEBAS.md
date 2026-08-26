@@ -78,6 +78,7 @@ VERIFACTU_TEST_P12_PASSWORD=contraseña
 
 ```bash
 php artisan test --group=aeatinternal
+php artisan presufactura:verifactu-aeat-preprod
 ```
 
 ## Criterios para pasar a producción

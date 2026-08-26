@@ -271,10 +271,16 @@ a:hover { text-decoration: underline; }
 .panel-layout {
     display: flex;
     min-height: 100vh;
+    align-items: flex-start;
 }
 
 .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
     width: var(--sidebar-width);
+    height: 100vh;
+    height: 100dvh;
     background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
     color: #fff;
     display: flex;
@@ -291,6 +297,7 @@ a:hover { text-decoration: underline; }
     gap: 0.5rem;
     padding: 1.25rem 1rem 1.25rem 1.25rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
 }
 .sidebar-brand a {
     color: #fff;
@@ -325,7 +332,9 @@ a:hover { text-decoration: underline; }
 }
 html.sidebar-collapsed .menu-fold__icon { transform: rotate(180deg); }
 .sidebar-nav {
-    flex: 1;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
     padding: 1rem 0;
 }
 .nav-link {
@@ -362,6 +371,8 @@ html.sidebar-collapsed .menu-fold__icon { transform: rotate(180deg); }
     padding: 1rem 1.5rem;
     border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.85rem;
+    margin-top: auto;
+    flex-shrink: 0;
 }
 .user-name {
     display: block;
@@ -1414,11 +1425,15 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
     .landing-nav .btn { width: 100%; text-align: center; }
     .landing-header { position: relative; padding: 0.85rem 1rem; }
     .landing-header-inner { position: relative; flex-wrap: wrap; }
-    .panel-layout { flex-direction: column; }
+    .panel-layout { flex-direction: column; align-items: stretch; }
     .menu-fold { display: none !important; }
     html.sidebar-collapsed .sidebar,
     .sidebar {
+        position: relative;
+        top: auto;
+        align-self: auto;
         width: 100%;
+        height: auto;
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;

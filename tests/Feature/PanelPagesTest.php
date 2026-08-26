@@ -36,6 +36,10 @@ class PanelPagesTest extends TestCase
             ->assertSee('css/app.css?v=', false)
             ->assertSee('js/app.js?v=', false)
             ->assertDontSee('class="sidebar-toggle"', false);
+
+        $css = file_get_contents(public_path('css/app.css'));
+        $this->assertStringContainsString('position: sticky', $css);
+        $this->assertStringContainsString('height: 100dvh', $css);
         $this->actingAs($user)->get('/clientes')->assertOk();
     }
 
