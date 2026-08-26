@@ -112,4 +112,24 @@ class DemoCatalogTest extends TestCase
             ->assertOk()
             ->assertSee('Certificado de desarrollo');
     }
+
+    public function test_dev_cert_command_adds_missing_is_dev_cert_column(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('local');
+        User::factory()->onboarded()->create([
+            'email' => 'marcospc1995@gmail.com',
+            'tax_id' => '89890001K',
+        ]);
+
+        \Illuminate\Support\Facades\Schema::table('user_sif_config', function (\Illuminate\Database\Schema\Blueprint $table) {
+            $table->dropColumn('is_dev_cert');
+        });
+        $this->assertFalse(\Illuminate\Support\Facades\Schema::hasColumn('user_sif_config', 'is_dev_cert'));
+
+        $this->artisan('presufactura:verifactu-dev-cert')
+            ->assertSuccessful();
+
+        $this->assertTrue(\Illuminate\Support\Facades\Schema::hasColumn('user_sif_config', 'is_dev_cert'));
+        $this->assertTrue(User::where('email', 'marcospc1995@gmail.com')->first()->sifConfig->is_dev_cert);
+    }
 }

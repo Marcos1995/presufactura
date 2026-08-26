@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\VerifactuSchema;
 use Illuminate\Console\Command;
 
 class PrepareTestUserCommand extends Command
@@ -18,6 +19,9 @@ class PrepareTestUserCommand extends Command
 
             return self::FAILURE;
         }
+
+        $this->call('migrate', ['--force' => true]);
+        VerifactuSchema::ensureDevCertColumn();
 
         $cert = $this->call('presufactura:verifactu-dev-cert');
         if ($cert !== self::SUCCESS) {

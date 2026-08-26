@@ -17,8 +17,11 @@ class InstallVerifactuDevCertCommand extends Command
 
     public function handle(): int
     {
+        $this->call('migrate', ['--force' => true]);
+        VerifactuSchema::ensureDevCertColumn();
+
         if (! VerifactuSchema::hasSifConfigTable()) {
-            $this->error('Faltan tablas Veri*Factu. Ejecuta php artisan migrate.');
+            $this->error('Faltan tablas Veri*Factu. Ejecuta php artisan migrate --force.');
 
             return self::FAILURE;
         }
