@@ -106,6 +106,8 @@ class QrServiceTest extends TestCase
         $this->assertStringContainsString('Factura verificable en sede.agenciatributaria.gob.es', $html);
         $this->assertStringContainsString('badge-fiscal', $html);
         $this->assertStringContainsString($qrDataUri, $html);
+        $this->assertStringNotContainsString('#2563eb', $html);
+        $this->assertStringNotContainsString('#1e40af', $html);
     }
 
     public function test_invoice_view_keeps_proforma_disclaimer_without_billing_record(): void

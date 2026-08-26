@@ -589,7 +589,8 @@ a:hover { text-decoration: underline; }
 .badge-expired { background: #fee2e2; color: #991b1b; }
 .badge-cancelled { background: #f3f4f6; color: #6b7280; text-decoration: line-through; }
 .badge-accepted { background: #dbeafe; color: #1e40af; }
-.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-pending,
+.badge-payment_pending { background: #fef3c7; color: #92400e; }
 .badge-rejected { background: #fee2e2; color: #991b1b; }
 .badge-cert-valid { background: #dcfce7; color: #166534; }
 .badge-cert-expired { background: #fee2e2; color: #991b1b; }
@@ -1042,10 +1043,12 @@ a:hover { text-decoration: underline; }
 .mock-row:not(.head):hover { background: var(--gray-50); }
 .mock-row.head { background: var(--gray-50); font-weight: 600; color: var(--gray-500); font-size: 0.72rem; }
 .mock-row:last-child { border-bottom: none; }
-.badge-sent, .badge-accepted, .badge-paid { font-size: 0.68rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-weight: 600; }
-.badge-sent { background: #dbeafe; color: #1d4ed8; }
-.badge-accepted { background: #dcfce7; color: #166534; }
-.badge-paid { background: #f3f4f6; color: #374151; }
+.screenshot-mock .badge-sent,
+.screenshot-mock .badge-accepted,
+.screenshot-mock .badge-paid { font-size: 0.68rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-weight: 600; }
+.screenshot-mock .badge-sent { background: #dbeafe; color: #1d4ed8; }
+.screenshot-mock .badge-accepted { background: #dcfce7; color: #166534; }
+.screenshot-mock .badge-paid { background: #f3f4f6; color: #374151; }
 .pricing-badge {
     display: inline-block;
     background: linear-gradient(135deg, var(--primary), var(--accent));
