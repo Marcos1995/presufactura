@@ -258,6 +258,11 @@ a:hover { text-decoration: underline; }
     color: #991b1b;
     border: 1px solid #fecaca;
 }
+.alert-info {
+    background: #eff6ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+}
 
 /* Panel layout */
 .panel-body { min-height: 100vh; }
@@ -629,13 +634,13 @@ a:hover { text-decoration: underline; }
 .accept-form { margin-top: 1.5rem; }
 
 /* Landing */
-.landing-body { background: #fff; }
+.landing-body { background: #fff; overflow-x: clip; }
 .landing-header {
     position: sticky;
     top: 0;
     z-index: 100;
     border-bottom: 1px solid transparent;
-    padding: 0.85rem 2rem;
+    padding: 0.85rem clamp(1.25rem, 5vw, 2rem);
     background: rgba(255,255,255,0.85);
     backdrop-filter: blur(12px);
     transition: border-color var(--transition), box-shadow var(--transition);
@@ -686,7 +691,7 @@ a:hover { text-decoration: underline; }
 .landing-hero {
     position: relative;
     text-align: center;
-    padding: 5rem 2rem 4rem;
+    padding: 5rem clamp(1.25rem, 5vw, 2rem) 4rem;
     overflow: hidden;
     background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 45%, #fff 100%);
 }
@@ -772,7 +777,7 @@ a:hover { text-decoration: underline; }
 }
 .trust-item svg { width: 16px; height: 16px; color: var(--success); flex-shrink: 0; }
 .landing-features, .landing-pricing {
-    padding: 4rem 2rem;
+    padding: 4rem clamp(1.25rem, 5vw, 2rem);
     max-width: 960px;
     margin: 0 auto;
 }
@@ -866,41 +871,55 @@ a:hover { text-decoration: underline; }
 .landing-footer p { margin: 0.25rem 0; }
 
 .landing-verifactu {
-    padding: 2.5rem 2rem 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 2.5rem clamp(1.25rem, 5vw, 2rem) 1.5rem;
+}
+.verifactu-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0;
 }
 .verifactu-panel {
-    max-width: 640px;
+    max-width: 100%;
     margin: 0 auto;
     background: #fff;
     border: 1px solid var(--primary);
     box-shadow: 0 0 0 1px var(--primary), var(--shadow-lg);
     border-radius: var(--radius-lg);
-    padding: 2rem;
+    padding: 2rem clamp(1.15rem, 4vw, 2rem);
     text-align: center;
     background-image: linear-gradient(180deg, #eff6ff 0%, #fff 42%);
+    box-sizing: border-box;
 }
 .verifactu-panel h2 {
-    margin: 0.75rem 0 0.75rem;
+    margin: 0.75rem auto;
     font-weight: 800;
     letter-spacing: -0.02em;
+    text-wrap: balance;
+    max-width: 22rem;
 }
 .verifactu-lead {
     margin: 0 auto 1.25rem;
-    max-width: 520px;
+    max-width: 36rem;
     color: var(--gray-500);
     line-height: 1.65;
+    text-wrap: pretty;
 }
-.verifactu-panel ul {
+.verifactu-points {
     list-style: none;
     padding: 0;
-    margin: 0 0 1.5rem;
+    margin: 0 auto 1.5rem;
+    width: fit-content;
+    max-width: 100%;
     text-align: left;
 }
-.verifactu-panel li {
-    padding: 0.4rem 0;
+.verifactu-points li {
+    padding: 0.4rem 0 0.4rem 0.15rem;
     color: var(--gray-700);
 }
-.verifactu-panel li::before { content: "✓ "; color: var(--success); }
+.verifactu-points li::before { content: "✓ "; color: var(--success); }
 
 /* Landing F8 — screenshots, FAQ, CTA */
 .hero-badge {
@@ -934,7 +953,7 @@ a:hover { text-decoration: underline; }
     margin-bottom: 0.75rem;
 }
 .landing-screenshots {
-    padding: 4rem 2rem 5rem;
+    padding: 4rem clamp(1.25rem, 5vw, 2rem) 5rem;
     background: linear-gradient(180deg, var(--gray-50) 0%, #fff 100%);
 }
 .screenshots-inner { max-width: 960px; margin: 0 auto; text-align: center; }
@@ -1039,7 +1058,7 @@ a:hover { text-decoration: underline; }
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
-.landing-faq { padding: 3rem 2rem; max-width: 720px; margin: 0 auto; }
+.landing-faq { padding: 3rem clamp(1.25rem, 5vw, 2rem); max-width: 720px; margin: 0 auto; }
 .faq-section-inner h2 { text-align: center; margin-bottom: 2rem; }
 .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
 .faq-item {
@@ -1075,7 +1094,7 @@ a:hover { text-decoration: underline; }
 .faq-more { text-align: center; margin-top: 1.5rem; }
 .landing-cta {
     text-align: center;
-    padding: 5rem 2rem;
+    padding: 5rem clamp(1.25rem, 5vw, 2rem);
     background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
     color: #fff;
     position: relative;
@@ -1391,7 +1410,11 @@ a:hover { text-decoration: underline; }
         padding: 1rem;
     }
     .panel-main { padding: 1rem; }
+    .landing-hero { padding: 3.25rem 1.25rem 2.5rem; }
     .landing-hero h1 { font-size: 2rem; }
+    .landing-verifactu { padding: 1.75rem 1.25rem 1.25rem; }
+    .verifactu-panel { padding: 1.5rem 1.15rem; }
+    .landing-cta { padding: 3.5rem 1.25rem; }
     .mock-stats { grid-template-columns: repeat(2, 1fr); }
     .mock-row { grid-template-columns: 1fr 1fr; font-size: 0.75rem; }
     .mock-row span:nth-child(3), .mock-row span:nth-child(4) { display: none; }
@@ -1577,7 +1600,7 @@ a:hover { text-decoration: underline; }
 .landing-flow {
     max-width: 1040px;
     margin: 0 auto;
-    padding: 4rem 2rem 2rem;
+    padding: 4rem clamp(1.25rem, 5vw, 2rem) 2rem;
     text-align: center;
 }
 .flow-track {

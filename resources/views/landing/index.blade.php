@@ -33,11 +33,12 @@
 </section>
 
 <section class="landing-verifactu" id="verifactu">
+    <div class="verifactu-inner">
     <div class="verifactu-panel reveal">
         <span class="pricing-badge">Veri*Factu</span>
         <h2>Facturas verificables ante Hacienda</h2>
         <p class="verifactu-lead">Actívalo en Configuración cuando quieras. Sin Veri*Factu los documentos son proforma; con certificado .p12 las facturas enviadas cumplen el RRSIF.</p>
-        <ul>
+        <ul class="verifactu-points">
             <li>Certificado electrónico .p12 del autónomo</li>
             <li>Hash encadenado y registro SIF por factura</li>
             <li>Código QR en el PDF y envío SOAP a la AEAT</li>
@@ -48,6 +49,7 @@
         @else
             <a href="{{ route('register') }}" class="btn btn-primary">Crear cuenta y activarlo</a>
         @endif
+    </div>
     </div>
 </section>
 

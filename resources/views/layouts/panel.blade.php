@@ -52,6 +52,9 @@
                 <h1>@yield('heading', 'Panel')</h1>
             </header>
             <main class="panel-main">
+                @if (auth()->user()->isDemoAdmin())
+                    <div class="alert alert-info">Catálogo de ejemplo: solo tu cuenta ve estos documentos de demostración. El SIF se genera sin envío a AEAT.</div>
+                @endif
                 @if (session('status'))
                     <div class="alert alert-success">{{ session('status') }}</div>
                 @endif

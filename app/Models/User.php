@@ -135,6 +135,14 @@ class User extends Authenticatable implements MustVerifyEmail
             && $this->sifConfig?->hasValidCertificate() === true;
     }
 
+    public function isDemoAdmin(): bool
+    {
+        $email = config('demo.admin_email');
+
+        return filled($email)
+            && strcasecmp((string) $this->email, $email) === 0;
+    }
+
     /**
      * Historicamente distinguía plan Pro. La app es 100% gratuita: todas las funciones están incluidas.
      */
