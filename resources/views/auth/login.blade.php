@@ -6,6 +6,8 @@
 <div class="auth-card">
     <h1>Iniciar sesión</h1>
 
+    @include('auth._google-button')
+
     <form method="POST" action="{{ route('login') }}" class="form">
         @csrf
 

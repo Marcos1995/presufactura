@@ -6,6 +6,8 @@
 <div class="auth-card">
     <h1>Crear cuenta</h1>
 
+    @include('auth._google-button', ['analyticsEvent' => 'signup_cta_click'])
+
     <form method="POST" action="{{ route('register') }}" class="form">
         @csrf
 

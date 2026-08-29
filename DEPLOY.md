@@ -218,6 +218,21 @@ La app es gratuita: no hace falta configurar Stripe para producción.
 Si quedan variables `STRIPE_*` en `.env`, puedes dejarlas vacías o eliminarlas.
 El webhook y Customer Portal solo aplican si hubiera suscripciones antiguas.
 
+## 6b. Login con Google
+
+En [Google Cloud Console](https://console.cloud.google.com/apis/credentials) crea un ID de cliente OAuth (aplicación web):
+
+- Orígenes: `https://presufactura.es`
+- URI de redirección: `https://presufactura.es/auth/google/callback`
+
+```env
+GOOGLE_CLIENT_ID=....apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=...
+GOOGLE_REDIRECT_URI=https://presufactura.es/auth/google/callback
+```
+
+Sin estas variables el botón «Continuar con Google» no se muestra; el registro por email sigue funcionando.
+
 ## 7. Deploy rutinario
 
 ```bash

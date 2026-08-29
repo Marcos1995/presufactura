@@ -45,6 +45,7 @@ class SmokeTest extends TestCase
         $this->get('/privacidad')
             ->assertOk()
             ->assertDontSee('Stripe (pagos)')
-            ->assertSee('Veri*Factu');
+            ->assertSee('Veri*Factu')
+            ->assertSee('Continuar con Google');
     }
 }

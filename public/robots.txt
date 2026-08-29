@@ -8,6 +8,7 @@ Allow: /privacidad
 Allow: /cookies
 Disallow: /login
 Disallow: /registro
+Disallow: /auth/
 Disallow: /password
 Disallow: /email
 Disallow: /dashboard

@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentActionController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FunnelController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\InvoiceController;
@@ -55,6 +56,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
     Route::get('/registro', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/registro', [AuthController::class, 'register'])->middleware('throttle:register');
+    Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->middleware('throttle:login')->name('auth.google');
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->middleware('throttle:login')->name('auth.google.callback');
     Route::get('/password/olvidada', [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/password/olvidada', [AuthController::class, 'sendResetLinkEmail'])->middleware('throttle:6,1')->name('password.email');
     Route::get('/password/restablecer/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');

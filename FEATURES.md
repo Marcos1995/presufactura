@@ -4,7 +4,7 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 
 ## Acceso y cuenta
 
-- Registro / login / verificación email / reset password
+- Registro / login (email o Google) / verificación email / reset password
 - Onboarding 3 pasos (datos fiscales, IBAN, preferencias + recordatorios)
 - Configuración de perfil: logo, NIF, dirección, IVA, prefijos, vencimiento
 - Baja de cuenta (RGPD)

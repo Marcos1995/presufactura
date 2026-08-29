@@ -25,7 +25,7 @@ php artisan storage:link
 php artisan serve
 ```
 
-Abre http://localhost:8000 — registro en `/registro`, login en `/login`.
+Abre http://localhost:8000 — registro en `/registro`, login en `/login` (email o Google si configuras `GOOGLE_CLIENT_*`).
 
 ## Fases completadas
 

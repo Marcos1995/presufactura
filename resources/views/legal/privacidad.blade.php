@@ -16,7 +16,7 @@
 
     <h2>2. Datos que recogemos</h2>
     <ul>
-        <li><strong>Datos de cuenta:</strong> nombre, email, contraseña (cifrada).</li>
+        <li><strong>Datos de cuenta:</strong> nombre, email, contraseña (cifrada) o identificador de Google si entras con esa cuenta.</li>
         <li><strong>Datos fiscales:</strong> nombre comercial, NIF/CIF, dirección, IBAN, logo.</li>
         <li><strong>Datos de clientes:</strong> los que introduces para emitir documentos.</li>
         <li><strong>Datos de documentos:</strong> presupuestos y facturas que emites, con sus líneas e importes.</li>
@@ -32,6 +32,7 @@
     <ul>
         <li>Proveedor de hosting (servidores en UE).</li>
         <li>Proveedor SMTP (envío de emails).</li>
+        <li>Google, solo si eliges «Continuar con Google» (nombre y email de esa cuenta).</li>
         <li>AEAT, solo si activas Veri*Factu (registros SIF de facturación).</li>
     </ul>
 
