@@ -10,6 +10,7 @@ use App\Models\UserSifConfig;
 use App\Services\PdfGeneratorService;
 use App\Services\Verifactu\QrService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
 use Tests\TestCase;
 
@@ -54,6 +55,7 @@ class QrServiceTest extends TestCase
             config('verifactu.qr_urls.preprod.no_verifactu'),
             $url
         );
+        $this->assertStringContainsString('ValidarQRNoVerifactu', $url);
     }
 
     public function test_generate_data_uri_returns_png_base64(): void
@@ -79,6 +81,22 @@ class QrServiceTest extends TestCase
         $this->assertTrue($this->service->shouldShowQr($record));
     }
 
+    public function test_official_cotejo_probe_accepts_aeat_ok_payload(): void
+    {
+        Http::fake([
+            '*' => Http::response([
+                'status' => 'OK',
+                'mensaje' => 'Encontrada',
+                'respuesta' => ['resultado' => '00', 'nif' => '89890001K'],
+            ], 200),
+        ]);
+
+        $probe = $this->service->probeOfficialCotejo();
+
+        $this->assertTrue($probe['ok']);
+        $this->assertSame('Encontrada', $probe['mensaje']);
+    }
+
     public function test_invoice_pdf_includes_qr_when_billing_record_exists(): void
     {
         $record = $this->makeBillingRecord();
@@ -88,6 +106,7 @@ class QrServiceTest extends TestCase
 
         $this->assertNotEmpty($pdf);
         $this->assertStringStartsWith('%PDF', $pdf);
+        $this->assertMatchesRegularExpression('/\/(Subtype\s*\/Image|XObject)/', $pdf);
     }
 
     public function test_invoice_view_shows_fiscal_badge_and_qr_legend(): void
@@ -103,9 +122,11 @@ class QrServiceTest extends TestCase
             'isFiscal' => true,
         ])->render();
 
-        $this->assertStringContainsString('Factura verificable en sede.agenciatributaria.gob.es', $html);
+        $this->assertStringContainsString('Factura verificable en la sede electrónica de la AEAT', $html);
+        $this->assertStringContainsString('VERI*FACTU', $html);
         $this->assertStringContainsString('badge-fiscal', $html);
         $this->assertStringContainsString($qrDataUri, $html);
+        $this->assertStringContainsString('32mm', $html);
         $this->assertStringNotContainsString('#2563eb', $html);
         $this->assertStringNotContainsString('#1e40af', $html);
         $this->assertStringNotContainsString('background: #111111', $html);
@@ -143,7 +164,7 @@ class QrServiceTest extends TestCase
 
         $this->assertStringContainsString('Documento proforma', $html);
         $this->assertStringContainsString('No válido como factura fiscal', $html);
-        $this->assertStringNotContainsString('Factura verificable en sede.agenciatributaria.gob.es', $html);
+        $this->assertStringNotContainsString('Factura verificable en la sede electrónica de la AEAT', $html);
     }
 
     private function makeBillingRecord(string $mode = UserSifConfig::MODE_VERIFACTU): BillingRecord

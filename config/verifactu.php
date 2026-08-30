@@ -20,11 +20,11 @@ return [
     'qr_urls' => [
         'preprod' => [
             'verifactu' => 'https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR',
-            'no_verifactu' => 'https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR',
+            'no_verifactu' => 'https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQRNoVerifactu',
         ],
         'prod' => [
             'verifactu' => 'https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQR',
-            'no_verifactu' => 'https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQR',
+            'no_verifactu' => 'https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQRNoVerifactu',
         ],
     ],
 

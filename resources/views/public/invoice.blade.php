@@ -35,6 +35,8 @@
                     <span class="badge badge-{{ $invoice->status }}">{{ $invoice->statusLabel() }}</span>
                 </div>
 
+                @include('partials.verifactu-qr')
+
                 <div class="invoice-meta">
                     <div>
                         <strong>Para:</strong> {{ $invoice->client->name }}<br>

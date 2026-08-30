@@ -331,24 +331,27 @@
 
     .qr-table {
         border: 1px solid #dddddd;
+        width: auto;
     }
 
     .qr-cell {
-        width: 90px;
-        padding: 8px;
+        width: 40mm;
+        padding: 4mm;
         vertical-align: middle;
     }
 
     .qr-image {
-        width: 80px;
-        height: 80px;
+        width: 32mm;
+        height: 32mm;
+        display: block;
     }
 
     .qr-legend {
-        font-size: 8px;
-        color: #555555;
+        font-size: 9px;
+        color: #333333;
         vertical-align: middle;
-        padding: 8px 12px;
+        padding: 4mm 6mm;
+        line-height: 1.4;
     }
 
     .footer {

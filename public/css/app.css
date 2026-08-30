@@ -759,6 +759,24 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
     background: #dcfce7;
     color: #166534;
 }
+.verifactu-qr {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin: 1.25rem 0 0;
+    padding: 1rem;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    background: var(--gray-50);
+}
+.verifactu-qr img {
+    width: 128px;
+    height: 128px;
+    flex-shrink: 0;
+    background: #fff;
+}
+.verifactu-qr strong { display: block; margin-bottom: 0.25rem; }
+.verifactu-qr p { margin: 0 0 0.35rem; color: var(--gray-700); font-size: 0.9rem; }
 .accept-form { margin-top: 1.5rem; }
 
 /* Landing */

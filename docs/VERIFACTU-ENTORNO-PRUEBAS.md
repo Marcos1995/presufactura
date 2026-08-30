@@ -27,7 +27,7 @@ VERIFACTU_SOFTWARE_NAME=PresuFactura
 VERIFACTU_SOFTWARE_VERSION=2.0.0
 ```
 
-5. Certificado **de pruebas** AEAT (`.p12`) del obligado tributario — **no existe un .p12 público de Hacienda**. Un certificado autofirmado (`php artisan presufactura:verifactu-dev-cert`, solo el usuario demo) sirve para el flujo interno (XML, hash, QR), no para SOAP AEAT.
+5. Certificado **de pruebas** AEAT (`.p12`) del obligado tributario — **no existe un .p12 público de Hacienda**. Cada autónomo pide el suyo en la [FNMT](https://www.sede.fnmt.gob.es/certificados/persona-fisica) (pruebas o real). Un certificado autofirmado (`php artisan presufactura:verifactu-dev-cert`, solo el usuario demo) sirve para el flujo interno (XML, hash, QR), no para SOAP AEAT.
 
 ## Checklist de prueba (preprod)
 
@@ -120,5 +120,7 @@ php artisan presufactura:verifactu-aeat-preprod
 ## Referencias
 
 - [AEAT — SIF y VERI*FACTU](https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu.html)
+- [AEAT desarrolladores — especificación QR](https://www.agenciatributaria.es/AEAT.desarrolladores/Desarrolladores/_menu_/Documentacion/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU.html)
+- Orden HAC/1177/2024, arts. 20 y 21: QR 30–40 mm, corrección M, texto «Factura verificable en la sede electrónica de la AEAT» o «VERI*FACTU», al inicio de la factura
 - Análisis general: [`docs/VERIFACTU.md`](VERIFACTU.md)
 - Despliegue: [`DEPLOY.md`](../DEPLOY.md) (sección Veri*Factu)

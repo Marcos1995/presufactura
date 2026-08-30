@@ -34,6 +34,21 @@
         </tr>
     </table>
 
+    @if (!empty($qrDataUri))
+    <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
+    <table class="qr-table" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="qr-cell">
+                <img src="{{ $qrDataUri }}" alt="QR Veri*Factu" class="qr-image" width="121" height="121">
+            </td>
+            <td class="qr-legend">
+                <strong>VERI*FACTU</strong><br>
+                Factura verificable en la sede electrónica de la AEAT
+            </td>
+        </tr>
+    </table>
+    @endif
+
     <table class="spacer-row-lg" width="100%"><tr><td>&nbsp;</td></tr></table>
 
     <table class="parties-table" cellpadding="0" cellspacing="0">
@@ -157,20 +172,6 @@
     @endif
 
     <table class="spacer-row-lg" width="100%"><tr><td>&nbsp;</td></tr></table>
-
-    @if (!empty($qrDataUri))
-    <table class="qr-table" cellpadding="0" cellspacing="0" width="100%">
-        <tr>
-            <td class="qr-cell">
-                <img src="{{ $qrDataUri }}" alt="QR Veri*Factu" class="qr-image">
-            </td>
-            <td class="qr-legend">
-                Factura verificable en sede.agenciatributaria.gob.es
-            </td>
-        </tr>
-    </table>
-    <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
-    @endif
 
     <div class="footer">
         @if ($isFiscal ?? false)

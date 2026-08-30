@@ -10,6 +10,7 @@ use App\Services\DocumentCalculatorService;
 use App\Services\DocumentNumberService;
 use App\Services\EmailService;
 use App\Services\PdfGeneratorService;
+use App\Services\Verifactu\QrService;
 use App\Support\VerifactuSchema;
 use App\Services\Verifactu\BillingRecordService;
 use Illuminate\Http\RedirectResponse;
@@ -30,6 +31,7 @@ class InvoiceController extends Controller
         private EmailService $emailService,
         private BillingRecordService $billingRecordService,
         private AnalyticsService $analytics,
+        private QrService $qrService,
     ) {}
 
     public function index(): View
@@ -111,11 +113,14 @@ class InvoiceController extends Controller
         $invoice->load($load);
 
         $clients = auth()->user()->clients()->orderBy('name')->get();
+        $qr = $this->qrService->payloadForDocument($invoice);
 
         return view('invoices.show', [
             'invoice' => $invoice,
             'clients' => $clients,
             'verifactuAvailable' => VerifactuSchema::hasBillingRecordsTable(),
+            'qrDataUri' => $qr['dataUri'] ?? null,
+            'qrUrl' => $qr['url'] ?? null,
         ]);
     }
 

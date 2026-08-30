@@ -71,10 +71,20 @@ class DemoCatalogTest extends TestCase
 
         $this->actingAs($admin)->get(route('invoices.show', $fiscal))
             ->assertOk()
-            ->assertSee('Aceptada (pruebas)');
+            ->assertSee('Aceptada (pruebas)')
+            ->assertSee('VERI*FACTU')
+            ->assertSee('data:image/png;base64,', false)
+            ->assertSee('Comprobar en la AEAT');
         $this->get(route('quotes.public', ['token' => $fiscal->public_token]))
             ->assertOk()
-            ->assertSee('Factura verificable');
+            ->assertSee('Factura verificable')
+            ->assertSee('VERI*FACTU')
+            ->assertSee('data:image/png;base64,', false);
+
+        $pdf = $this->actingAs($admin)->get(route('invoices.pdf', $fiscal));
+        $pdf->assertOk();
+        $this->assertStringStartsWith('%PDF', $pdf->getContent());
+        $this->assertMatchesRegularExpression('/\/(Subtype\s*\/Image|XObject)/', $pdf->getContent());
 
         $this->actingAs($admin)->get('/dashboard')
             ->assertOk()

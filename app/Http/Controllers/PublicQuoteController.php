@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Models\DocumentEvent;
 use App\Services\EmailService;
+use App\Services\Verifactu\QrService;
 use App\Support\VerifactuSchema;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -13,6 +14,7 @@ class PublicQuoteController extends Controller
 {
     public function __construct(
         private EmailService $emailService,
+        private QrService $qrService,
     ) {}
 
     public function show(string $token): View
@@ -119,6 +121,12 @@ class PublicQuoteController extends Controller
             $invoice->refresh();
         }
 
-        return view('public.invoice', compact('invoice'));
+        $qr = $this->qrService->payloadForDocument($invoice);
+
+        return view('public.invoice', [
+            'invoice' => $invoice,
+            'qrDataUri' => $qr['dataUri'] ?? null,
+            'qrUrl' => $qr['url'] ?? null,
+        ]);
     }
 }

@@ -81,6 +81,22 @@ final class VerifactuProductionCheck
                     'Revisa permisos de storage/app'
                 );
             }
+
+            if ($fiscal && $record) {
+                $qrOk = false;
+                $pdfOk = false;
+                try {
+                    $payload = app(\App\Services\Verifactu\QrService::class)->payloadForDocument($fiscal->fresh(['user.sifConfig', 'billingRecord']));
+                    $qrOk = is_array($payload) && str_starts_with((string) $payload['dataUri'], 'data:image/png;base64,');
+                    $pdf = app(\App\Services\PdfGeneratorService::class)->generateInvoicePdf($fiscal);
+                    $pdfOk = str_starts_with($pdf, '%PDF') && (str_contains($pdf, '/Image') || str_contains($pdf, '/XObject'));
+                } catch (\Throwable) {
+                    $qrOk = false;
+                    $pdfOk = false;
+                }
+                $add('QR PNG de DEMO-F-FIS', $qrOk, 'php artisan presufactura:prepare-test-user');
+                $add('PDF con imagen QR', $pdfOk, 'Comprueba ext-gd en PHP');
+            }
         }
 
         $ok = true;

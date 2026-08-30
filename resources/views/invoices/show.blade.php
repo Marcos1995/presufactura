@@ -84,6 +84,8 @@
             </div>
         </div>
 
+        @include('partials.verifactu-qr')
+
         <table class="data-table data-table-lines">
             <thead>
                 <tr>

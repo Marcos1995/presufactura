@@ -37,6 +37,15 @@ class VerifactuCheckCommand extends Command
 
         $this->info('Veri*Factu pruebas: OK. En el panel abre la factura DEMO-F-FIS (Aceptada (pruebas)).');
 
+        if (! app()->environment('testing')) {
+            $probe = app(\App\Services\Verifactu\QrService::class)->probeOfficialCotejo();
+            if ($probe['ok']) {
+                $this->line('✓ Cotejo AEAT ('.$probe['env'].'): ejemplo oficial '.$probe['mensaje']);
+            } else {
+                $this->warn('⚠ Cotejo AEAT ('.$probe['env'].'): '.$probe['mensaje']);
+            }
+        }
+
         return self::SUCCESS;
     }
 }

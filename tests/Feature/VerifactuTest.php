@@ -309,7 +309,7 @@ class VerifactuTest extends TestCase
             'isFiscal' => true,
         ])->render();
 
-        $this->assertStringContainsString('Factura verificable en sede.agenciatributaria.gob.es', $html);
+        $this->assertStringContainsString('Factura verificable en la sede electrónica de la AEAT', $html);
     }
 
     public function test_paid_invoice_cannot_be_edited_or_deleted(): void
