@@ -81,6 +81,40 @@ class QrServiceTest extends TestCase
         $this->assertTrue($this->service->shouldShowQr($record));
     }
 
+    public function test_payload_for_sent_invoice_without_certificate(): void
+    {
+        $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
+        $this->assertTrue($user->hasVerifactuEnabled());
+        $this->assertFalse($user->canEmitFiscalInvoices());
+
+        $client = Client::create([
+            'user_id' => $user->id,
+            'name' => 'Cliente',
+            'email' => 'c@test.com',
+        ]);
+        $document = Document::create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'type' => Document::TYPE_INVOICE,
+            'number' => 'F-TEST-QR',
+            'status' => Document::STATUS_SENT,
+            'issue_date' => now()->setDate(2026, 3, 15),
+            'due_date' => now()->addDays(30),
+            'subtotal' => 100,
+            'vat_amount' => 21,
+            'total' => 121,
+            'public_token' => 'token-qr-nocert',
+        ]);
+
+        $payload = $this->service->payloadForDocument($document->fresh(['user.sifConfig']));
+
+        $this->assertNotNull($payload);
+        $this->assertStringStartsWith('data:image/png;base64,', $payload['dataUri']);
+        $this->assertStringContainsString('nif=89890001K', $payload['url']);
+        $this->assertStringContainsString('numserie=F-TEST-QR', $payload['url']);
+        $this->assertStringNotContainsString('formato=', $payload['url']);
+    }
+
     public function test_official_cotejo_probe_accepts_aeat_ok_payload(): void
     {
         Http::fake([
@@ -95,6 +129,28 @@ class QrServiceTest extends TestCase
 
         $this->assertTrue($probe['ok']);
         $this->assertSame('Encontrada', $probe['mensaje']);
+    }
+
+    public function test_official_cotejo_probes_preprod_and_prod_urls(): void
+    {
+        Http::fake([
+            '*' => Http::response([
+                'status' => 'OK',
+                'mensaje' => 'Encontrada',
+            ], 200),
+        ]);
+
+        $both = $this->service->probeOfficialCotejoBoth();
+
+        $this->assertTrue($both['preprod']['ok']);
+        $this->assertTrue($both['prod']['ok']);
+        $this->assertSame('preprod', $both['preprod']['env']);
+        $this->assertSame('prod', $both['prod']['env']);
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'prewww2.aeat.es')
+            && str_contains($request->url(), 'formato=json'));
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'www2.agenciatributaria.gob.es')
+            && str_contains($request->url(), 'formato=json'));
     }
 
     public function test_invoice_pdf_includes_qr_when_billing_record_exists(): void

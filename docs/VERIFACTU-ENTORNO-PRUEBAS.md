@@ -27,7 +27,9 @@ VERIFACTU_SOFTWARE_NAME=PresuFactura
 VERIFACTU_SOFTWARE_VERSION=2.0.0
 ```
 
-5. Certificado **de pruebas** AEAT (`.p12`) del obligado tributario — **no existe un .p12 público de Hacienda**. Cada autónomo pide el suyo en la [FNMT](https://www.sede.fnmt.gob.es/certificados/persona-fisica) (pruebas o real). Un certificado autofirmado (`php artisan presufactura:verifactu-dev-cert`, solo el usuario demo) sirve para el flujo interno (XML, hash, QR), no para SOAP AEAT.
+5. Certificado electrónico cualificado del obligado (FNMT persona física o representante). **Hacienda no publica un .p12 descargable.** Preproducción y producción usan el **mismo tipo de certificado**; solo cambia `VERIFACTU_ENV` (URLs `prewww2.aeat.es` ↔ `www2.agenciatributaria.gob.es`). Portal de pruebas: [preportal.aeat.es](https://preportal.aeat.es/). Un `.p12` autofirmado (`php artisan presufactura:verifactu-dev-cert`) cubre XML, hash y QR en el usuario demo, no el SOAP AEAT.
+
+El QR **no lo devuelve Hacienda**: el SIF lo pinta al emitir la factura (arts. 20–21 Orden HAC/1177/2024). El cotejo `ValidarQR` confirma si el registro ya está en AEAT; el ejemplo oficial `nif=89890001K&numserie=12345678-G33&fecha=01-09-2024&importe=241.4` responde `Encontrada` en preprod y en producción.
 
 ## Checklist de prueba (preprod)
 
@@ -120,7 +122,11 @@ php artisan presufactura:verifactu-aeat-preprod
 ## Referencias
 
 - [AEAT — SIF y VERI*FACTU](https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu.html)
-- [AEAT desarrolladores — especificación QR](https://www.agenciatributaria.es/AEAT.desarrolladores/Desarrolladores/_menu_/Documentacion/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU.html)
-- Orden HAC/1177/2024, arts. 20 y 21: QR 30–40 mm, corrección M, texto «Factura verificable en la sede electrónica de la AEAT» o «VERI*FACTU», al inicio de la factura
+- [AEAT desarrolladores](https://www.agenciatributaria.es/AEAT.desarrolladores/Desarrolladores/_menu_/Documentacion/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU.html) — QR, hash, WSDL, FAQs
+- [Descripción servicios web SOAP](https://sede.agenciatributaria.gob.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/Veri-Factu_Descripcion_SWeb.pdf)
+- [FAQs desarrolladores](https://sede.agenciatributaria.gob.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/FAQs-Desarrolladores.pdf) — facturas de prueba = factura real + QR + anulación posterior
+- [Portal de pruebas AEAT](https://preportal.aeat.es/)
+- [FNMT — certificado persona física](https://www.sede.fnmt.gob.es/certificados/persona-fisica)
+- [Orden HAC/1177/2024](https://www.boe.es/buscar/act.php?id=BOE-A-2024-22138) arts. 20–21: QR 30–40 mm, corrección M, al inicio de la factura
 - Análisis general: [`docs/VERIFACTU.md`](VERIFACTU.md)
 - Despliegue: [`DEPLOY.md`](../DEPLOY.md) (sección Veri*Factu)

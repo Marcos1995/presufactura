@@ -22,6 +22,22 @@ final class VerifactuProductionCheck
             $checks[] = ['label' => $label, 'pass' => $pass, 'hint' => $hint];
         };
 
+        $qrPng = false;
+        try {
+            $uri = app(\App\Services\Verifactu\QrService::class)->pngDataUri(
+                app(\App\Services\Verifactu\QrService::class)->cotejoUrl(
+                    'prod',
+                    'verifactu',
+                    \App\Services\Verifactu\QrService::OFFICIAL_EXAMPLE
+                )
+            );
+            $qrPng = str_starts_with($uri, 'data:image/png;base64,')
+                && strlen((string) base64_decode(substr($uri, 22), true)) > 200;
+        } catch (\Throwable) {
+            $qrPng = false;
+        }
+        $add('Generador QR PNG (ejemplo oficial AEAT)', $qrPng, 'Comprueba ext-gd / endroid/qr-code');
+
         $add(
             'Tablas Veri*Factu',
             VerifactuSchema::hasSifConfigTable() && VerifactuSchema::hasBillingRecordsTable(),

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\BillingRecord;
 use App\Models\Document;
 use App\Support\VerifactuSchema;
 use App\Services\Verifactu\QrService;
@@ -24,14 +23,10 @@ class PdfGeneratorService
         }
         $document->load($load);
 
-        $billingRecord = $document->billingRecord;
-        $qrDataUri = null;
-        $isFiscal = false;
+        $qr = $this->qrService->payloadForDocument($document);
 
-        if ($billingRecord && $this->qrService->shouldShowQr($billingRecord)) {
-            $qrDataUri = $this->qrService->generateDataUri($billingRecord);
-            $isFiscal = true;
-        }
+        $qrDataUri = $qr['dataUri'] ?? null;
+        $isFiscal = $document->isFiscal();
 
         return $this->renderPdf('pdf.invoice', $document, [
             'qrDataUri' => $qrDataUri,

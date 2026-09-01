@@ -38,11 +38,21 @@ class VerifactuCheckCommand extends Command
         $this->info('Veri*Factu pruebas: OK. En el panel abre la factura DEMO-F-FIS (Aceptada (pruebas)).');
 
         if (! app()->environment('testing')) {
-            $probe = app(\App\Services\Verifactu\QrService::class)->probeOfficialCotejo();
-            if ($probe['ok']) {
-                $this->line('✓ Cotejo AEAT ('.$probe['env'].'): ejemplo oficial '.$probe['mensaje']);
-            } else {
-                $this->warn('⚠ Cotejo AEAT ('.$probe['env'].'): '.$probe['mensaje']);
+            $qr = app(\App\Services\Verifactu\QrService::class);
+            foreach ($qr->probeOfficialCotejoBoth() as $probe) {
+                if ($probe['ok']) {
+                    $this->line('✓ Cotejo AEAT '.$probe['env'].': ejemplo oficial '.$probe['mensaje']);
+                } else {
+                    $this->warn('⚠ Cotejo AEAT '.$probe['env'].': '.$probe['mensaje']);
+                }
+            }
+            foreach (['preprod', 'prod'] as $env) {
+                $wsdl = $qr->probeOfficialWsdl($env);
+                if ($wsdl['ok']) {
+                    $this->line('✓ WSDL AEAT '.$env.': '.$wsdl['mensaje']);
+                } else {
+                    $this->warn('⚠ WSDL AEAT '.$env.': '.$wsdl['mensaje']);
+                }
             }
         }
 

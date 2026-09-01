@@ -76,6 +76,60 @@ class VerifactuTest extends TestCase
         Queue::assertPushed(SubmitBillingRecordJob::class);
     }
 
+    public function test_sending_invoice_without_certificate_still_shows_qr(): void
+    {
+        Mail::fake();
+
+        $user = User::factory()->onboarded()->create(['tax_id' => '89890001K']);
+        $this->assertFalse($user->canEmitFiscalInvoices());
+
+        $client = Client::create([
+            'user_id' => $user->id,
+            'name' => 'Cliente Test',
+            'email' => 'cliente@test.com',
+            'tax_id' => 'B87654321',
+        ]);
+
+        $invoice = Document::create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'type' => Document::TYPE_INVOICE,
+            'number' => 'F2026-QR',
+            'status' => Document::STATUS_DRAFT,
+            'issue_date' => now(),
+            'due_date' => now()->addDays(30),
+            'subtotal' => 100,
+            'vat_amount' => 21,
+            'total' => 121,
+            'public_token' => 'qrsentnocert',
+        ]);
+
+        $invoice->lineItems()->create([
+            'description' => 'Servicio',
+            'quantity' => 1,
+            'unit_price' => 100,
+            'vat_rate' => 21,
+            'line_subtotal' => 100,
+            'line_vat' => 21,
+            'line_total' => 121,
+            'sort_order' => 0,
+        ]);
+
+        $this->actingAs($user);
+        $this->post(route('invoices.send', $invoice))->assertRedirect();
+
+        $this->get(route('invoices.show', $invoice))
+            ->assertOk()
+            ->assertSee('VERI*FACTU')
+            ->assertSee('data:image/png;base64,', false)
+            ->assertSee('Comprobar en la AEAT');
+
+        $pdf = $this->get(route('invoices.pdf', $invoice));
+        $pdf->assertOk();
+        $this->assertStringStartsWith('%PDF', $pdf->getContent());
+        $this->assertMatchesRegularExpression('/\/(Subtype\s*\/Image|XObject)/', $pdf->getContent());
+    }
+
     public function test_sent_invoice_is_not_editable(): void
     {
         $user = User::factory()->onboarded()->create();

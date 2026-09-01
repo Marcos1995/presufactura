@@ -134,7 +134,7 @@
         @method('PUT')
 
         <h2 class="form-section-title">Veri*Factu</h2>
-        <p class="text-muted">Va activado al crear la cuenta. Sube tu certificado electrónico .p12 para emitir facturas fiscales con QR y envío a AEAT. Sin certificado, los PDF siguen siendo proforma.</p>
+        <p class="text-muted">Va activado al crear la cuenta. Al enviar una factura se genera siempre el QR tributario (Orden HAC/1177/2024). El envío SOAP a Hacienda requiere tu certificado FNMT (.p12): el mismo archivo vale en pruebas y en real; solo cambia <code>VERIFACTU_ENV</code>. Sin certificado el PDF sigue siendo proforma.</p>
         <p>
             <strong>Entorno AEAT:</strong>
             <span class="badge {{ \App\Support\VerifactuEnv::badgeClass() }}">{{ \App\Support\VerifactuEnv::labelFor($sif ?? null) }}</span>

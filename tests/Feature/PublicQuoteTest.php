@@ -50,7 +50,9 @@ class PublicQuoteTest extends TestCase
         $this->get(route('quotes.public', ['token' => $invoice->public_token]))
             ->assertOk()
             ->assertSee('Documento proforma')
-            ->assertDontSee('Factura verificable');
+            ->assertDontSee('Factura verificable — Veri*Factu')
+            ->assertSee('VERI*FACTU')
+            ->assertSee('data:image/png;base64,', false);
     }
 
     public function test_public_invoice_shows_fiscal_badge_when_sif_alta_exists(): void
