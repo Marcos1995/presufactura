@@ -52,24 +52,24 @@
         });
     });
 
-    /* Interactive product mock: 24s loop presupuesto → factura → QR → cobro */
-    var mock = document.querySelector('.screenshot-mock');
-    if (mock) {
-        var tabs = mock.querySelectorAll('[data-mock-tab]');
-        var panels = mock.querySelectorAll('[data-mock-panel]');
+    /* Product screenshots: 24s loop, always visible */
+    var frame = document.querySelector('.hero-shots-frame');
+    if (frame) {
+        var shots = frame.querySelectorAll('[data-shot]');
+        var tabs = document.querySelectorAll('[data-shot-tab]');
         var order = [];
-        tabs.forEach(function (tab) { order.push(tab.getAttribute('data-mock-tab')); });
-        var stepMs = parseInt(mock.getAttribute('data-mock-autoplay') || '0', 10);
+        shots.forEach(function (img) { order.push(img.getAttribute('data-shot')); });
+        var stepMs = parseInt(frame.getAttribute('data-shot-autoplay') || '0', 10);
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var timer = null;
-        var progress = mock.querySelector('.hero-demo-progress span');
+        var progress = frame.querySelector('.hero-demo-progress span');
 
         var show = function (name) {
-            tabs.forEach(function (t) {
-                t.classList.toggle('active', t.getAttribute('data-mock-tab') === name);
+            shots.forEach(function (img) {
+                img.classList.toggle('is-active', img.getAttribute('data-shot') === name);
             });
-            panels.forEach(function (p) {
-                p.hidden = p.getAttribute('data-mock-panel') !== name;
+            tabs.forEach(function (t) {
+                t.classList.toggle('is-active', t.getAttribute('data-shot-tab') === name);
             });
             if (progress) {
                 progress.style.animation = 'none';
@@ -81,15 +81,15 @@
         };
 
         var next = function () {
-            var current = mock.querySelector('.mock-nav.active');
-            var name = current ? current.getAttribute('data-mock-tab') : order[0];
+            var current = frame.querySelector('[data-shot].is-active');
+            var name = current ? current.getAttribute('data-shot') : order[0];
             var idx = order.indexOf(name);
             show(order[(idx + 1) % order.length]);
         };
 
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {
-                show(tab.getAttribute('data-mock-tab'));
+                show(tab.getAttribute('data-shot-tab'));
                 if (timer) {
                     clearInterval(timer);
                     timer = setInterval(next, stepMs);
@@ -98,7 +98,7 @@
         });
 
         if (stepMs > 0 && !reduce && order.length > 1) {
-            mock.classList.add('is-playing');
+            frame.classList.add('is-playing');
             if (progress) {
                 progress.style.animation = 'mock-progress ' + stepMs + 'ms linear forwards';
             }

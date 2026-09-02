@@ -78,6 +78,27 @@
     </div>
 </section>
 
+<section class="landing-screenshots" id="capturas">
+    <div class="screenshots-inner">
+        <h2>Capturas de la app</h2>
+        <p class="section-sub">Presupuesto, factura y QR Veri*Factu. Así queda al usarlo.</p>
+        <div class="shot-grid">
+            <figure>
+                <img src="{{ asset('images/hero-presupuesto.jpg') }}" alt="Pantalla de presupuestos: cliente acepta online" width="1280" height="720">
+                <figcaption>Presupuesto aceptado</figcaption>
+            </figure>
+            <figure>
+                <img src="{{ asset('images/hero-factura.jpg') }}" alt="Pantalla de facturas enviadas con PDF" width="1280" height="720">
+                <figcaption>Factura y PDF</figcaption>
+            </figure>
+            <figure>
+                <img src="{{ asset('images/hero-verifactu.jpg') }}" alt="Factura con código QR Veri*Factu" width="1280" height="720">
+                <figcaption>QR Veri*Factu</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
 <section class="landing-flow">
     <h2 class="reveal">Tres pasos. Cobras.</h2>
     <p class="section-sub reveal">El flujo de un autónomo, sin Excel ni plantillas sueltas.</p>
