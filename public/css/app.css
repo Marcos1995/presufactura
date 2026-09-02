@@ -1027,16 +1027,7 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
 }
 .landing-footer p { margin: 0.25rem 0; }
 
-.hero-demo { min-width: 0; }
 .hero-shots { min-width: 0; }
-.hero-demo-kicker {
-    margin: 0 0 0.65rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--gray-500);
-}
 .hero-demo-caption {
     margin: 0.75rem 0 0;
     font-size: 0.88rem;

@@ -1,5 +1,4 @@
 <div class="hero-shots">
-    <p class="hero-demo-kicker">Así se ve · 24 s</p>
     <div class="hero-shots-frame" data-shot-autoplay="8000">
         <img src="{{ asset('images/hero-presupuesto.jpg') }}" alt="Presupuesto aceptado en PresuFactura" width="1280" height="720" class="is-active" data-shot="quotes">
         <img src="{{ asset('images/hero-factura.jpg') }}" alt="Factura enviada con PDF" width="1280" height="720" data-shot="invoices">

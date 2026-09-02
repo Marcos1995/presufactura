@@ -19,7 +19,6 @@ class SmokeTest extends TestCase
             ->assertSee('pricing-card', false)
             ->assertSee('Crear cuenta y activarlo')
             ->assertSee('Empezar gratis')
-            ->assertSee('Así se ve')
             ->assertSee('Capturas de la app')
             ->assertSee('hero-verifactu.jpg', false)
             ->assertSee('QR Veri*Factu')
@@ -30,7 +29,6 @@ class SmokeTest extends TestCase
         $css = file_get_contents(public_path('css/app.css'));
         $this->assertIsString($css);
         $this->assertStringContainsString('.pricing-card', $css);
-        $this->assertStringContainsString('.hero-demo', $css);
         $this->assertStringContainsString('.hero-shots-frame', $css);
         $this->assertFileExists(public_path('images/hero-presupuesto.jpg'));
         $this->assertFileExists(public_path('images/hero-factura.jpg'));
