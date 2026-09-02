@@ -24,8 +24,8 @@ class GoogleAuthController extends Controller
     public function redirect(): RedirectResponse
     {
         if (! self::enabled()) {
-            return redirect()->route('login')
-                ->with('error', 'El acceso con Google no está disponible ahora mismo.');
+            return back()
+                ->with('error', 'Falta configurar Google en el servidor (GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET).');
         }
 
         return Socialite::driver('google')

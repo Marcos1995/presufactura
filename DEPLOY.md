@@ -220,10 +220,13 @@ El webhook y Customer Portal solo aplican si hubiera suscripciones antiguas.
 
 ## 6b. Login con Google
 
-En [Google Cloud Console](https://console.cloud.google.com/apis/credentials) crea un ID de cliente OAuth (aplicación web):
+El botón «Continuar con Google» está en `/registro` y `/login`. Para que **funcione** (no solo se vea), en [Google Cloud Console](https://console.cloud.google.com/apis/credentials):
 
-- Orígenes: `https://presufactura.es`
-- URI de redirección: `https://presufactura.es/auth/google/callback`
+1. Crear proyecto (o usar uno existente) y pantalla de consentimiento OAuth (tipo Externo, app en pruebas; añade tu Gmail como usuario de prueba).
+2. Crear **ID de cliente OAuth** → tipo **Aplicación web**.
+3. Orígenes JavaScript autorizados: `https://presufactura.es`
+4. URI de redirección autorizada: `https://presufactura.es/auth/google/callback`
+5. En el `.env` de producción:
 
 ```env
 GOOGLE_CLIENT_ID=....apps.googleusercontent.com
@@ -231,7 +234,7 @@ GOOGLE_CLIENT_SECRET=...
 GOOGLE_REDIRECT_URI=https://presufactura.es/auth/google/callback
 ```
 
-Sin estas variables el botón «Continuar con Google» no se muestra; el registro por email sigue funcionando.
+Luego: `php artisan migrate --force` (columna `google_id`) y `php artisan config:cache`. Sin esas variables el botón se ve, pero Google rechaza el acceso.
 
 ## 7. Deploy rutinario
 

@@ -67,30 +67,22 @@ class AuthTest extends TestCase
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
     }
 
-    public function test_login_hides_google_when_not_configured(): void
+    public function test_login_and_register_show_google_button(): void
     {
-        $this->get('/login')
-            ->assertOk()
-            ->assertDontSee('Continuar con Google');
-    }
-
-    public function test_login_and_register_show_google_when_configured(): void
-    {
-        $this->enableGoogleAuth();
-
         $this->get('/login')
             ->assertOk()
             ->assertSee('Continuar con Google')
             ->assertSee('o con email');
         $this->get('/registro')
             ->assertOk()
-            ->assertSee('Continuar con Google');
+            ->assertSee('Continuar con Google')
+            ->assertSee('o con email');
     }
 
     public function test_google_redirect_requires_configuration(): void
     {
-        $this->get('/auth/google')
-            ->assertRedirect(route('login'))
+        $this->from('/registro')->get('/auth/google')
+            ->assertRedirect('/registro')
             ->assertSessionHas('error');
     }
 
