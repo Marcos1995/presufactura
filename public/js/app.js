@@ -145,7 +145,26 @@
         }
     });
 
-    /* Modal: close on Escape */
+    /* Bug report modal */
+    var bugOpen = document.getElementById('bug-report-open');
+    var bugModal = document.getElementById('bug-report-modal');
+    var bugClose = document.getElementById('bug-report-close');
+    var bugUrl = document.getElementById('bug-report-url');
+    if (bugOpen && bugModal) {
+        var openBug = function () {
+            if (bugUrl) bugUrl.value = window.location.href;
+            bugModal.hidden = false;
+        };
+        var closeBug = function () { bugModal.hidden = true; };
+        bugOpen.addEventListener('click', openBug);
+        if (bugClose) bugClose.addEventListener('click', closeBug);
+            bugModal.addEventListener('click', function (e) {
+                if (e.target === bugModal) closeBug();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && !bugModal.hidden) closeBug();
+            });
+        }
     if ($) {
         $(document).on('keydown', function (e) {
             if (e.key === 'Escape') {

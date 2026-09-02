@@ -34,6 +34,9 @@ class AdminOverviewService
             ],
             'uniqueSessions' => $hasAnalytics ? $this->analytics->uniqueSessions($from) : 0,
             'daily' => $hasAnalytics ? $this->analytics->dailyLandingViews(now()->subDays(13)->startOfDay()) : [],
+            'bugReports' => Schema::hasTable('bug_reports')
+                ? \App\Models\BugReport::query()->with('user')->latest()->limit(30)->get()
+                : collect(),
         ];
     }
 
@@ -75,6 +78,7 @@ class AdminOverviewService
             'sif_enabled' => $sifEnabled,
             'sif_cert' => $sifCert,
             'feedback' => $feedback,
+            'bug_reports' => Schema::hasTable('bug_reports') ? \App\Models\BugReport::query()->count() : 0,
         ];
     }
 

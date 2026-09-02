@@ -82,6 +82,7 @@
             <tr><td>Facturas cobradas</td><td class="text-right">{{ $stats['paid_invoices'] }}</td></tr>
             <tr><td>Veri*Factu activo / con certificado</td><td class="text-right">{{ $stats['sif_enabled'] }} / {{ $stats['sif_cert'] }}</td></tr>
             <tr><td>Feedback recibido</td><td class="text-right">{{ $stats['feedback'] }}</td></tr>
+            <tr><td>Avisos de fallo</td><td class="text-right">{{ $stats['bug_reports'] }}</td></tr>
         </tbody>
     </table>
     @if ($documents['quotes'] || $documents['invoices'])
@@ -92,6 +93,34 @@
         </p>
     @endif
 </div>
+
+@if (($bugReports ?? collect())->isNotEmpty())
+<div class="card">
+    <h2 class="section-title">Avisos de fallo</h2>
+    <div class="table-wrap">
+        <table class="data-table data-table-list">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Página</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($bugReports as $report)
+                    <tr>
+                        <td data-label="Fecha">{{ $report->created_at?->format('d/m/Y H:i') }}</td>
+                        <td data-label="Usuario">{{ $report->user?->email }}</td>
+                        <td data-label="Página"><span class="text-muted">{{ \Illuminate\Support\Str::limit($report->page_url, 60) }}</span></td>
+                        <td data-label="Descripción">{{ \Illuminate\Support\Str::limit($report->description, 120) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
 
 <div class="card">
     <h2 class="section-title">Usuarios ({{ $stats['users'] }})</h2>

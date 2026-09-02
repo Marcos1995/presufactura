@@ -1510,7 +1510,24 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
 .landing-pricing-page h1 { margin-bottom: 0.5rem; }
 .landing-pricing-page .hero-sub { margin-bottom: 2.5rem; }
 
-/* Modal upgrade */
+.bug-report-btn {
+    position: fixed;
+    right: 1.1rem;
+    bottom: 1.1rem;
+    z-index: 900;
+    background: #fff;
+    color: var(--gray-800);
+    border: 1px solid var(--gray-300);
+    box-shadow: var(--shadow-lg);
+    border-radius: 999px;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.bug-report-btn:hover { background: var(--gray-50); color: var(--gray-900); }
+#bug-report-modal[hidden] { display: none !important; }
+#bug-report-modal textarea { min-height: 8rem; }
 .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(15, 23, 42, 0.55);

@@ -84,6 +84,7 @@
             </footer>
         </div>
     </div>
+    @include('partials.bug-report')
     @include('layouts.partials.cookie-banner')
     <script>
     (function () {

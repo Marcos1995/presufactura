@@ -6,7 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentActionController;
-use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\FunnelController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuideController;
@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('/dashboard/presupuesto-prueba', [QuickStartController::class, 'sampleQuote'])->middleware('doc.limit')->name('quickstart.quote');
         Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+        Route::post('/aviso-fallo', [BugReportController::class, 'store'])->middleware('throttle:bug-report')->name('bug-reports.store');
         Route::get('/admin', [FunnelController::class, 'index'])->name('admin.index');
         Route::get('/embudo', [FunnelController::class, 'index'])->name('funnel.index');
         Route::get('/configuracion', [ProfileController::class, 'edit'])->name('settings.index');
