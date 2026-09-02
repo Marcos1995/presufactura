@@ -19,6 +19,9 @@ class SmokeTest extends TestCase
             ->assertSee('pricing-card', false)
             ->assertSee('Crear cuenta y activarlo')
             ->assertSee('Empezar gratis')
+            ->assertSee('Así funciona')
+            ->assertSee('data-mock-tab="verifactu"', false)
+            ->assertSee('Factura verificable en la sede electrónica de la AEAT')
             ->assertDontSee('landing-marquee', false)
             ->assertDontSee('landing-verifactu', false)
             ->assertDontSee('verifactu-panel', false);
@@ -26,6 +29,7 @@ class SmokeTest extends TestCase
         $css = file_get_contents(public_path('css/app.css'));
         $this->assertIsString($css);
         $this->assertStringContainsString('.pricing-card', $css);
+        $this->assertStringContainsString('.hero-demo', $css);
         $this->assertStringNotContainsString('.landing-verifactu', $css);
         $this->assertStringNotContainsString('.verifactu-panel', $css);
     }

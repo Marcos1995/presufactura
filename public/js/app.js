@@ -52,20 +52,58 @@
         });
     });
 
-    /* Interactive product mock tabs */
+    /* Interactive product mock: 24s loop presupuesto → factura → QR → cobro */
     var mock = document.querySelector('.screenshot-mock');
     if (mock) {
         var tabs = mock.querySelectorAll('[data-mock-tab]');
         var panels = mock.querySelectorAll('[data-mock-panel]');
+        var order = [];
+        tabs.forEach(function (tab) { order.push(tab.getAttribute('data-mock-tab')); });
+        var stepMs = parseInt(mock.getAttribute('data-mock-autoplay') || '0', 10);
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var timer = null;
+        var progress = mock.querySelector('.hero-demo-progress span');
+
+        var show = function (name) {
+            tabs.forEach(function (t) {
+                t.classList.toggle('active', t.getAttribute('data-mock-tab') === name);
+            });
+            panels.forEach(function (p) {
+                p.hidden = p.getAttribute('data-mock-panel') !== name;
+            });
+            if (progress) {
+                progress.style.animation = 'none';
+                void progress.offsetWidth;
+                if (stepMs > 0 && !reduce) {
+                    progress.style.animation = 'mock-progress ' + stepMs + 'ms linear forwards';
+                }
+            }
+        };
+
+        var next = function () {
+            var current = mock.querySelector('.mock-nav.active');
+            var name = current ? current.getAttribute('data-mock-tab') : order[0];
+            var idx = order.indexOf(name);
+            show(order[(idx + 1) % order.length]);
+        };
+
         tabs.forEach(function (tab) {
             tab.addEventListener('click', function () {
-                var name = tab.getAttribute('data-mock-tab');
-                tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
-                panels.forEach(function (p) {
-                    p.hidden = p.getAttribute('data-mock-panel') !== name;
-                });
+                show(tab.getAttribute('data-mock-tab'));
+                if (timer) {
+                    clearInterval(timer);
+                    timer = setInterval(next, stepMs);
+                }
             });
         });
+
+        if (stepMs > 0 && !reduce && order.length > 1) {
+            mock.classList.add('is-playing');
+            if (progress) {
+                progress.style.animation = 'mock-progress ' + stepMs + 'ms linear forwards';
+            }
+            timer = setInterval(next, stepMs);
+        }
     }
 
     /* Animated counters in hero mock */

@@ -32,23 +32,28 @@
         <div class="hero-orb hero-orb--2"></div>
         <div class="hero-orb hero-orb--3"></div>
     </div>
-    <p class="hero-badge reveal">Veri*Factu opcional · Autónomos en España</p>
-    <h1 class="reveal reveal-delay-1">De presupuesto a cobro<br>en minutos, no en horas</h1>
-    <p class="hero-sub reveal reveal-delay-2">Crea presupuestos y facturas, envíalos por email con PDF y activa Veri*Factu cuando quieras cumplir con Hacienda. Sin instalaciones. Completamente gratis.</p>
-    <div class="hero-actions reveal reveal-delay-3">
-        @if ($loggedIn)
-            <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
-        @else
-            <a href="{{ route('register') }}" class="btn btn-primary btn-lg" data-analytics="signup_cta_click">Empezar gratis</a>
-            <a href="#precios" class="btn btn-secondary btn-lg">Ver qué incluye</a>
-        @endif
-    </div>
-    <p class="hero-note reveal reveal-delay-3">Sin tarjeta · Sin límites · Veri*Factu opcional</p>
-    <div class="trust-strip reveal reveal-delay-4">
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> IVA incluido</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> PDF + email</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Enlace público</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> QR Veri*Factu</span>
+    <div class="hero-inner">
+        <div class="hero-copy">
+            <p class="hero-badge reveal">Veri*Factu opcional · Autónomos en España</p>
+            <h1 class="reveal reveal-delay-1">De presupuesto a cobro<br>en minutos, no en horas</h1>
+            <p class="hero-sub reveal reveal-delay-2">Crea presupuestos y facturas, envíalos por email con PDF y activa Veri*Factu cuando quieras cumplir con Hacienda. Sin instalaciones. Completamente gratis.</p>
+            <div class="hero-actions reveal reveal-delay-3">
+                @if ($loggedIn)
+                    <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg">Ir al panel</a>
+                @else
+                    <a href="{{ route('register') }}" class="btn btn-primary btn-lg" data-analytics="signup_cta_click">Empezar gratis</a>
+                    <a href="#precios" class="btn btn-secondary btn-lg">Ver qué incluye</a>
+                @endif
+            </div>
+            <p class="hero-note reveal reveal-delay-3">Sin tarjeta · Sin límites · Veri*Factu opcional</p>
+            <div class="trust-strip reveal reveal-delay-4">
+                <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> IVA incluido</span>
+                <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> PDF + email</span>
+                <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Enlace público</span>
+                <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> QR Veri*Factu</span>
+            </div>
+        </div>
+        @include('partials.landing-product-demo')
     </div>
 </section>
 
@@ -69,59 +74,6 @@
             @else
                 <a href="{{ route('register') }}" class="btn btn-primary btn-block" data-analytics="signup_cta_click">Crear cuenta y activarlo</a>
             @endif
-        </div>
-    </div>
-</section>
-
-<section class="landing-screenshots">
-    <div class="screenshots-inner">
-        <h2 class="reveal">Todo tu flujo de cobro en un solo sitio</h2>
-        <p class="section-sub reveal">Dashboard, documentos y recordatorios pensados para autónomos que facturan solos. <em>Pulsa las pestañas ↓</em></p>
-        <div class="screenshot-mock reveal">
-            <div class="mock-sidebar">
-                <span class="mock-brand">
-                    <img src="{{ asset('images/logo-icon.svg') }}" alt="" width="24" height="24">
-                    PresuFactura
-                </span>
-                <button type="button" class="mock-nav active" data-mock-tab="dashboard">Dashboard</button>
-                <button type="button" class="mock-nav" data-mock-tab="invoices">Facturas</button>
-                <button type="button" class="mock-nav" data-mock-tab="quotes">Presupuestos</button>
-            </div>
-            <div class="mock-main">
-                <div data-mock-panel="dashboard">
-                    <div class="mock-panel-title">Vista general</div>
-                    <div class="mock-stats">
-                        <div class="mock-stat"><span>Por cobrar</span><strong data-count-to="2450" data-count-prefix="" data-count-suffix=" €" data-count-decimals="0">0 €</strong></div>
-                        <div class="mock-stat danger"><span>Vencido</span><strong data-count-to="380" data-count-suffix=" €" data-count-decimals="0">0 €</strong></div>
-                        <div class="mock-stat success"><span>Cobrado mes</span><strong data-count-to="5120" data-count-suffix=" €" data-count-decimals="0">0 €</strong></div>
-                        <div class="mock-stat"><span>Docs mes</span><strong data-count-to="12" data-count-decimals="0">0</strong></div>
-                    </div>
-                    <div class="mock-table">
-                        <div class="mock-row head"><span>Número</span><span>Cliente</span><span>Estado</span><span>Total</span></div>
-                        <div class="mock-row"><span>FAC-2026-012</span><span>Acme SL</span><span class="badge-sent">Enviada</span><span>1.210 €</span></div>
-                        <div class="mock-row"><span>PRE-2026-008</span><span>López Design</span><span class="badge-accepted">Aceptado</span><span>890 €</span></div>
-                        <div class="mock-row"><span>FAC-2026-011</span><span>Studio Norte</span><span class="badge-paid">Pagada</span><span>450 €</span></div>
-                    </div>
-                </div>
-                <div data-mock-panel="invoices" hidden>
-                    <div class="mock-panel-title">Facturas recientes</div>
-                    <div class="mock-table">
-                        <div class="mock-row head"><span>Número</span><span>Cliente</span><span>Estado</span><span>Total</span></div>
-                        <div class="mock-row"><span>FAC-2026-012</span><span>Acme SL</span><span class="badge-sent">Enviada</span><span>1.210 €</span></div>
-                        <div class="mock-row"><span>FAC-2026-011</span><span>Studio Norte</span><span class="badge-paid">Pagada</span><span>450 €</span></div>
-                        <div class="mock-row"><span>FAC-2026-010</span><span>María Ruiz</span><span class="badge-sent">Enviada</span><span>320 €</span></div>
-                    </div>
-                </div>
-                <div data-mock-panel="quotes" hidden>
-                    <div class="mock-panel-title">Presupuestos activos</div>
-                    <div class="mock-table">
-                        <div class="mock-row head"><span>Número</span><span>Cliente</span><span>Estado</span><span>Total</span></div>
-                        <div class="mock-row"><span>PRE-2026-008</span><span>López Design</span><span class="badge-accepted">Aceptado</span><span>890 €</span></div>
-                        <div class="mock-row"><span>PRE-2026-007</span><span>TechStart</span><span class="badge-sent">Enviado</span><span>2.400 €</span></div>
-                        <div class="mock-row"><span>PRE-2026-006</span><span>Consulting Pro</span><span class="badge-sent">Enviado</span><span>650 €</span></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
