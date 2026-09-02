@@ -51,6 +51,8 @@ Route::get('/accion/{token}/cobrada', [DocumentActionController::class, 'confirm
 
 Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('stripe.webhook');
 
+Route::redirect('/register', '/registro', 301);
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');

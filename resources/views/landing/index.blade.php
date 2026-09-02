@@ -22,6 +22,7 @@
     }
 }
 </script>
+    @include('partials.faq-jsonld', ['faqs' => $landingFaqs])
 @endpush
 
 @section('content')

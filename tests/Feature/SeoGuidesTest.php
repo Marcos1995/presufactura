@@ -31,7 +31,12 @@ class SeoGuidesTest extends TestCase
 
         $robots = $this->get('/robots.txt')->assertOk()->getContent();
         $this->assertStringContainsString('Disallow: /login', $robots);
+        $this->assertStringContainsString('Disallow: /register', $robots);
         $this->assertStringContainsString('Disallow: /registro', $robots);
+
+        $this->get('/ayuda')->assertOk()->assertSee('"@type":"FAQPage"', false);
+        $this->get('/')->assertOk()->assertSee('"@type":"FAQPage"', false);
+        $this->get('/register')->assertRedirect('/registro');
         $this->assertStringContainsString('Disallow: /auth/', $robots);
         $this->assertStringContainsString('Allow: /guias', $robots);
     }

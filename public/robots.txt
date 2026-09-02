@@ -7,6 +7,7 @@ Allow: /terminos
 Allow: /privacidad
 Allow: /cookies
 Disallow: /login
+Disallow: /register
 Disallow: /registro
 Disallow: /auth/
 Disallow: /password

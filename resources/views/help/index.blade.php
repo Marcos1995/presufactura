@@ -4,6 +4,10 @@
 @section('meta_description', 'Preguntas frecuentes sobre PresuFactura: Verifactu, gratuidad, privacidad y uso para autónomos.')
 @section('og_title', 'Ayuda PresuFactura — FAQ para autónomos')
 
+@push('head')
+    @include('partials.faq-jsonld', ['faqs' => $faqs])
+@endpush
+
 @section('content')
 <section class="help-page">
     <div class="help-intro">
