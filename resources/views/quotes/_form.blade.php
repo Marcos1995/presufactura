@@ -1,3 +1,7 @@
+@php
+    $defaultIrpfRate = $defaultIrpfRate ?? 0;
+    $defaultRecargoRate = $defaultRecargoRate ?? 0;
+@endphp
 <div class="card">
     <form method="POST" action="{{ $action }}" class="form" id="invoice-form">
         @csrf
@@ -48,6 +52,8 @@
                         <th class="col-qty">Cant.</th>
                         <th class="col-price">Precio</th>
                         <th class="col-vat">IVA %</th>
+                        <th class="col-vat">IRPF %</th>
+                        <th class="col-vat">RE %</th>
                         <th class="col-total">Total</th>
                         <th></th>
                     </tr>
@@ -55,27 +61,35 @@
                 <tbody id="line-items-body">
                     @php
                         $oldLines = old('lines');
-                        $rows = $oldLines ?? ($lineItems && count($lineItems) ? $lineItems : [['description' => '', 'quantity' => 1, 'unit_price' => '', 'vat_rate' => $defaultVatRate]]);
+                        $rows = $oldLines ?? ($lineItems && count($lineItems) ? $lineItems : [['description' => '', 'quantity' => 1, 'unit_price' => '', 'vat_rate' => $defaultVatRate, 'irpf_rate' => $defaultIrpfRate, 'recargo_rate' => $defaultRecargoRate]]);
                     @endphp
                     @foreach ($rows as $i => $line)
                     <tr class="line-item-row">
-                        <td>
+                        <td data-label="Descripción">
                             <input type="text" name="lines[{{ $i }}][description]" class="line-desc"
                                 value="{{ is_array($line) ? ($line['description'] ?? '') : $line->description }}" required>
                         </td>
-                        <td>
+                        <td data-label="Cant.">
                             <input type="number" name="lines[{{ $i }}][quantity]" class="line-qty" step="0.01" min="0.01"
                                 value="{{ is_array($line) ? ($line['quantity'] ?? 1) : $line->quantity }}" required>
                         </td>
-                        <td>
+                        <td data-label="Precio">
                             <input type="number" name="lines[{{ $i }}][unit_price]" class="line-price" step="0.01" min="0"
                                 value="{{ is_array($line) ? ($line['unit_price'] ?? '') : $line->unit_price }}" required>
                         </td>
-                        <td>
+                        <td data-label="IVA %">
                             <input type="number" name="lines[{{ $i }}][vat_rate]" class="line-vat" step="0.01" min="0" max="100"
                                 value="{{ is_array($line) ? ($line['vat_rate'] ?? $defaultVatRate) : $line->vat_rate }}" required>
                         </td>
-                        <td class="line-total text-right">0,00 €</td>
+                        <td data-label="IRPF %">
+                            <input type="number" name="lines[{{ $i }}][irpf_rate]" class="line-irpf" step="0.01" min="0" max="100"
+                                value="{{ is_array($line) ? ($line['irpf_rate'] ?? $defaultIrpfRate) : $line->irpf_rate }}">
+                        </td>
+                        <td data-label="RE %">
+                            <input type="number" name="lines[{{ $i }}][recargo_rate]" class="line-recargo" step="0.01" min="0" max="100"
+                                value="{{ is_array($line) ? ($line['recargo_rate'] ?? $defaultRecargoRate) : $line->recargo_rate }}">
+                        </td>
+                        <td class="line-total text-right" data-label="Total">0,00 €</td>
                         <td><button type="button" class="btn-link btn-danger-link remove-line">✕</button></td>
                     </tr>
                     @endforeach
@@ -87,6 +101,8 @@
         <div class="totals-box">
             <div class="totals-row"><span>Subtotal</span><span id="total-subtotal">0,00 €</span></div>
             <div class="totals-row"><span>IVA</span><span id="total-vat">0,00 €</span></div>
+            <div class="totals-row" id="total-recargo-row" hidden><span>Recargo</span><span id="total-recargo">0,00 €</span></div>
+            <div class="totals-row" id="total-irpf-row" hidden><span>IRPF</span><span id="total-irpf">0,00 €</span></div>
             <div class="totals-row totals-grand"><span>Total</span><span id="total-grand">0,00 €</span></div>
         </div>
 
@@ -104,11 +120,13 @@
 
 <template id="line-item-template">
     <tr class="line-item-row">
-        <td><input type="text" name="lines[__INDEX__][description]" class="line-desc" required></td>
-        <td><input type="number" name="lines[__INDEX__][quantity]" class="line-qty" step="0.01" min="0.01" value="1" required></td>
-        <td><input type="number" name="lines[__INDEX__][unit_price]" class="line-price" step="0.01" min="0" required></td>
-        <td><input type="number" name="lines[__INDEX__][vat_rate]" class="line-vat" step="0.01" min="0" max="100" value="{{ $defaultVatRate }}" required></td>
-        <td class="line-total text-right">0,00 €</td>
+        <td data-label="Descripción"><input type="text" name="lines[__INDEX__][description]" class="line-desc" required></td>
+        <td data-label="Cant."><input type="number" name="lines[__INDEX__][quantity]" class="line-qty" step="0.01" min="0.01" value="1" required></td>
+        <td data-label="Precio"><input type="number" name="lines[__INDEX__][unit_price]" class="line-price" step="0.01" min="0" required></td>
+        <td data-label="IVA %"><input type="number" name="lines[__INDEX__][vat_rate]" class="line-vat" step="0.01" min="0" max="100" value="{{ $defaultVatRate }}" required></td>
+        <td data-label="IRPF %"><input type="number" name="lines[__INDEX__][irpf_rate]" class="line-irpf" step="0.01" min="0" max="100" value="{{ $defaultIrpfRate }}"></td>
+        <td data-label="RE %"><input type="number" name="lines[__INDEX__][recargo_rate]" class="line-recargo" step="0.01" min="0" max="100" value="{{ $defaultRecargoRate }}"></td>
+        <td class="line-total text-right" data-label="Total">0,00 €</td>
         <td><button type="button" class="btn-link btn-danger-link remove-line">✕</button></td>
     </tr>
 </template>

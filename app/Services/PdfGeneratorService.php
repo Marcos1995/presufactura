@@ -17,7 +17,7 @@ class PdfGeneratorService
 
     public function generateInvoicePdf(Document $document): string
     {
-        $load = ['user', 'client', 'lineItems'];
+        $load = ['user', 'company', 'client', 'lineItems'];
         if (VerifactuSchema::hasBillingRecordsTable()) {
             $load[] = 'billingRecord';
         }
@@ -42,11 +42,11 @@ class PdfGeneratorService
     /** @param  array<string, mixed>  $extra */
     private function renderPdf(string $view, Document $document, array $extra = []): string
     {
-        $document->load(['user', 'client', 'lineItems']);
+        $document->load(['user', 'company', 'client', 'lineItems']);
 
         $html = View::make($view, array_merge([
             'document' => $document,
-            'logoDataUri' => $this->logoDataUri($document->user->logo_path),
+            'logoDataUri' => $this->logoDataUri($document->company?->logo_path ?: $document->user->logo_path),
         ], $extra))->render();
 
         $tempDir = storage_path('framework/cache/dompdf');

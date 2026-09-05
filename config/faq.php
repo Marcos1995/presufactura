@@ -3,7 +3,7 @@
 return [
     [
         'question' => '¿PresuFactura cumple Veri*Factu?',
-        'answer' => 'Sí. Con Veri*Factu activado en Configuración y un certificado electrónico válido, PresuFactura genera registros SIF con hash encadenado, código QR en el PDF y envío a la AEAT (modalidad VERI*FACTU). Sin activarlo, los documentos siguen siendo proforma.',
+        'answer' => 'PresuFactura puede generar facturas, conservar el registro de facturación y, si activas Veri*Factu y un certificado válido, preparar el envío del registro a la AEAT. No presenta tus declaraciones tributarias. La validez fiscal debe revisarla un profesional; no afirmamos certificación oficial.',
         'landing' => true,
     ],
     [
@@ -28,7 +28,7 @@ return [
     ],
     [
         'question' => '¿Los documentos tienen validez legal?',
-        'answer' => 'Con Veri*Factu desactivado, los PDF son proforma (cobro y recordatorios). Con Veri*Factu activado y certificado válido, las facturas enviadas generan registros SIF con validez fiscal ante la AEAT.',
+        'answer' => 'Sin Veri*Factu, los PDF son proforma (cobro y recordatorios). Con Veri*Factu activado y certificado válido, las facturas enviadas generan un registro SIF y pueden enviarse a la AEAT. No afirma certificación oficial ni sustituye tus declaraciones; un profesional debe revisar la validez fiscal.',
         'landing' => false,
     ],
     [

@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->trustProxies(at: '*');
         $middleware->append(\App\Http\Middleware\ForceHttps::class);
-        $middleware->appendToGroup('web', \App\Http\Middleware\RecordHttpErrors::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\ShareCurrentCompany::class);
         $middleware->validateCsrfTokens(except: [
             'stripe/webhook',
         ]);

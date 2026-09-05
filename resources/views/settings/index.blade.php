@@ -4,6 +4,7 @@
 @section('heading', 'Configuración')
 
 @section('content')
+@php $company = $company ?? $user->currentCompany(); @endphp
 @if (auth()->user()->isDemoAdmin())
     <p class="text-muted"><a href="{{ route('funnel.index') }}">Embudo de conversión (30 días)</a></p>
 @endif
@@ -12,35 +13,35 @@
         @csrf
         @method('PUT')
 
-        <h2 class="form-section-title">Datos fiscales</h2>
+        <h2 class="form-section-title">Datos fiscales{{ $company ? ' — '.$company->legal_name : '' }}</h2>
 
         <div class="form-group">
             <label for="business_name">Nombre comercial *</label>
-            <input type="text" id="business_name" name="business_name" value="{{ old('business_name', $user->business_name) }}" required>
+            <input type="text" id="business_name" name="business_name" value="{{ old('business_name', $company->legal_name ?? $user->business_name) }}" required>
             @error('business_name')<span class="form-error">{{ $message }}</span>@enderror
         </div>
 
         <div class="form-group">
             <label for="tax_id">NIF/CIF *</label>
-            <input type="text" id="tax_id" name="tax_id" value="{{ old('tax_id', $user->tax_id) }}" required>
+            <input type="text" id="tax_id" name="tax_id" value="{{ old('tax_id', $company->tax_id ?? $user->tax_id) }}" required>
             @error('tax_id')<span class="form-error">{{ $message }}</span>@enderror
         </div>
 
         <div class="form-group">
             <label for="address">Dirección</label>
-            <textarea id="address" name="address" rows="2">{{ old('address', $user->address) }}</textarea>
+            <textarea id="address" name="address" rows="2">{{ old('address', $company->address ?? $user->address) }}</textarea>
             @error('address')<span class="form-error">{{ $message }}</span>@enderror
         </div>
 
         <div class="form-row">
             <div class="form-group">
                 <label for="city">Ciudad</label>
-                <input type="text" id="city" name="city" value="{{ old('city', $user->city) }}">
+                <input type="text" id="city" name="city" value="{{ old('city', $company->city ?? $user->city) }}">
                 @error('city')<span class="form-error">{{ $message }}</span>@enderror
             </div>
             <div class="form-group">
                 <label for="postal_code">Código postal</label>
-                <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', $user->postal_code) }}">
+                <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', $company->postal_code ?? $user->postal_code) }}">
                 @error('postal_code')<span class="form-error">{{ $message }}</span>@enderror
             </div>
         </div>
@@ -53,15 +54,26 @@
 
         <div class="form-group">
             <label for="iban">IBAN</label>
-            <input type="text" id="iban" name="iban" value="{{ old('iban', $user->iban) }}" placeholder="ES00 0000 0000 0000 0000 0000">
+            <input type="text" id="iban" name="iban" value="{{ old('iban', $company->iban ?? $user->iban) }}" placeholder="ES00 0000 0000 0000 0000 0000">
             @error('iban')<span class="form-error">{{ $message }}</span>@enderror
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="province">Provincia</label>
+                <input type="text" id="province" name="province" value="{{ old('province', $company->province ?? '') }}">
+            </div>
+            <div class="form-group">
+                <label for="country">País</label>
+                <input type="text" id="country" name="country" maxlength="2" value="{{ old('country', $company->country ?? 'ES') }}">
+            </div>
         </div>
 
         <div class="form-group">
             <label for="logo">Logo</label>
-            @if ($user->logo_path)
+            @if ($company->logo_path ?? $user->logo_path)
                 <div class="logo-preview">
-                    <img src="{{ asset('storage/'.$user->logo_path) }}" alt="Logo" height="48">
+                    <img src="{{ asset('storage/'.($company->logo_path ?? $user->logo_path)) }}" alt="Logo" height="48">
                 </div>
             @endif
             <input type="file" id="logo" name="logo" accept="image/*">
@@ -73,12 +85,12 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="default_vat_rate">IVA por defecto (%)</label>
-                <input type="number" id="default_vat_rate" name="default_vat_rate" step="0.01" min="0" max="100" value="{{ old('default_vat_rate', $user->default_vat_rate) }}" required>
+                <input type="number" id="default_vat_rate" name="default_vat_rate" step="0.01" min="0" max="100" value="{{ old('default_vat_rate', $company->default_vat_rate ?? $user->default_vat_rate) }}" required>
                 @error('default_vat_rate')<span class="form-error">{{ $message }}</span>@enderror
             </div>
             <div class="form-group">
                 <label for="default_due_days">Días vencimiento factura</label>
-                <input type="number" id="default_due_days" name="default_due_days" min="1" max="365" value="{{ old('default_due_days', $user->default_due_days) }}" required>
+                <input type="number" id="default_due_days" name="default_due_days" min="1" max="365" value="{{ old('default_due_days', $company->default_due_days ?? $user->default_due_days) }}" required>
                 @error('default_due_days')<span class="form-error">{{ $message }}</span>@enderror
             </div>
         </div>
@@ -86,14 +98,38 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="invoice_prefix">Prefijo facturas</label>
-                <input type="text" id="invoice_prefix" name="invoice_prefix" value="{{ old('invoice_prefix', $user->invoice_prefix) }}" required>
+                <input type="text" id="invoice_prefix" name="invoice_prefix" value="{{ old('invoice_prefix', $company->invoice_prefix ?? $user->invoice_prefix) }}" required>
                 @error('invoice_prefix')<span class="form-error">{{ $message }}</span>@enderror
             </div>
             <div class="form-group">
                 <label for="quote_prefix">Prefijo presupuestos</label>
-                <input type="text" id="quote_prefix" name="quote_prefix" value="{{ old('quote_prefix', $user->quote_prefix) }}" required>
+                <input type="text" id="quote_prefix" name="quote_prefix" value="{{ old('quote_prefix', $company->quote_prefix ?? $user->quote_prefix) }}" required>
                 @error('quote_prefix')<span class="form-error">{{ $message }}</span>@enderror
             </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="vat_regime">Régimen IVA</label>
+                <select id="vat_regime" name="vat_regime">
+                    <option value="general" @selected(old('vat_regime', $company->vat_regime ?? 'general') === 'general')>General</option>
+                    <option value="recargo" @selected(old('vat_regime', $company->vat_regime ?? '') === 'recargo')>Recargo de equivalencia</option>
+                    <option value="exento" @selected(old('vat_regime', $company->vat_regime ?? '') === 'exento')>Exento</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="default_irpf_rate">IRPF por defecto (%)</label>
+                <input type="number" id="default_irpf_rate" name="default_irpf_rate" step="0.01" min="0" max="100" value="{{ old('default_irpf_rate', $company->default_irpf_rate ?? 0) }}">
+            </div>
+            <div class="form-group">
+                <label for="default_recargo_rate">Recargo por defecto (%)</label>
+                <input type="number" id="default_recargo_rate" name="default_recargo_rate" step="0.01" min="0" max="100" value="{{ old('default_recargo_rate', $company->default_recargo_rate ?? 0) }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="invoice_footer">Pie de factura</label>
+            <textarea id="invoice_footer" name="invoice_footer" rows="2">{{ old('invoice_footer', $company->invoice_footer ?? '') }}</textarea>
         </div>
 
         <h2 class="form-section-title">Recordatorios automáticos</h2>
@@ -128,13 +164,44 @@
 </div>
 
 <div class="card card-narrow">
+    <form method="POST" action="{{ route('companies.store') }}" class="form">
+        @csrf
+        <h2 class="form-section-title">Nueva empresa emisora</h2>
+        <p class="text-muted">Puedes facturar con varias empresas. Tras crearla, el panel usará esa empresa.</p>
+        <div class="form-group">
+            <label for="new_legal_name">Razón social *</label>
+            <input type="text" id="new_legal_name" name="legal_name" required>
+        </div>
+        <div class="form-group">
+            <label for="new_tax_id">NIF/CIF *</label>
+            <input type="text" id="new_tax_id" name="tax_id" required>
+        </div>
+        <input type="hidden" name="country" value="ES">
+        <input type="hidden" name="vat_regime" value="general">
+        <input type="hidden" name="default_vat_rate" value="21">
+        <input type="hidden" name="default_due_days" value="30">
+        <input type="hidden" name="invoice_prefix" value="FAC">
+        <input type="hidden" name="quote_prefix" value="PRE">
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="accept_terms" value="1">
+                Acepto los <a href="{{ route('legal.terminos') }}" target="_blank" rel="noopener">términos de uso</a>
+            </label>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-secondary">Crear empresa</button>
+        </div>
+    </form>
+</div>
+
+<div class="card card-narrow">
     @if ($verifactuAvailable ?? false)
     <form method="POST" action="{{ route('settings.verifactu.update') }}" class="form" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <h2 class="form-section-title">Veri*Factu</h2>
-        <p class="text-muted">Va activado al crear la cuenta. Al enviar una factura se genera siempre el QR tributario (Orden HAC/1177/2024). El envío SOAP a Hacienda requiere tu certificado FNMT (.p12): el mismo archivo vale en pruebas y en real; solo cambia <code>VERIFACTU_ENV</code>. Sin certificado el PDF sigue siendo proforma.</p>
+        <p class="text-muted">Va activado al crear la empresa. El QR tributario aparece cuando existe un registro SIF de alta. El envío SOAP a Hacienda requiere tu certificado FNMT (.p12): el mismo archivo vale en pruebas y en real; solo cambia <code>VERIFACTU_ENV</code>. Sin certificado el PDF sigue siendo proforma.</p>
         <p>
             <strong>Entorno AEAT:</strong>
             <span class="badge {{ \App\Support\VerifactuEnv::badgeClass() }}">{{ \App\Support\VerifactuEnv::labelFor($sif ?? null) }}</span>

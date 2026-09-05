@@ -13,11 +13,15 @@
         var qty = parseFloat($row.find('.line-qty').val()) || 0;
         var price = parseFloat($row.find('.line-price').val()) || 0;
         var vat = parseFloat($row.find('.line-vat').val()) || 0;
+        var irpf = parseFloat($row.find('.line-irpf').val()) || 0;
+        var recargo = parseFloat($row.find('.line-recargo').val()) || 0;
         var subtotal = qty * price;
         var lineVat = subtotal * (vat / 100);
-        var total = subtotal + lineVat;
+        var lineRecargo = subtotal * (recargo / 100);
+        var lineIrpf = subtotal * (irpf / 100);
+        var total = subtotal + lineVat + lineRecargo - lineIrpf;
         $row.find('.line-total').text(formatMoney(total));
-        return { subtotal: subtotal, vat: lineVat };
+        return { subtotal: subtotal, vat: lineVat, recargo: lineRecargo, irpf: lineIrpf };
     }
 
     function reindexRows() {
@@ -34,14 +38,22 @@
     function updateTotals() {
         var subtotal = 0;
         var vat = 0;
+        var recargo = 0;
+        var irpf = 0;
         $('#line-items-body .line-item-row').each(function () {
             var line = calcLine($(this));
             subtotal += line.subtotal;
             vat += line.vat;
+            recargo += line.recargo;
+            irpf += line.irpf;
         });
         $('#total-subtotal').text(formatMoney(subtotal));
         $('#total-vat').text(formatMoney(vat));
-        $('#total-grand').text(formatMoney(subtotal + vat));
+        $('#total-recargo').text(formatMoney(recargo));
+        $('#total-irpf').text('− ' + formatMoney(irpf));
+        $('#total-recargo-row').prop('hidden', recargo <= 0);
+        $('#total-irpf-row').prop('hidden', irpf <= 0);
+        $('#total-grand').text(formatMoney(subtotal + vat + recargo - irpf));
     }
 
     function bindRowEvents($row) {

@@ -38,6 +38,14 @@ class DocumentActionController extends Controller
             'paid_at' => now(),
         ]);
 
+        if (! $document->payments()->exists()) {
+            $document->payments()->create([
+                'amount' => $document->total,
+                'method' => 'manual',
+                'paid_on' => now()->toDateString(),
+            ]);
+        }
+
         $document->events()->create([
             'event_type' => DocumentEvent::MARKED_PAID,
             'meta' => ['source' => 'owner_email'],

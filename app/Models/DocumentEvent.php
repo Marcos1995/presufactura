@@ -17,6 +17,8 @@ class DocumentEvent extends Model
     public const MARKED_PAID = 'marked_paid';
     public const CLIENT_CLAIMED_PAID = 'client_claimed_paid';
     public const CANCELLED = 'cancelled';
+    public const REJECTED = 'rejected';
+    public const NUMBER_ASSIGNED = 'number_assigned';
 
     protected $fillable = [
         'document_id',

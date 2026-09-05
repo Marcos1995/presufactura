@@ -89,7 +89,7 @@ class AeatSoapClientTest extends TestCase
 
         $this->activateVerifactuCertificate($user);
 
-        Storage::disk('local')->put('sif/certs/user_'.$user->id.'.p12.enc', encrypt($this->makeTestP12('secret')));
+        Storage::disk('local')->put('sif/certs/company_'.$user->currentCompany()->id.'.p12.enc', encrypt($this->makeTestP12('secret')));
 
         $record = $this->makeBillingRecord($user, '<RegistroAlta><IDVersion>1.0</IDVersion></RegistroAlta>');
 

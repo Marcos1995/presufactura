@@ -19,7 +19,7 @@ class PublicQuoteController extends Controller
 
     public function show(string $token): View
     {
-        $with = ['client', 'lineItems', 'user'];
+        $with = ['client', 'lineItems', 'user', 'company'];
         if (VerifactuSchema::hasBillingRecordsTable()) {
             $with[] = 'billingRecord';
         }
@@ -63,6 +63,20 @@ class PublicQuoteController extends Controller
         $quote->events()->create(['event_type' => DocumentEvent::ACCEPTED]);
 
         return back()->with('status', 'Presupuesto aceptado. Gracias.');
+    }
+
+    public function reject(string $token): RedirectResponse
+    {
+        $quote = Document::where('public_token', $token)
+            ->where('type', Document::TYPE_QUOTE)
+            ->firstOrFail();
+
+        abort_unless($quote->canReject(), 403, 'Este presupuesto no puede rechazarse.');
+
+        $quote->update(['status' => Document::STATUS_REJECTED]);
+        $quote->events()->create(['event_type' => DocumentEvent::REJECTED]);
+
+        return back()->with('status', 'Presupuesto rechazado.');
     }
 
     public function claimPaid(string $token): RedirectResponse

@@ -1849,11 +1849,6 @@ html.sidebar-collapsed .sidebar-logout { justify-content: center; width: 100%; }
         color: var(--gray-500);
         margin-bottom: 0.25rem;
     }
-    .line-items-table tbody td:first-child::before { content: "Descripción"; }
-    .line-items-table tbody td:nth-child(2)::before { content: "Cant."; }
-    .line-items-table tbody td:nth-child(3)::before { content: "Precio"; }
-    .line-items-table tbody td:nth-child(4)::before { content: "IVA %"; }
-    .line-items-table tbody td:nth-child(5)::before { content: "Total"; }
     .line-items-table tbody td:last-child::before { display: none; }
     .line-items-table tbody td:last-child {
         text-align: right;

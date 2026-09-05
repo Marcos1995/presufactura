@@ -24,6 +24,12 @@
         <button type="submit" class="btn btn-danger">Anular factura</button>
     </form>
     @endif
+    @if (($verifactuAvailable ?? false) && $invoice->billingRecord?->canRetry())
+    <form method="POST" action="{{ route('invoices.verifactu.retry', $invoice) }}" class="inline-form">
+        @csrf
+        <button type="submit" class="btn btn-secondary">Reintentar Veri*Factu</button>
+    </form>
+    @endif
     @if ($invoice->canCreateRectificativa())
     <form method="POST" action="{{ route('invoices.rectificativa', $invoice) }}" class="inline-form" onsubmit="return confirm('¿Crear factura rectificativa de esta factura?')">
         @csrf
@@ -46,7 +52,9 @@
         'method' => 'PUT',
         'invoice' => $invoice,
         'clients' => $clients,
-        'defaultVatRate' => auth()->user()->default_vat_rate,
+        'defaultVatRate' => $invoice->company?->default_vat_rate ?? auth()->user()->default_vat_rate,
+        'defaultIrpfRate' => $invoice->company?->default_irpf_rate ?? 0,
+        'defaultRecargoRate' => $invoice->company?->default_recargo_rate ?? 0,
         'lineItems' => $invoice->lineItems,
     ])
 @else
@@ -108,23 +116,34 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <tr>
-                    <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
-                    <td class="text-right">{{ number_format($invoice->subtotal, 2, ',', '.') }} €</td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-right"><strong>IVA</strong></td>
-                    <td class="text-right">{{ number_format($invoice->vat_amount, 2, ',', '.') }} €</td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-right"><strong>Total</strong></td>
-                    <td class="text-right"><strong>{{ number_format($invoice->total, 2, ',', '.') }} €</strong></td>
-                </tr>
+                @include('partials.document-totals', ['document' => $invoice])
             </tfoot>
         </table>
 
         @if ($invoice->notes)
             <p class="invoice-notes"><strong>Notas:</strong> {{ $invoice->notes }}</p>
+        @endif
+
+        @if ($invoice->canMarkPaid() || $invoice->status === 'paid')
+        <form method="POST" action="{{ route('invoices.payments.store', $invoice) }}" class="form" style="margin-top:1.5rem;max-width:420px">
+            @csrf
+            <h2 class="form-section-title">Registrar cobro</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="amount">Importe *</label>
+                    <input type="number" id="amount" name="amount" step="0.01" min="0.01" value="{{ old('amount', $invoice->total) }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="paid_on">Fecha *</label>
+                    <input type="date" id="paid_on" name="paid_on" value="{{ old('paid_on', now()->format('Y-m-d')) }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="method">Método</label>
+                <input type="text" id="method" name="method" value="{{ old('method', 'transferencia') }}" maxlength="40">
+            </div>
+            <button type="submit" class="btn btn-secondary">Guardar cobro</button>
+        </form>
         @endif
     </div>
 @endif

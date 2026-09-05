@@ -9,7 +9,7 @@ use DOMXPath;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class AeatSoapClient
+class AeatSoapClient implements VerifactuTransportInterface
 {
     private const NS_SOAP = 'http://schemas.xmlsoap.org/soap/envelope/';
 
@@ -24,8 +24,8 @@ class AeatSoapClient
 
     public function submit(BillingRecord $record, string $certPassword): array
     {
-        $record->loadMissing(['user.sifConfig', 'document']);
-        $sifConfig = $record->user->sifConfig;
+        $record->loadMissing(['user.sifConfig', 'company.sifConfig', 'document']);
+        $sifConfig = $record->company?->sifConfig ?? $record->user?->sifConfig;
 
         if ($sifConfig?->is_dev_cert) {
             return [
@@ -101,8 +101,9 @@ class AeatSoapClient
 
     public function buildSoapEnvelope(BillingRecord $record, string $registroXml): string
     {
-        $record->loadMissing('user');
+        $record->loadMissing(['user', 'company']);
         $user = $record->user;
+        $issuer = $record->company;
 
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = false;
@@ -128,12 +129,12 @@ class AeatSoapClient
         $obligado->appendChild($dom->createElementNS(
             self::NS_SUM1,
             'sum1:NombreRazon',
-            htmlspecialchars($user->business_name ?: $user->name, ENT_XML1),
+            htmlspecialchars($issuer?->legal_name ?: ($user->business_name ?: $user->name), ENT_XML1),
         ));
         $obligado->appendChild($dom->createElementNS(
             self::NS_SUM1,
             'sum1:NIF',
-            strtoupper(preg_replace('/\s+/', '', (string) $user->tax_id)),
+            strtoupper(preg_replace('/\s+/', '', (string) ($issuer?->tax_id ?: $user->tax_id))),
         ));
         $cabecera->appendChild($obligado);
 
@@ -186,20 +187,18 @@ class AeatSoapClient
         $errorCode = trim($xpath->evaluate('string(//*[local-name()="CodigoErrorRegistro"])'));
         $errorDesc = trim($xpath->evaluate('string(//*[local-name()="DescripcionErrorRegistro"])'));
 
-        if ($estado !== '' && stripos($estado, 'Correcto') !== false) {
-            return [
-                'success' => true,
-                'message' => 'Enviado correctamente',
-                'csv' => $csv !== '' ? $csv : null,
-                'response' => $responseXml,
-            ];
-        }
+        $estadoRegistro = trim($xpath->evaluate('string(//*[local-name()="EstadoRegistro"])'));
+        $acceptedRecord = in_array($estadoRegistro, ['Correcto', 'AceptadoConErrores'], true);
+        $acceptedBatch = $estado !== ''
+            && stripos($estado, 'Correcto') !== false
+            && stripos($estado, 'Incorrecto') === false
+            && $estadoRegistro !== 'Incorrecto';
 
-        if ($csv !== '') {
+        if ($acceptedRecord || ($acceptedBatch && $estadoRegistro === '')) {
             return [
                 'success' => true,
-                'message' => 'Enviado correctamente',
-                'csv' => $csv,
+                'message' => $estadoRegistro !== '' ? $estadoRegistro : 'Enviado correctamente',
+                'csv' => $csv !== '' ? $csv : null,
                 'response' => $responseXml,
             ];
         }

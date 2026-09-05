@@ -26,10 +26,13 @@ class ProfileController extends Controller
     public function edit(): View
     {
         $user = auth()->user();
-        $sif = VerifactuSchema::hasSifConfigTable() ? $user->sifConfig : null;
+        $company = $user->currentCompany();
+        $sif = VerifactuSchema::hasSifConfigTable() ? $company->sifConfig : null;
 
         return view('settings.index', [
             'user' => $user,
+            'company' => $company,
+            'companies' => $user->companies,
             'sif' => $sif,
             'verifactuAvailable' => VerifactuSchema::hasSifConfigTable(),
             'sandboxCheck' => $user->isDemoAdmin() ? VerifactuProductionCheck::run() : null,
@@ -39,6 +42,7 @@ class ProfileController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $user = auth()->user();
+        $company = $user->currentCompany();
 
         $rules = [
             'business_name' => ['required', 'string', 'max:255'],
@@ -46,13 +50,19 @@ class ProfileController extends Controller
             'address' => ['nullable', 'string', 'max:500'],
             'city' => ['nullable', 'string', 'max:100'],
             'postal_code' => ['nullable', 'string', 'max:10'],
+            'province' => ['nullable', 'string', 'max:100'],
+            'country' => ['nullable', 'string', 'size:2'],
             'phone' => ['nullable', 'string', 'max:30'],
             'iban' => ['nullable', 'string', 'max:34'],
             'logo' => ['nullable', 'image', 'max:2048'],
+            'vat_regime' => ['nullable', 'in:general,recargo,exento'],
             'default_vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'default_irpf_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'default_recargo_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'invoice_prefix' => ['required', 'string', 'max:20'],
             'quote_prefix' => ['required', 'string', 'max:20'],
             'default_due_days' => ['required', 'integer', 'min:1', 'max:365'],
+            'invoice_footer' => ['nullable', 'string', 'max:2000'],
         ];
 
         if ($user->isPro()) {
@@ -68,15 +78,39 @@ class ProfileController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            if ($user->logo_path) {
-                Storage::disk('public')->delete($user->logo_path);
+            if ($company->logo_path) {
+                Storage::disk('public')->delete($company->logo_path);
             }
             $data['logo_path'] = $request->file('logo')->store('logos', 'public');
         }
 
         unset($data['logo']);
 
-        $user->update($data);
+        $company->update([
+            'legal_name' => $data['business_name'],
+            'tax_id' => $data['tax_id'],
+            'address' => $data['address'] ?? $company->address,
+            'city' => $data['city'] ?? $company->city,
+            'postal_code' => $data['postal_code'] ?? $company->postal_code,
+            'province' => $data['province'] ?? $company->province,
+            'country' => $data['country'] ?? $company->country ?? 'ES',
+            'phone' => $data['phone'] ?? $company->phone,
+            'iban' => $data['iban'] ?? $company->iban,
+            'logo_path' => $data['logo_path'] ?? $company->logo_path,
+            'vat_regime' => $data['vat_regime'] ?? $company->vat_regime,
+            'default_vat_rate' => $data['default_vat_rate'],
+            'default_irpf_rate' => $data['default_irpf_rate'] ?? $company->default_irpf_rate,
+            'default_recargo_rate' => $data['default_recargo_rate'] ?? $company->default_recargo_rate,
+            'invoice_prefix' => $data['invoice_prefix'],
+            'quote_prefix' => $data['quote_prefix'],
+            'default_due_days' => $data['default_due_days'],
+            'invoice_footer' => $data['invoice_footer'] ?? $company->invoice_footer,
+        ]);
+        $company->syncLegacyUserFields();
+
+        $user->update(array_intersect_key($data, array_flip([
+            'reminder_day_1', 'reminder_day_2', 'reminder_day_3', 'owner_reminder_day',
+        ])));
 
         return redirect()->route('settings.index')->with('status', 'Configuración guardada.');
     }
@@ -88,6 +122,7 @@ class ProfileController extends Controller
         }
 
         $user = auth()->user();
+        $company = $user->currentCompany();
 
         $data = $request->validate([
             'verifactu_enabled' => ['nullable', 'boolean'],
@@ -98,9 +133,11 @@ class ProfileController extends Controller
             'cert_password.required_with' => 'Indica la contraseña del certificado.',
         ]);
 
-        $config = $user->sifConfig ?? new UserSifConfig(['user_id' => $user->id]);
+        $company->ensureSifConfig();
+        $config = $company->sifConfig ?? new UserSifConfig(['user_id' => $user->id, 'company_id' => $company->id]);
         $wasEnabled = (bool) $config->enabled;
         $config->user_id = $user->id;
+        $config->company_id = $company->id;
         $config->enabled = $request->boolean('verifactu_enabled');
         $config->mode = $data['verifactu_mode'];
 
@@ -129,7 +166,7 @@ class ProfileController extends Controller
                 Storage::disk('local')->delete($config->cert_path);
             }
 
-            $path = 'sif/certs/user_'.$user->id.'.p12.enc';
+            $path = 'sif/certs/company_'.$company->id.'.p12.enc';
             Storage::disk('local')->put($path, encrypt($p12Content));
             $config->cert_path = $path;
             $config->cert_expires_at = $expiresAt;
@@ -209,16 +246,30 @@ class ProfileController extends Controller
             }
         }
 
-        if ($user->logo_path) {
-            Storage::disk('public')->delete($user->logo_path);
-        }
+        if ($user->hasFiscalRecords()) {
+            DB::transaction(function () use ($user): void {
+                $user->forceFill([
+                    'name' => 'Cuenta eliminada',
+                    'email' => 'deleted-'.$user->id.'@invalid.local',
+                    'password' => str()->password(32),
+                    'google_id' => null,
+                    'remember_token' => null,
+                    'onboarding_completed_at' => $user->onboarding_completed_at,
+                ])->save();
+                $user->companies()->update(['is_active' => false, 'email' => null, 'phone' => null]);
+            });
+        } else {
+            if ($user->logo_path) {
+                Storage::disk('public')->delete($user->logo_path);
+            }
 
-        DB::transaction(function () use ($user): void {
-            $user->documents()->delete();
-            $user->clients()->delete();
-            DB::table('password_reset_tokens')->where('email', $user->email)->delete();
-            $user->delete();
-        });
+            DB::transaction(function () use ($user): void {
+                $user->documents()->whereDoesntHave('billingRecords')->delete();
+                $user->clients()->delete();
+                DB::table('password_reset_tokens')->where('email', $user->email)->delete();
+                $user->delete();
+            });
+        }
 
         try {
             Mail::to($email)->send(new AccountDeletedMail($name));

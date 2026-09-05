@@ -76,7 +76,7 @@ class VerifactuTest extends TestCase
         Queue::assertPushed(SubmitBillingRecordJob::class);
     }
 
-    public function test_sending_invoice_without_certificate_still_shows_qr(): void
+    public function test_sending_invoice_without_certificate_is_proforma_without_qr(): void
     {
         Mail::fake();
 
@@ -120,14 +120,11 @@ class VerifactuTest extends TestCase
 
         $this->get(route('invoices.show', $invoice))
             ->assertOk()
-            ->assertSee('VERI*FACTU')
-            ->assertSee('data:image/png;base64,', false)
-            ->assertSee('Comprobar en la AEAT');
+            ->assertDontSee('data:image/png;base64,', false);
 
-        $pdf = $this->get(route('invoices.pdf', $invoice));
-        $pdf->assertOk();
-        $this->assertStringStartsWith('%PDF', $pdf->getContent());
-        $this->assertMatchesRegularExpression('/\/(Subtype\s*\/Image|XObject)/', $pdf->getContent());
+        $this->assertDatabaseMissing('billing_records', [
+            'document_id' => $invoice->id,
+        ]);
     }
 
     public function test_sent_invoice_is_not_editable(): void
@@ -458,7 +455,8 @@ class VerifactuTest extends TestCase
 
         $rectificativa = Document::where('rectifies_document_id', $original->id)->first();
         $this->assertNotNull($rectificativa);
-        $this->assertStringStartsWith('R-', $rectificativa->number);
+        $this->assertTrue($rectificativa->isDraftNumber());
+        $this->assertSame(Document::KIND_R1, $rectificativa->invoice_kind);
         $this->assertSame(Document::STATUS_DRAFT, $rectificativa->status);
     }
 

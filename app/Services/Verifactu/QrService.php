@@ -37,15 +37,17 @@ class QrService
 
     public function buildUrlForDocument(Document $document): string
     {
-        $document->loadMissing('user.sifConfig');
+        $document->loadMissing(['company.sifConfig', 'user.sifConfig']);
         $user = $document->user;
-        $sifConfig = $user->sifConfig;
+        $company = $document->company;
+        $sifConfig = $company?->sifConfig ?? $user->sifConfig;
 
         $env = config('verifactu.env', 'preprod');
         $mode = $sifConfig?->mode ?? config('verifactu.mode', 'verifactu');
+        $nif = $company?->tax_id ?: $user->tax_id;
 
         return $this->cotejoUrl($env, $mode, [
-            'nif' => strtoupper((string) preg_replace('/[\s-]+/', '', (string) $user->tax_id)),
+            'nif' => strtoupper((string) preg_replace('/[\s-]+/', '', (string) $nif)),
             'numserie' => (string) $document->number,
             'fecha' => $document->issue_date->format('d-m-Y'),
             'importe' => number_format((float) $document->total, 2, '.', ''),
@@ -115,10 +117,6 @@ class QrService
         }
 
         $document->loadMissing(['user.sifConfig', 'billingRecord']);
-
-        if ($document->user->hasVerifactuEnabled()) {
-            return true;
-        }
 
         $record = $document->billingRecord;
 

@@ -30,7 +30,7 @@ class QuoteController extends Controller
 
     public function index(): View
     {
-        $quotes = auth()->user()->documents()
+        $quotes = auth()->user()->currentCompany()->documents()
             ->where('type', Document::TYPE_QUOTE)
             ->with('client')
             ->orderByDesc('created_at')
@@ -41,12 +41,14 @@ class QuoteController extends Controller
 
     public function create(): View
     {
-        $clients = auth()->user()->clients()->orderBy('name')->get();
+        $company = auth()->user()->currentCompany();
 
         return view('quotes.form', [
             'quote' => null,
-            'clients' => $clients,
-            'defaultVatRate' => auth()->user()->default_vat_rate,
+            'clients' => $company->clients()->where('is_active', true)->orderBy('name')->get(),
+            'defaultVatRate' => $company->default_vat_rate,
+            'defaultIrpfRate' => $company->default_irpf_rate,
+            'defaultRecargoRate' => $company->default_recargo_rate,
             'lineItems' => [],
         ]);
     }
@@ -59,19 +61,25 @@ class QuoteController extends Controller
 
         $quote = DB::transaction(function () use ($data, $lines, $totals) {
             $user = auth()->user();
+            $company = $user->currentCompany();
 
             $quote = $user->documents()->create([
+                'company_id' => $company->id,
                 'client_id' => $data['client_id'],
                 'type' => Document::TYPE_QUOTE,
-                'number' => $this->numberService->nextQuoteNumber($user),
+                'number' => $this->numberService->draftNumber(Document::TYPE_QUOTE),
                 'status' => Document::STATUS_DRAFT,
                 'issue_date' => $data['issue_date'],
                 'valid_until' => $data['valid_until'],
                 'subtotal' => $totals['subtotal'],
+                'discount_amount' => $totals['discount_amount'],
                 'vat_amount' => $totals['vat_amount'],
+                'irpf_amount' => $totals['irpf_amount'],
+                'recargo_amount' => $totals['recargo_amount'],
                 'total' => $totals['total'],
                 'notes' => $data['notes'] ?? null,
                 'public_token' => Str::random(32),
+                'created_by' => $user->id,
             ]);
 
             $this->syncLineItems($quote, $lines, $totals['lines']);
@@ -89,8 +97,8 @@ class QuoteController extends Controller
     public function show(Document $quote): View
     {
         $this->authorizeQuote($quote);
-        $quote->load(['client', 'lineItems']);
-        $clients = auth()->user()->clients()->orderBy('name')->get();
+        $quote->load(['client', 'lineItems', 'company']);
+        $clients = auth()->user()->currentCompany()->clients()->orderBy('name')->get();
 
         return view('quotes.show', compact('quote', 'clients'));
     }
@@ -110,7 +118,10 @@ class QuoteController extends Controller
                 'issue_date' => $data['issue_date'],
                 'valid_until' => $data['valid_until'],
                 'subtotal' => $totals['subtotal'],
+                'discount_amount' => $totals['discount_amount'],
                 'vat_amount' => $totals['vat_amount'],
+                'irpf_amount' => $totals['irpf_amount'],
+                'recargo_amount' => $totals['recargo_amount'],
                 'total' => $totals['total'],
                 'notes' => $data['notes'] ?? null,
             ]);
@@ -137,12 +148,17 @@ class QuoteController extends Controller
         $this->authorizeQuote($quote);
         abort_unless($quote->canSend(), 403);
 
-        $quote->update([
-            'status' => Document::STATUS_SENT,
-            'sent_at' => now(),
-        ]);
+        DB::transaction(function () use ($quote) {
+            $locked = Document::query()->whereKey($quote->id)->lockForUpdate()->firstOrFail();
+            $this->numberService->assignFiscalNumber($locked);
+            $locked->update([
+                'status' => Document::STATUS_SENT,
+                'sent_at' => now(),
+            ]);
+            $locked->events()->create(['event_type' => DocumentEvent::SENT]);
+        });
 
-        $quote->events()->create(['event_type' => DocumentEvent::SENT]);
+        $quote = $quote->fresh(['user', 'company', 'client', 'lineItems']);
 
         try {
             $this->emailService->sendQuote($quote);
@@ -181,31 +197,31 @@ class QuoteController extends Controller
             $quote->load('lineItems');
 
             $invoice = $user->documents()->create([
+                'company_id' => $quote->company_id,
                 'client_id' => $quote->client_id,
                 'type' => Document::TYPE_INVOICE,
-                'number' => $this->numberService->nextInvoiceNumber($user),
+                'number' => $this->numberService->draftNumber(Document::TYPE_INVOICE),
                 'status' => Document::STATUS_DRAFT,
                 'issue_date' => now()->toDateString(),
-                'due_date' => now()->addDays($user->default_due_days)->toDateString(),
+                'due_date' => now()->addDays($user->currentCompany()->default_due_days)->toDateString(),
                 'subtotal' => $quote->subtotal,
+                'discount_amount' => $quote->discount_amount,
                 'vat_amount' => $quote->vat_amount,
+                'irpf_amount' => $quote->irpf_amount,
+                'recargo_amount' => $quote->recargo_amount,
                 'total' => $quote->total,
                 'notes' => $quote->notes,
                 'public_token' => Str::random(32),
                 'converted_from_id' => $quote->id,
+                'created_by' => $user->id,
             ]);
 
             foreach ($quote->lineItems as $item) {
-                $invoice->lineItems()->create([
-                    'description' => $item->description,
-                    'quantity' => $item->quantity,
-                    'unit_price' => $item->unit_price,
-                    'vat_rate' => $item->vat_rate,
-                    'line_subtotal' => $item->line_subtotal,
-                    'line_vat' => $item->line_vat,
-                    'line_total' => $item->line_total,
-                    'sort_order' => $item->sort_order,
-                ]);
+                $invoice->lineItems()->create($item->only([
+                    'description', 'quantity', 'unit_price', 'discount_rate', 'vat_rate',
+                    'irpf_rate', 'recargo_rate', 'line_subtotal', 'line_discount',
+                    'line_vat', 'line_irpf', 'line_recargo', 'line_total', 'sort_order',
+                ]));
             }
 
             $invoice->events()->create(['event_type' => DocumentEvent::CREATED]);
@@ -223,7 +239,7 @@ class QuoteController extends Controller
     private function validated(Request $request): array
     {
         return $request->validate([
-            'client_id' => ['required', Rule::exists('clients', 'id')->where(fn ($q) => $q->where('user_id', auth()->id()))],
+            'client_id' => ['required', Rule::exists('clients', 'id')->where(fn ($q) => $q->where('company_id', auth()->user()->currentCompany()->id))],
             'issue_date' => ['required', 'date'],
             'valid_until' => ['required', 'date', 'after_or_equal:issue_date'],
             'notes' => ['nullable', 'string', 'max:2000'],
@@ -232,6 +248,9 @@ class QuoteController extends Controller
             'lines.*.quantity' => ['required', 'numeric', 'min:0.01'],
             'lines.*.unit_price' => ['required', 'numeric', 'min:0'],
             'lines.*.vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'lines.*.discount_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'lines.*.irpf_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'lines.*.recargo_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],
         ], [
             'client_id.required' => 'Selecciona un cliente.',
             'lines.required' => 'Añade al menos una línea.',
@@ -241,16 +260,19 @@ class QuoteController extends Controller
     /** @return array<int, array{description: string, quantity: float, unit_price: float, vat_rate: float}> */
     private function parseLines(Request $request): array
     {
-        $clientIds = auth()->user()->clients()->pluck('id');
-        abort_unless($clientIds->contains($request->input('client_id')), 403);
+        $clientIds = auth()->user()->currentCompany()->clients()->pluck('id');
+        abort_unless($clientIds->contains((int) $request->input('client_id')), 403);
 
         return collect($request->input('lines', []))
             ->values()
             ->map(fn ($line) => [
                 'description' => $line['description'],
-                'quantity' => (float) $line['quantity'],
-                'unit_price' => (float) $line['unit_price'],
-                'vat_rate' => (float) $line['vat_rate'],
+                'quantity' => $line['quantity'],
+                'unit_price' => $line['unit_price'],
+                'discount_rate' => $line['discount_rate'] ?? 0,
+                'vat_rate' => $line['vat_rate'],
+                'irpf_rate' => $line['irpf_rate'] ?? 0,
+                'recargo_rate' => $line['recargo_rate'] ?? 0,
             ])
             ->all();
     }
@@ -265,9 +287,15 @@ class QuoteController extends Controller
                 'description' => $line['description'],
                 'quantity' => $line['quantity'],
                 'unit_price' => $line['unit_price'],
+                'discount_rate' => $line['discount_rate'] ?? 0,
                 'vat_rate' => $line['vat_rate'],
+                'irpf_rate' => $line['irpf_rate'] ?? 0,
+                'recargo_rate' => $line['recargo_rate'] ?? 0,
                 'line_subtotal' => $calculated[$i]['line_subtotal'],
+                'line_discount' => $calculated[$i]['line_discount'] ?? 0,
                 'line_vat' => $calculated[$i]['line_vat'],
+                'line_irpf' => $calculated[$i]['line_irpf'] ?? 0,
+                'line_recargo' => $calculated[$i]['line_recargo'] ?? 0,
                 'line_total' => $calculated[$i]['line_total'],
                 'sort_order' => $i,
             ]);

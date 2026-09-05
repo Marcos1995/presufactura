@@ -6,7 +6,8 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 
 - Registro / login (email o Google) / verificación email / reset password
 - Onboarding 3 pasos (datos fiscales, IBAN, preferencias + recordatorios)
-- Configuración de perfil: logo, NIF, dirección, IVA, prefijos, vencimiento
+- Una o varias empresas emisoras por usuario, con selector en el panel
+- Configuración de empresa: logo, NIF, dirección, IVA, IRPF, recargo, prefijos, vencimiento
 - Baja de cuenta (RGPD)
 
 ## Clientes
@@ -16,15 +17,16 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 
 ## Presupuestos
 
-- CRUD, estados: draft, sent, accepted, expired
+- CRUD, estados: draft, sent, accepted, expired, rejected
 - PDF + email al publicar
-- Enlace público `/p/{token}` con aceptación online
+- Enlace público `/p/{token}` con aceptación o rechazo online
 - Conversión a factura borrador (desde borrador, enviado o aceptado)
 - Presupuesto de prueba desde el dashboard (primer valor sin Veri*Factu)
 
 ## Facturas
 
 - CRUD, estados: draft, sent, expired, paid, payment_pending, cancelled
+- Líneas con IVA, IRPF y recargo de equivalencia
 - PDF + email
 - Enlace público con IBAN y botón «He pagado»
 - Rectificativas e inmutabilidad cuando aplica Veri*Factu
@@ -45,7 +47,7 @@ Catálogo de funcionalidades. Todo incluido, sin planes de pago.
 - Separación de portada, zona autenticada, tráfico propio, bots y errores 4xx/5xx
 - Panel `/embudo` (cuenta demo) y `php artisan presufactura:funnel`
 
-## Veri*Factu (opcional por usuario)
+## Veri*Factu (opcional por empresa)
 
 - Activación por defecto al registrarse; certificado .p12 para emitir fiscales y enviar a AEAT
 - Comando `php artisan presufactura:verifactu-check` (producción: schema + sandbox demo, sin AEAT)

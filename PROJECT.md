@@ -55,7 +55,7 @@ Cron obligatorio:
 
 - Minimal diff; sin refactors no pedidos
 - Estados factura: draft, sent, expired, paid, payment_pending, cancelled
-- Estados presupuesto: draft, sent, accepted, expired
+- Estados presupuesto: draft, sent, accepted, expired, rejected
 - Factura sin Veri*Factu = proforma + disclaimer
 <!-- managed-by-telegram-cursor-bot:agent-kit -->
 

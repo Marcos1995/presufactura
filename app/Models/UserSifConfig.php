@@ -19,6 +19,7 @@ class UserSifConfig extends Model
 
     protected $fillable = [
         'user_id',
+        'company_id',
         'mode',
         'cert_path',
         'cert_expires_at',
@@ -38,6 +39,11 @@ class UserSifConfig extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function isVerifactuMode(): bool
@@ -75,30 +81,42 @@ class UserSifConfig extends Model
 
     public function certPasswordPath(): string
     {
+        if ($this->company_id) {
+            return 'sif/certs/company_'.$this->company_id.'.pass.enc';
+        }
+
         return 'sif/certs/user_'.$this->user_id.'.pass.enc';
     }
 
     public function storeCertPassword(string $password): void
     {
         Storage::disk('local')->put($this->certPasswordPath(), encrypt($password));
-        Cache::put("verifactu:cert_password:{$this->user_id}", $password, now()->addDays(30));
+        $cacheKey = $this->company_id
+            ? "verifactu:cert_password:company:{$this->company_id}"
+            : "verifactu:cert_password:{$this->user_id}";
+        Cache::put($cacheKey, $password, now()->addDays(30));
     }
 
     public function certPassword(): ?string
     {
-        $path = $this->certPasswordPath();
-        if (Storage::disk('local')->exists($path)) {
-            try {
-                $password = decrypt(Storage::disk('local')->get($path));
-                if (filled($password)) {
-                    return $password;
+        foreach (array_filter([
+            $this->certPasswordPath(),
+            'sif/certs/user_'.$this->user_id.'.pass.enc',
+        ]) as $path) {
+            if (Storage::disk('local')->exists($path)) {
+                try {
+                    $password = decrypt(Storage::disk('local')->get($path));
+                    if (filled($password)) {
+                        return $password;
+                    }
+                } catch (\Throwable) {
+                    // fallback to cache
                 }
-            } catch (\Throwable) {
-                // fallback to cache
             }
         }
 
-        $cached = Cache::get("verifactu:cert_password:{$this->user_id}");
+        $cached = Cache::get("verifactu:cert_password:company:{$this->company_id}")
+            ?: Cache::get("verifactu:cert_password:{$this->user_id}");
 
         return filled($cached) ? $cached : null;
     }

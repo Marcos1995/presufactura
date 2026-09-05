@@ -66,6 +66,18 @@
         <div class="panel-content">
             <header class="panel-header">
                 <h1>@yield('heading', 'Panel')</h1>
+                @if (isset($userCompanies) && $userCompanies->count() > 1)
+                    <div class="company-switcher" style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+                        @foreach ($userCompanies as $co)
+                            <form method="POST" action="{{ route('companies.switch', $co) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-secondary btn-sm" @disabled(($currentCompany->id ?? null) === $co->id)>
+                                    {{ $co->legal_name }}
+                                </button>
+                            </form>
+                        @endforeach
+                    </div>
+                @endif
             </header>
             <main class="panel-main">
                 @if (auth()->user()->isDemoAdmin())

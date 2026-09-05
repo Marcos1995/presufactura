@@ -15,35 +15,35 @@ class EmailService
 
     public function sendInvoice(Document $document): void
     {
-        $document->load(['user', 'client', 'lineItems']);
+        $document->load(['user', 'company', 'client', 'lineItems']);
         $pdf = $this->pdfGenerator->generateInvoicePdf($document);
         $filename = 'factura-'.$document->number.'.pdf';
 
         Mail::send('emails.invoice-sent', ['document' => $document], function ($message) use ($document, $pdf, $filename) {
             $message->from(config('mail.from.address'), config('mail.from.name'))
                 ->to($document->client->email, $document->client->name)
-                ->subject('Factura '.$document->number.' — '.($document->user->business_name ?: $document->user->name))
+                ->subject('Factura '.$document->number.' — '.$document->issuerName())
                 ->attachData($pdf, $filename, ['mime' => 'application/pdf']);
         });
     }
 
     public function sendQuote(Document $document): void
     {
-        $document->load(['user', 'client', 'lineItems']);
+        $document->load(['user', 'company', 'client', 'lineItems']);
         $pdf = $this->pdfGenerator->generateQuotePdf($document);
         $filename = 'presupuesto-'.$document->number.'.pdf';
 
         Mail::send('emails.quote-sent', ['document' => $document], function ($message) use ($document, $pdf, $filename) {
             $message->from(config('mail.from.address'), config('mail.from.name'))
                 ->to($document->client->email, $document->client->name)
-                ->subject('Presupuesto '.$document->number.' — '.($document->user->business_name ?: $document->user->name))
+                ->subject('Presupuesto '.$document->number.' — '.$document->issuerName())
                 ->attachData($pdf, $filename, ['mime' => 'application/pdf']);
         });
     }
 
     public function sendClientClaimedPaid(Document $document): void
     {
-        $document->load(['user', 'client']);
+        $document->load(['user', 'company', 'client']);
 
         $panelUrl = url('/facturas/'.$document->id);
 
@@ -58,7 +58,7 @@ class EmailService
 
     public function sendClientReminder(Document $document, int $daysOverdue): void
     {
-        $document->load(['user', 'client']);
+        $document->load(['user', 'company', 'client']);
 
         Mail::send('emails.client-reminder', [
             'document' => $document,
@@ -71,7 +71,7 @@ class EmailService
 
     public function sendOwnerReminder(Document $document, int $daysOverdue): void
     {
-        $document->load(['user', 'client']);
+        $document->load(['user', 'company', 'client']);
 
         $confirmUrl = URL::signedRoute('documents.confirm-paid', [
             'token' => $document->public_token,

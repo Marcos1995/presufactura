@@ -3,10 +3,12 @@
 use App\Http\Controllers\AnalyticsEventController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentActionController;
 use App\Http\Controllers\BugReportController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FunnelController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuideController;
@@ -43,6 +45,7 @@ Route::post('/a/e', [AnalyticsEventController::class, 'store'])->middleware('thr
 
 Route::get('/p/{token}', [PublicQuoteController::class, 'show'])->middleware('throttle:public-doc')->name('quotes.public');
 Route::post('/p/{token}/aceptar', [PublicQuoteController::class, 'accept'])->middleware('throttle:public-doc')->name('quotes.public.accept');
+Route::post('/p/{token}/rechazar', [PublicQuoteController::class, 'reject'])->middleware('throttle:public-doc')->name('quotes.public.reject');
 Route::post('/p/{token}/he-pagado', [PublicQuoteController::class, 'claimPaid'])->middleware('throttle:public-doc')->name('invoices.public.claim-paid');
 
 Route::get('/accion/{token}/cobrada', [DocumentActionController::class, 'confirmPaid'])
@@ -91,6 +94,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/configuracion', [ProfileController::class, 'edit'])->name('settings.index');
         Route::put('/configuracion', [ProfileController::class, 'update'])->name('settings.update');
         Route::put('/configuracion/verifactu', [ProfileController::class, 'updateVerifactu'])->name('settings.verifactu.update');
+        Route::post('/empresas', [CompanyController::class, 'store'])->name('companies.store');
+        Route::put('/empresas/{company}', [CompanyController::class, 'update'])->name('companies.update');
+        Route::post('/empresas/{company}/activar', [CompanyController::class, 'switch'])->name('companies.switch');
         Route::post('/configuracion/exportar', [ProfileController::class, 'export'])->middleware('throttle:export')->name('settings.export');
         Route::post('/configuracion/eliminar-cuenta', [ProfileController::class, 'destroy'])->name('settings.destroy');
         Route::get('/suscripcion', [SubscriptionController::class, 'index'])->name('subscription.index');
@@ -114,6 +120,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/facturas/{invoice}/pagada', [InvoiceController::class, 'markPaid'])->name('invoices.mark-paid');
         Route::post('/facturas/{invoice}/anular', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
         Route::post('/facturas/{invoice}/rectificativa', [InvoiceController::class, 'createRectificativa'])->middleware('doc.limit')->name('invoices.rectificativa');
+        Route::post('/facturas/{invoice}/cobro', [InvoiceController::class, 'storePayment'])->name('invoices.payments.store');
+        Route::post('/facturas/{invoice}/reintentar-verifactu', [InvoiceController::class, 'retryVerifactu'])->name('invoices.verifactu.retry');
 
         Route::get('/presupuestos', [QuoteController::class, 'index'])->name('quotes.index');
         Route::get('/presupuestos/nuevo', [QuoteController::class, 'create'])->middleware('doc.limit')->name('quotes.create');

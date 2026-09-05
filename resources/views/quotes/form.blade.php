@@ -10,6 +10,8 @@
     'quote' => null,
     'clients' => $clients,
     'defaultVatRate' => $defaultVatRate,
+    'defaultIrpfRate' => $defaultIrpfRate ?? 0,
+    'defaultRecargoRate' => $defaultRecargoRate ?? 0,
     'lineItems' => $lineItems,
 ])
 @endsection

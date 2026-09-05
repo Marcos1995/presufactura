@@ -21,9 +21,10 @@ class QuickStartController extends Controller
         $user = auth()->user();
 
         $quote = DB::transaction(function () use ($user, $calculator, $numbers) {
-            $client = $user->clients()->firstOrCreate(
+            $client = $user->currentCompany()->clients()->firstOrCreate(
                 ['email' => $user->email],
                 [
+                    'user_id' => $user->id,
                     'name' => 'Cliente de prueba',
                     'tax_id' => null,
                     'address' => null,
@@ -35,19 +36,23 @@ class QuickStartController extends Controller
                 'description' => 'Servicio de prueba',
                 'quantity' => 1.0,
                 'unit_price' => 100.0,
-                'vat_rate' => (float) $user->default_vat_rate,
+                'vat_rate' => (float) $user->currentCompany()->default_vat_rate,
             ]];
             $totals = $calculator->calculateDocument($lines);
 
             $quote = $user->documents()->create([
+                'company_id' => $user->currentCompany()->id,
                 'client_id' => $client->id,
                 'type' => Document::TYPE_QUOTE,
-                'number' => $numbers->nextQuoteNumber($user),
+                'number' => $numbers->draftNumber(Document::TYPE_QUOTE),
                 'status' => Document::STATUS_DRAFT,
                 'issue_date' => now()->toDateString(),
                 'valid_until' => now()->addDays(15)->toDateString(),
                 'subtotal' => $totals['subtotal'],
+                'discount_amount' => $totals['discount_amount'],
                 'vat_amount' => $totals['vat_amount'],
+                'irpf_amount' => $totals['irpf_amount'],
+                'recargo_amount' => $totals['recargo_amount'],
                 'total' => $totals['total'],
                 'notes' => 'Presupuesto de prueba. Puedes editarlo, convertirlo en factura, descargar el PDF o enviarlo por email.',
                 'public_token' => Str::random(32),

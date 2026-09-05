@@ -3,6 +3,7 @@
 namespace App\Services\Verifactu;
 
 use App\Models\BillingRecord;
+use App\Support\Money;
 use Carbon\Carbon;
 
 class HashChainService
@@ -56,14 +57,22 @@ class HashChainService
         return strtoupper(hash('sha256', $payload));
     }
 
-    public function getPreviousHash(int $userId): ?string
+    public function getPreviousRecord(?int $companyId, ?int $userId = null): ?BillingRecord
     {
-        $record = BillingRecord::query()
-            ->where('user_id', $userId)
-            ->orderByDesc('id')
-            ->first();
+        $query = BillingRecord::query()->orderByDesc('id')->lockForUpdate();
 
-        return $record?->hash_current;
+        if ($companyId) {
+            $query->where('company_id', $companyId);
+        } else {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->first();
+    }
+
+    public function getPreviousHash(int $companyOrUserId): ?string
+    {
+        return $this->getPreviousRecord($companyOrUserId)?->hash_current;
     }
 
     public function formatIssueDate(Carbon $date): string
@@ -76,8 +85,8 @@ class HashChainService
         return ($timestamp ?? now())->timezone('Europe/Madrid')->format('Y-m-d\TH:i:sP');
     }
 
-    public function formatAmount(float $amount): string
+    public function formatAmount(int|float|string $amount): string
     {
-        return number_format($amount, 2, '.', '');
+        return Money::of($amount);
     }
 }

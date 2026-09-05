@@ -43,6 +43,14 @@
     </div>
 </div>
 
+@if ($setupIncomplete ?? false)
+<div class="alert alert-warning">Completa NIF e IBAN de la empresa en Configuración antes de emitir facturas fiscales.</div>
+@endif
+
+@if (($pendingSif ?? 0) > 0)
+<div class="alert alert-warning">Hay {{ $pendingSif }} registro(s) VERI*FACTU pendientes o con error. Revisa las facturas y reintenta el envío si corresponde.</div>
+@endif
+
 @if ($recentDocuments->isNotEmpty())
 <div class="card">
     <h2 class="section-title">Últimos documentos</h2>

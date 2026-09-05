@@ -3,13 +3,15 @@
 namespace App\Jobs;
 
 use App\Models\BillingRecord;
-use App\Services\Verifactu\AeatSoapClient;
+use App\Models\BillingSubmissionAttempt;
+use App\Services\Verifactu\VerifactuTransportFactory;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
-class SubmitBillingRecordJob implements ShouldQueue
+class SubmitBillingRecordJob implements ShouldQueue, ShouldBeUnique
 {
     use Queueable;
 
@@ -22,15 +24,20 @@ class SubmitBillingRecordJob implements ShouldQueue
         public int $billingRecordId,
     ) {}
 
-    public function handle(AeatSoapClient $client): void
+    public function uniqueId(): string
+    {
+        return 'verifactu-submit-'.$this->billingRecordId;
+    }
+
+    public function handle(VerifactuTransportFactory $factory): void
     {
         $record = BillingRecord::find($this->billingRecordId);
-        if (! $record || $record->aeat_status !== BillingRecord::STATUS_PENDING) {
+        if (! $record || in_array($record->aeat_status, [BillingRecord::STATUS_ACCEPTED, BillingRecord::STATUS_REJECTED], true)) {
             return;
         }
 
-        $record->loadMissing(['user.sifConfig']);
-        $sifConfig = $record->user->sifConfig;
+        $record->loadMissing(['user.sifConfig', 'company.sifConfig']);
+        $sifConfig = $record->company?->sifConfig ?? $record->user->sifConfig;
 
         if (! $sifConfig?->enabled || ! $sifConfig->hasValidCertificate()) {
             Log::info('Veri*Factu: envío omitido (sin certificado válido)', [
@@ -49,9 +56,10 @@ class SubmitBillingRecordJob implements ShouldQueue
             return;
         }
 
-        $result = $client->submit($record, $password);
+        $result = $factory->for($record)->submit($record, $password);
+        $this->storeAttempt($record, $result);
 
-        if ($result['success']) {
+        if ($result['success'] ?? false) {
             $record->update([
                 'aeat_status' => BillingRecord::STATUS_ACCEPTED,
                 'aeat_response' => $result,
@@ -67,13 +75,19 @@ class SubmitBillingRecordJob implements ShouldQueue
             return;
         }
 
+        $record->increment('retry_count');
+        $record->update([
+            'aeat_status' => BillingRecord::STATUS_ERROR,
+            'aeat_response' => $result,
+        ]);
+
         throw new RuntimeException($result['message'] ?? 'Error de envío AEAT');
     }
 
     public function failed(?\Throwable $exception): void
     {
         $record = BillingRecord::find($this->billingRecordId);
-        if (! $record || $record->aeat_status !== BillingRecord::STATUS_PENDING) {
+        if (! $record || $record->aeat_status === BillingRecord::STATUS_ACCEPTED) {
             return;
         }
 
@@ -102,6 +116,32 @@ class SubmitBillingRecordJob implements ShouldQueue
                 'billing_record_id' => $record->id,
                 'message' => $result['message'] ?? 'unknown',
             ]);
+        }
+    }
+
+    /** @param array<string, mixed> $result */
+    private function storeAttempt(BillingRecord $record, array $result): void
+    {
+        if (! class_exists(BillingSubmissionAttempt::class)) {
+            return;
+        }
+
+        try {
+            BillingSubmissionAttempt::create([
+                'billing_record_id' => $record->id,
+                'status' => ($result['success'] ?? false) ? 'accepted' : 'error',
+                'permanent' => (bool) ($result['permanent'] ?? false),
+                'idempotency_key' => $record->idempotency_key,
+                'response' => [
+                    'success' => $result['success'] ?? false,
+                    'message' => $result['message'] ?? null,
+                    'csv' => $result['csv'] ?? null,
+                    'sandbox' => $result['sandbox'] ?? false,
+                ],
+                'error_message' => ($result['success'] ?? false) ? null : ($result['message'] ?? null),
+            ]);
+        } catch (\Throwable) {
+            // tabla de intentos opcional si la migración no se ha ejecutado
         }
     }
 }

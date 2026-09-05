@@ -53,12 +53,17 @@ class QuoteInvoiceFlowTest extends TestCase
 
         $year = now()->year;
         $this->post('/facturas', $this->invoicePayload($client->id))->assertRedirect();
-        $numbers = $user->documents()->where('type', Document::TYPE_INVOICE)->orderBy('id')->pluck('number')->all();
-        $this->assertSame(["FAC-{$year}-001", "FAC-{$year}-002"], $numbers);
+        $invoices = $user->documents()->where('type', Document::TYPE_INVOICE)->orderBy('id')->get();
+        $this->assertTrue($invoices->every(fn (Document $doc) => str_starts_with($doc->number, 'BOR-F-')));
 
         $this->post(route('invoices.send', $invoice))->assertRedirect();
         $this->assertSame(Document::STATUS_SENT, $invoice->fresh()->status);
+        $this->assertSame("FAC-{$year}-001", $invoice->fresh()->number);
         $this->assertDatabaseHas('analytics_events', ['name' => AnalyticsEvent::INVOICE_EMAIL_SENT]);
+
+        $second = $invoices->last();
+        $this->post(route('invoices.send', $second))->assertRedirect();
+        $this->assertSame("FAC-{$year}-002", $second->fresh()->number);
 
         $this->get(route('quotes.public', ['token' => $quote->fresh()->public_token]))->assertOk();
 

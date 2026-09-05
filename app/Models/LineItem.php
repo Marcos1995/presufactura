@@ -14,9 +14,15 @@ class LineItem extends Model
         'description',
         'quantity',
         'unit_price',
+        'discount_rate',
         'vat_rate',
+        'irpf_rate',
+        'recargo_rate',
         'line_subtotal',
+        'line_discount',
         'line_vat',
+        'line_irpf',
+        'line_recargo',
         'line_total',
         'sort_order',
     ];
@@ -26,9 +32,15 @@ class LineItem extends Model
         return [
             'quantity' => 'decimal:2',
             'unit_price' => 'decimal:2',
+            'discount_rate' => 'decimal:2',
             'vat_rate' => 'decimal:2',
+            'irpf_rate' => 'decimal:2',
+            'recargo_rate' => 'decimal:2',
             'line_subtotal' => 'decimal:2',
+            'line_discount' => 'decimal:2',
             'line_vat' => 'decimal:2',
+            'line_irpf' => 'decimal:2',
+            'line_recargo' => 'decimal:2',
             'line_total' => 'decimal:2',
         ];
     }

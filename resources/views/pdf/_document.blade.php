@@ -5,6 +5,18 @@
     @include('pdf._styles')
 </head>
 <body>
+@php
+    $issuer = $document->company;
+    $issuerName = $issuer?->legal_name ?: ($document->user->business_name ?: $document->user->name);
+    $issuerTaxId = $issuer?->tax_id ?: $document->user->tax_id;
+    $issuerAddress = $issuer?->address ?: $document->user->address;
+    $issuerCity = $issuer?->city ?: $document->user->city;
+    $issuerPostal = $issuer?->postal_code ?: $document->user->postal_code;
+    $issuerEmail = $issuer?->email ?: $document->user->email;
+    $issuerPhone = $issuer?->phone ?: $document->user->phone;
+    $issuerIban = $issuer?->iban ?: $document->user->iban;
+    $issuerFooter = $issuer?->invoice_footer;
+@endphp
 <table class="page-frame" cellpadding="0" cellspacing="0">
 <tr class="spacer-top"><td colspan="3">&nbsp;</td></tr>
 <tr>
@@ -17,12 +29,12 @@
                 @if (!empty($logoDataUri))
                     <div class="logo"><img src="{{ $logoDataUri }}" alt=""></div>
                 @endif
-                <div class="issuer-name">{{ $document->user->business_name ?: $document->user->name }}</div>
+                <div class="issuer-name">{{ $issuerName }}</div>
                 <div class="issuer-line">
-                    @if ($document->user->tax_id)NIF {{ $document->user->tax_id }}<br>@endif
-                    @if ($document->user->address){{ $document->user->address }}<br>@endif
-                    @if ($document->user->city){{ $document->user->postal_code }} {{ $document->user->city }}<br>@endif
-                    {{ $document->user->email }}@if ($document->user->phone) · {{ $document->user->phone }}@endif
+                    @if ($issuerTaxId)NIF {{ $issuerTaxId }}<br>@endif
+                    @if ($issuerAddress){{ $issuerAddress }}<br>@endif
+                    @if ($issuerCity){{ $issuerPostal }} {{ $issuerCity }}<br>@endif
+                    {{ $issuerEmail }}@if ($issuerPhone) · {{ $issuerPhone }}@endif
                 </div>
             </td>
             <td class="header-right">
@@ -55,13 +67,13 @@
         <tr>
             <td>
                 <div class="box-label">Emisor</div>
-                <div class="box-name">{{ $document->user->business_name ?: $document->user->name }}</div>
+                <div class="box-name">{{ $issuerName }}</div>
                 <div class="box-text">
-                    @if ($document->user->tax_id)NIF: {{ $document->user->tax_id }}<br>@endif
-                    @if ($document->user->address){{ $document->user->address }}<br>@endif
-                    @if ($document->user->city){{ $document->user->postal_code }} {{ $document->user->city }}<br>@endif
-                    {{ $document->user->email }}
-                    @if ($document->user->phone)<br>{{ $document->user->phone }}@endif
+                    @if ($issuerTaxId)NIF: {{ $issuerTaxId }}<br>@endif
+                    @if ($issuerAddress){{ $issuerAddress }}<br>@endif
+                    @if ($issuerCity){{ $issuerPostal }} {{ $issuerCity }}<br>@endif
+                    {{ $issuerEmail }}
+                    @if ($issuerPhone)<br>{{ $issuerPhone }}@endif
                 </div>
             </td>
             <td>
@@ -154,6 +166,18 @@
                         <td class="lbl">IVA</td>
                         <td class="val">{{ number_format($document->vat_amount, 2, ',', '.') }} €</td>
                     </tr>
+                    @if ((float) $document->recargo_amount > 0)
+                    <tr>
+                        <td class="lbl">Recargo</td>
+                        <td class="val">{{ number_format($document->recargo_amount, 2, ',', '.') }} €</td>
+                    </tr>
+                    @endif
+                    @if ((float) $document->irpf_amount > 0)
+                    <tr>
+                        <td class="lbl">IRPF</td>
+                        <td class="val">− {{ number_format($document->irpf_amount, 2, ',', '.') }} €</td>
+                    </tr>
+                    @endif
                     <tr class="grand">
                         <td class="lbl">Total</td>
                         <td class="val">{{ number_format($document->total, 2, ',', '.') }} €</td>
@@ -163,20 +187,24 @@
         </tr>
     </table>
 
-    @if (!empty($showIban) && $document->user->iban)
+    @if (!empty($showIban) && $issuerIban)
         <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
         <div class="iban-inner">
             <strong>Datos para transferencia bancaria</strong>
-            <span class="iban-code">{{ $document->user->iban }}</span>
+            <span class="iban-code">{{ $issuerIban }}</span>
         </div>
+    @endif
+    @if ($issuerFooter)
+        <table class="spacer-row" width="100%"><tr><td>&nbsp;</td></tr></table>
+        <div class="footer">{{ $issuerFooter }}</div>
     @endif
 
     <table class="spacer-row-lg" width="100%"><tr><td>&nbsp;</td></tr></table>
 
     <div class="footer">
         @if ($isFiscal ?? false)
-            Factura generada con PresuFactura (Veri*Factu). Registro SIF conforme RRSIF.<br>
-            Verificable mediante el código QR en la sede de la Agencia Tributaria.
+            Factura generada con PresuFactura. El QR permite cotejar el registro en la sede de la AEAT cuando el envío haya sido aceptado.<br>
+            No sustituye las declaraciones tributarias. El emisor es responsable del cumplimiento fiscal.
         @else
             Documento proforma generado con PresuFactura. No válido como factura fiscal.<br>
             El emisor es responsable de cumplir la normativa fiscal aplicable.

@@ -7,8 +7,8 @@ use App\Models\BillingRecord;
 use App\Models\Client;
 use App\Models\Document;
 use App\Models\User;
-use App\Models\UserSifConfig;
-use App\Services\Verifactu\AeatSoapClient;
+use App\Services\Verifactu\VerifactuTransportFactory;
+use App\Services\Verifactu\VerifactuTransportInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -31,15 +31,14 @@ class SubmitBillingRecordJobTest extends TestCase
 
         Cache::put("verifactu:cert_password:{$user->id}", 'secret', now()->addHour());
 
-        $client = $this->createMock(AeatSoapClient::class);
-        $client->method('submit')->willReturn([
+        $factory = $this->transportFactory($this->transport([
             'success' => true,
             'message' => 'Enviado correctamente',
             'csv' => 'CSV123',
-        ]);
+        ]));
 
         $job = new SubmitBillingRecordJob($record->id);
-        $job->handle($client);
+        $job->handle($factory);
 
         $record->refresh();
         $this->assertSame(BillingRecord::STATUS_ACCEPTED, $record->aeat_status);
@@ -53,15 +52,14 @@ class SubmitBillingRecordJobTest extends TestCase
 
         Cache::put("verifactu:cert_password:{$user->id}", 'secret', now()->addHour());
 
-        $client = $this->createMock(AeatSoapClient::class);
-        $client->method('submit')->willReturn([
+        $factory = $this->transportFactory($this->transport([
             'success' => false,
             'message' => 'Certificado no configurado',
             'permanent' => true,
-        ]);
+        ]));
 
         $job = new SubmitBillingRecordJob($record->id);
-        $job->handle($client);
+        $job->handle($factory);
 
         $record->refresh();
         $this->assertSame(BillingRecord::STATUS_REJECTED, $record->aeat_status);
@@ -73,16 +71,15 @@ class SubmitBillingRecordJobTest extends TestCase
 
         Cache::put("verifactu:cert_password:{$user->id}", 'secret', now()->addHour());
 
-        $client = $this->createMock(AeatSoapClient::class);
-        $client->method('submit')->willReturn([
+        $factory = $this->transportFactory($this->transport([
             'success' => false,
             'message' => 'Timeout AEAT',
-        ]);
+        ]));
 
         $job = new SubmitBillingRecordJob($record->id);
 
         $this->expectException(RuntimeException::class);
-        $job->handle($client);
+        $job->handle($factory);
     }
 
     public function test_failed_marks_record_rejected_after_retries(): void
@@ -102,8 +99,8 @@ class SubmitBillingRecordJobTest extends TestCase
         [$record, $user] = $this->makePendingRecord();
         $user->sifConfig->storeCertPassword('secret');
 
-        $client = $this->createMock(AeatSoapClient::class);
-        $client->expects($this->once())
+        $transport = $this->createMock(VerifactuTransportInterface::class);
+        $transport->expects($this->once())
             ->method('submit')
             ->with($this->anything(), 'secret')
             ->willReturn([
@@ -113,7 +110,7 @@ class SubmitBillingRecordJobTest extends TestCase
             ]);
 
         $job = new SubmitBillingRecordJob($record->id);
-        $job->handle($client);
+        $job->handle($this->transportFactory($transport));
 
         $record->refresh();
         $this->assertSame(BillingRecord::STATUS_ACCEPTED, $record->aeat_status);
@@ -158,5 +155,22 @@ class SubmitBillingRecordJobTest extends TestCase
         ]);
 
         return [$record, $user];
+    }
+
+    /** @param  array<string, mixed>  $result */
+    private function transport(array $result): VerifactuTransportInterface
+    {
+        $transport = $this->createMock(VerifactuTransportInterface::class);
+        $transport->method('submit')->willReturn($result);
+
+        return $transport;
+    }
+
+    private function transportFactory(VerifactuTransportInterface $transport): VerifactuTransportFactory
+    {
+        $factory = $this->createMock(VerifactuTransportFactory::class);
+        $factory->method('for')->willReturn($transport);
+
+        return $factory;
     }
 }

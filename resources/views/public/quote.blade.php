@@ -11,7 +11,7 @@
 <body class="guest-body">
     <div class="guest-container public-quote-page">
         <header class="guest-header">
-            <span class="public-issuer">{{ $quote->user->business_name ?: $quote->user->name }}</span>
+            <span class="public-issuer">{{ $quote->issuerName() }}</span>
         </header>
 
         <main class="guest-main public-quote-main">
@@ -72,8 +72,14 @@
                     @csrf
                     <button type="submit" class="btn btn-primary btn-block btn-lg">Aceptar presupuesto</button>
                 </form>
+                <form method="POST" action="{{ route('quotes.public.reject', $quote->public_token) }}" class="accept-form" style="margin-top:8px">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary btn-block">Rechazar</button>
+                </form>
                 @elseif ($quote->status === 'accepted')
                     <p class="text-muted text-center">Presupuesto aceptado. Gracias.</p>
+                @elseif ($quote->status === 'rejected')
+                    <p class="text-muted text-center">Presupuesto rechazado.</p>
                 @elseif ($quote->status === 'expired')
                     <p class="text-muted text-center">Este presupuesto ha caducado.</p>
                 @endif

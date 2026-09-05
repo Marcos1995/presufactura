@@ -37,6 +37,26 @@ class PublicQuoteTest extends TestCase
         $this->assertNotNull($quote->accepted_at);
     }
 
+    public function test_public_quote_can_be_rejected(): void
+    {
+        $user = User::factory()->onboarded()->create();
+        $client = $this->createClient($user);
+        $quote = $this->createDocument($user, $client, [
+            'type' => Document::TYPE_QUOTE,
+            'number' => 'PRE-0002',
+            'status' => Document::STATUS_SENT,
+            'valid_until' => now()->addDays(7)->toDateString(),
+            'due_date' => null,
+            'public_token' => 'token-rechazar-test',
+        ]);
+
+        $this->post(route('quotes.public.reject', ['token' => $quote->public_token]))
+            ->assertRedirect()
+            ->assertSessionHas('status');
+
+        $this->assertSame(Document::STATUS_REJECTED, $quote->fresh()->status);
+    }
+
     public function test_public_invoice_shows_proforma_without_verifactu(): void
     {
         $user = User::factory()->onboarded()->create();
@@ -51,8 +71,7 @@ class PublicQuoteTest extends TestCase
             ->assertOk()
             ->assertSee('Documento proforma')
             ->assertDontSee('Factura verificable — Veri*Factu')
-            ->assertSee('VERI*FACTU')
-            ->assertSee('data:image/png;base64,', false);
+            ->assertDontSee('data:image/png;base64,', false);
     }
 
     public function test_public_invoice_shows_fiscal_badge_when_sif_alta_exists(): void

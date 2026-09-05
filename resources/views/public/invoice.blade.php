@@ -11,7 +11,7 @@
 <body class="guest-body">
     <div class="guest-container public-quote-page">
         <header class="guest-header">
-            <span class="public-issuer">{{ $invoice->user->business_name ?: $invoice->user->name }}</span>
+            <span class="public-issuer">{{ $invoice->issuerName() }}</span>
         </header>
 
         <main class="guest-main public-quote-main">
@@ -69,14 +69,34 @@
                 </table>
 
                 <div class="public-doc-total">
+                    <span>Subtotal</span>
+                    <strong>{{ number_format($invoice->subtotal, 2, ',', '.') }} €</strong>
+                </div>
+                <div class="public-doc-total">
+                    <span>IVA</span>
+                    <strong>{{ number_format($invoice->vat_amount, 2, ',', '.') }} €</strong>
+                </div>
+                @if ((float) $invoice->recargo_amount > 0)
+                <div class="public-doc-total">
+                    <span>Recargo</span>
+                    <strong>{{ number_format($invoice->recargo_amount, 2, ',', '.') }} €</strong>
+                </div>
+                @endif
+                @if ((float) $invoice->irpf_amount > 0)
+                <div class="public-doc-total">
+                    <span>IRPF</span>
+                    <strong>− {{ number_format($invoice->irpf_amount, 2, ',', '.') }} €</strong>
+                </div>
+                @endif
+                <div class="public-doc-total">
                     <span>Total factura</span>
                     <strong>{{ number_format($invoice->total, 2, ',', '.') }} €</strong>
                 </div>
 
-                @if ($invoice->user->iban)
+                @if ($invoice->issuerIban())
                 <div class="iban-box">
                     <strong>IBAN para transferencia:</strong><br>
-                    {{ $invoice->user->iban }}
+                    {{ $invoice->issuerIban() }}
                 </div>
                 @endif
 

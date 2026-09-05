@@ -19,6 +19,7 @@ class SifEvent extends Model
 
     protected $fillable = [
         'user_id',
+        'company_id',
         'event_type',
         'payload',
     ];

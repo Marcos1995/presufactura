@@ -40,8 +40,9 @@ class InstallVerifactuDevCertCommand extends Command
             return self::FAILURE;
         }
 
-        $user->ensureDefaultVerifactu();
-        $config = $user->sifConfig;
+        $company = $user->ensureDefaultCompany();
+        $company->ensureSifConfig();
+        $config = $company->fresh()->sifConfig;
         if (! $config) {
             $this->error('No se pudo crear user_sif_config.');
 
@@ -49,7 +50,7 @@ class InstallVerifactuDevCertCommand extends Command
         }
 
         $p12 = DevCertificateFactory::makePkcs12();
-        $path = 'sif/certs/user_'.$user->id.'.p12.enc';
+        $path = 'sif/certs/company_'.$company->id.'.p12.enc';
         Storage::disk('local')->put($path, encrypt($p12));
 
         $config->update([

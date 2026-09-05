@@ -64,6 +64,16 @@ class OnboardingController extends Controller
         ]);
 
         $user->update($data);
+        $company = $user->ensureDefaultCompany();
+        $company->update([
+            'legal_name' => $data['business_name'],
+            'tax_id' => $data['tax_id'],
+            'address' => $data['address'],
+            'city' => $data['city'],
+            'postal_code' => $data['postal_code'],
+            'phone' => $data['phone'] ?? $company->phone,
+            'email' => $user->email,
+        ]);
     }
 
     private function storeStep2(Request $request, $user): void
@@ -82,6 +92,11 @@ class OnboardingController extends Controller
 
         unset($data['logo']);
         $user->update($data);
+        $company = $user->ensureDefaultCompany();
+        $company->update([
+            'iban' => $data['iban'],
+            'logo_path' => $data['logo_path'] ?? $company->logo_path,
+        ]);
     }
 
     private function storeStep3(Request $request, $user): void
@@ -120,5 +135,12 @@ class OnboardingController extends Controller
         }
 
         $user->update($data);
+        $company = $user->ensureDefaultCompany();
+        $company->update([
+            'default_vat_rate' => $validated['default_vat_rate'],
+            'invoice_prefix' => $validated['invoice_prefix'],
+            'quote_prefix' => $validated['quote_prefix'],
+            'default_due_days' => (int) $validated['default_due_days'],
+        ]);
     }
 }

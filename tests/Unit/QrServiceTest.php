@@ -108,11 +108,7 @@ class QrServiceTest extends TestCase
 
         $payload = $this->service->payloadForDocument($document->fresh(['user.sifConfig']));
 
-        $this->assertNotNull($payload);
-        $this->assertStringStartsWith('data:image/png;base64,', $payload['dataUri']);
-        $this->assertStringContainsString('nif=89890001K', $payload['url']);
-        $this->assertStringContainsString('numserie=F-TEST-QR', $payload['url']);
-        $this->assertStringNotContainsString('formato=', $payload['url']);
+        $this->assertNull($payload);
     }
 
     public function test_official_cotejo_probe_accepts_aeat_ok_payload(): void

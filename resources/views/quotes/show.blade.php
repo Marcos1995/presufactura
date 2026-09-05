@@ -28,7 +28,7 @@
     @endif
 </div>
 
-    @if (in_array($quote->status, ['sent', 'accepted', 'expired']))
+    @if (in_array($quote->status, ['sent', 'accepted', 'rejected', 'expired']))
 <div class="card card-narrow public-link-box">
     <strong>Enlace público</strong>
     <div class="public-link-row">
@@ -44,7 +44,9 @@
         'method' => 'PUT',
         'quote' => $quote,
         'clients' => $clients,
-        'defaultVatRate' => auth()->user()->default_vat_rate,
+        'defaultVatRate' => $quote->company?->default_vat_rate ?? auth()->user()->default_vat_rate,
+        'defaultIrpfRate' => $quote->company?->default_irpf_rate ?? 0,
+        'defaultRecargoRate' => $quote->company?->default_recargo_rate ?? 0,
         'lineItems' => $quote->lineItems,
     ])
 @else
@@ -55,6 +57,9 @@
                 <strong>Estado:</strong> <span class="badge badge-{{ $quote->status }}">{{ $quote->statusLabel() }}</span>
                 @if ($quote->accepted_at)
                     <br><strong>Aceptado:</strong> {{ $quote->accepted_at->format('d/m/Y H:i') }}
+                @endif
+                @if ($quote->status === 'rejected')
+                    <br><strong>Rechazado</strong> por el cliente
                 @endif
             </div>
             <div>
@@ -85,10 +90,7 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <tr>
-                    <td colspan="4" class="text-right"><strong>Total</strong></td>
-                    <td class="text-right"><strong>{{ number_format($quote->total, 2, ',', '.') }} €</strong></td>
-                </tr>
+                @include('partials.document-totals', ['document' => $quote])
             </tfoot>
         </table>
     </div>

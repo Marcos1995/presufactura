@@ -10,6 +10,9 @@ return [
 
     'mode' => env('VERIFACTU_MODE', 'verifactu'),
 
+    // disabled = no SOAP; sandbox = aceptación local; aeat = WSDL preprod/prod
+    'transport' => env('VERIFACTU_TRANSPORT', 'aeat'),
+
     'software' => [
         'name' => env('VERIFACTU_SOFTWARE_NAME', 'PresuFactura'),
         'version' => env('VERIFACTU_SOFTWARE_VERSION', '2.0.0'),
