@@ -20,7 +20,7 @@
         <aside class="sidebar">
             <div class="sidebar-brand">
                 @include('layouts.partials.logo', ['href' => route('dashboard'), 'variant' => 'sidebar'])
-                <button type="button" class="menu-fold" id="sidebar-toggle" aria-expanded="true" aria-label="Plegar menú" title="Plegar menú" style="appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#fff;width:32px;height:32px;padding:0;border-radius:8px;cursor:pointer;flex-shrink:0">
+                <button type="button" class="menu-fold" id="sidebar-toggle" aria-expanded="true" aria-label="Plegar menú" title="Plegar menú">
                     <svg class="menu-fold__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
                 </button>
             </div>

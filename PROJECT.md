@@ -70,3 +70,6 @@ Cron obligatorio:
 ## Notas para el agente
 -
 
+## Estado
+- UI: sistema Stitch (papel `#F4F1EA`, tinta `#1C1917`, acento `#0F6E56`, Newsreader + Plus Jakarta Sans) en `public/css/app.css`, claro y oscuro. Ids en `DESIGN.md`.
+
