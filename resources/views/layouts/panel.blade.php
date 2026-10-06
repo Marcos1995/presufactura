@@ -7,6 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
+    @include('layouts.partials.theme-boot')
     @include('layouts.partials.fonts')
     @include('layouts.partials.app-css')
     <script>
@@ -66,6 +67,7 @@
         <div class="panel-content">
             <header class="panel-header">
                 <h1>@yield('heading', 'Panel')</h1>
+                @include('layouts.partials.theme-switch')
                 @if (isset($userCompanies) && $userCompanies->count() > 1)
                     <div class="company-switcher" style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
                         @foreach ($userCompanies as $co)
@@ -118,6 +120,7 @@
     })();
     </script>
     @include('layouts.partials.app-js')
+    @include('layouts.partials.theme-toggle-script')
     @stack('scripts')
 </body>
 </html>

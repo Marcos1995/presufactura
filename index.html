@@ -3,17 +3,26 @@
 <html class="scroll-smooth" lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta name="csrf-token" content="{{ csrf_token() }}"/>
-@include('layouts.partials.favicon')
-<title>{{ config('app.name') }} — Presupuestos y facturas para autónomos con Veri*Factu</title>
+<meta name="csrf-token" content=""/>
+<link rel="icon" href="https://presufactura.es/images/favicon.svg" type="image/svg+xml">
+<title>PresuFactura — Presupuestos y facturas para autónomos con Veri*Factu</title>
 <meta name="description" content="Presupuestos, facturas proforma o fiscales con Veri*Factu, PDF con QR y envío a AEAT. Para autónomos y pymes en España. Completamente gratis, sin tarjeta."/>
-<link rel="canonical" href="{{ url('/') }}"/>
+<link rel="canonical" href="https://presufactura.es/"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="PresuFactura — De presupuesto a cobro en minutos"/>
 <meta property="og:description" content="Presupuestos con enlace público, facturas con Veri*Factu opcional, recordatorios automáticos. Todo gratis para autónomos en España."/>
-<meta property="og:url" content="{{ url('/') }}"/>
-<meta property="og:image" content="{{ asset('images/og-presufactura.svg') }}"/>
-@include('layouts.partials.theme-boot')
+<meta property="og:url" content="https://presufactura.es/"/>
+<meta property="og:image" content="https://presufactura.es/images/og-presufactura.svg"/>
+<script>
+(function () {
+    var stored = null;
+    try { stored = localStorage.getItem('pf-theme'); } catch (e) {}
+    var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+})();
+</script>
+
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -87,14 +96,14 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"SoftwareApplication","name":"PresuFactura","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://presufactura.es","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-@include('partials.faq-jsonld', ['faqs' => $landingFaqs])
+
 </head>
 <body class="bg-[#F6F8F5] text-stone-900 antialiased selection:bg-[#18E667] selection:text-[#032612] w-full max-w-full overflow-x-hidden">
 <!-- 1) Cabecera fija / sticky -->
 <header class="sticky top-0 z-50 bg-[#F6F8F5] border-b border-stone-200">
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-2 flex items-center justify-between gap-2">
 <!-- Wordmark -->
-<a class="flex items-center gap-2.5 group shrink-0" href="{{ route('landing') }}">
+<a class="flex items-center gap-2.5 group shrink-0" href="https://presufactura.es/">
 <div class="w-9 h-9 rounded-xl bg-brand-dark flex items-center justify-center text-brand-green shadow-sm group-hover:scale-105 transition-transform">
 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
 <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -106,9 +115,9 @@
 <!-- Navegación desktop -->
 <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-stone-600">
 <a class="hover:text-brand-dark transition-colors" href="#verifactu">Veri*Factu</a>
-<a class="hover:text-brand-dark transition-colors" href="{{ route('guides.index') }}">Guías</a>
+<a class="hover:text-brand-dark transition-colors" href="https://presufactura.es/guias">Guías</a>
 <a class="hover:text-brand-dark transition-colors" href="#precios">Precios</a>
-<a class="hover:text-brand-dark transition-colors" href="{{ route('help') }}">Ayuda</a>
+<a class="hover:text-brand-dark transition-colors" href="https://presufactura.es/ayuda">Ayuda</a>
 </nav>
 <div class="flex items-center gap-2 sm:gap-3">
 <button type="button" class="theme-switch" data-theme-toggle aria-label="Cambiar tema claro u oscuro">
@@ -116,23 +125,18 @@
 <svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
 <span class="theme-switch__thumb"></span>
 </button>
-@if ($loggedIn)
-<a class="text-sm font-bold text-stone-700 hover:text-brand-dark px-2 py-2" href="{{ route('dashboard') }}">Panel</a>
-<a class="bg-brand-dark hover:bg-brand-darkHover text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl" href="{{ route('dashboard') }}">Ir al panel</a>
-@else
-<a class="hidden sm:inline text-sm font-bold text-stone-700 hover:text-brand-dark px-2 py-2 whitespace-nowrap" href="{{ route('login') }}">Entrar</a>
-<a class="bg-brand-dark hover:bg-brand-darkHover text-white text-xs sm:text-sm font-bold px-3 sm:px-4 py-2.5 rounded-xl whitespace-nowrap" href="{{ route('register') }}">Empezar gratis</a>
-@endif
+<a class="hidden sm:inline text-sm font-bold text-stone-700 hover:text-brand-dark px-2 py-2 whitespace-nowrap" href="https://presufactura.es/login">Entrar</a>
+<a class="bg-brand-dark hover:bg-brand-darkHover text-white text-xs sm:text-sm font-bold px-3 sm:px-4 py-2.5 rounded-xl whitespace-nowrap" href="https://presufactura.es/registro">Empezar gratis</a>
+
 </div>
 </div>
 <nav class="lg:hidden flex gap-4 overflow-x-auto px-4 pb-3 text-sm font-semibold text-stone-600 whitespace-nowrap" aria-label="Secciones">
-@unless ($loggedIn)
-<a class="sm:hidden" href="{{ route('login') }}">Entrar</a>
-@endunless
+<a class="sm:hidden" href="https://presufactura.es/login">Entrar</a>
+
 <a href="#verifactu">Veri*Factu</a>
-<a href="{{ route('guides.index') }}">Guías</a>
+<a href="https://presufactura.es/guias">Guías</a>
 <a href="#precios">Precios</a>
-<a href="{{ route('help') }}">Ayuda</a>
+<a href="https://presufactura.es/ayuda">Ayuda</a>
 <a href="#faq">Preguntas</a>
 </nav>
 </header>
@@ -155,8 +159,8 @@
         </p>
 <!-- Grupo CTA -->
 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-4">
-<a class="inline-flex justify-center items-center bg-[#0A3D22] text-white hover:bg-[#072d19] px-7 py-3.5 rounded-xl font-bold text-base transition-all shadow-md active:scale-95 text-center" href="{{ $loggedIn ? route('dashboard') : route('register') }}">
-            {{ $loggedIn ? 'Ir al panel' : 'Empezar gratis' }}
+<a class="inline-flex justify-center items-center bg-[#0A3D22] text-white hover:bg-[#072d19] px-7 py-3.5 rounded-xl font-bold text-base transition-all shadow-md active:scale-95 text-center" href="https://presufactura.es/registro">
+            Empezar gratis
           </a>
 <a class="inline-flex justify-center items-center text-stone-700 hover:text-stone-900 px-4 py-3 font-bold text-base hover:underline transition-all text-center" href="#precios">
             Ver qué incluye →
@@ -182,8 +186,8 @@
             </h2>
 </div>
 <div>
-<a class="inline-flex items-center justify-center bg-[#0A3D22] text-white hover:bg-[#072d19] text-base font-extrabold px-8 py-4 rounded-xl transition-all shadow-md active:scale-95 text-center" href="{{ $loggedIn ? route('dashboard') : route('register') }}">
-              {{ $loggedIn ? 'Ir al panel' : 'Empezar gratis' }}
+<a class="inline-flex items-center justify-center bg-[#0A3D22] text-white hover:bg-[#072d19] text-base font-extrabold px-8 py-4 rounded-xl transition-all shadow-md active:scale-95 text-center" href="https://presufactura.es/registro">
+              Empezar gratis
             </a>
 </div>
 </div>
@@ -512,8 +516,8 @@
 <!-- Botón destacado -->
 <div class="pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 <p class="text-sm text-stone-300 font-medium">¿Prefieres facturar en modo estándar primero? Puedes activarlo cuando tu gestor te lo pida.</p>
-<a class="inline-flex justify-center items-center bg-[#18E667] text-[#032612] font-black px-7 py-3.5 rounded-xl hover:bg-[#15cf5c] transition-all shrink-0 active:scale-95 shadow-sm text-center" href="{{ $loggedIn ? route('settings.index') : route('register') }}">
-            {{ $loggedIn ? 'Activar en Configuración' : 'Crear cuenta y activarlo' }}
+<a class="inline-flex justify-center items-center bg-[#18E667] text-[#032612] font-black px-7 py-3.5 rounded-xl hover:bg-[#15cf5c] transition-all shrink-0 active:scale-95 shadow-sm text-center" href="https://presufactura.es/registro">
+            Crear cuenta y activarlo
           </a>
 </div>
 </div>
@@ -524,13 +528,23 @@
         Preguntas frecuentes
       </h2>
 <div class="space-y-6">
-@foreach ($landingFaqs as $faq)
 <div class="pb-6 border-b border-stone-200">
-<h3 class="font-black text-lg text-stone-900 mb-2">{{ $faq['question'] }}</h3>
-<p class="text-sm sm:text-base text-stone-600 leading-relaxed font-normal">{{ $faq['answer'] }}</p>
+<h3 class="font-black text-lg text-stone-900 mb-2">¿PresuFactura cumple Veri*Factu?</h3>
+<p class="text-sm sm:text-base text-stone-600 leading-relaxed font-normal">PresuFactura puede generar facturas, conservar el registro de facturación y, si activas Veri*Factu y un certificado válido, preparar el envío del registro a la AEAT. No presenta tus declaraciones tributarias. La validez fiscal debe revisarla un profesional; no afirmamos certificación oficial.</p>
 </div>
-@endforeach
-<p class="text-sm font-semibold"><a class="underline" href="{{ route('help') }}">Ver todas las preguntas</a> · <a class="underline" href="{{ route('guides.index') }}">Guías para autónomos</a></p>
+<div class="pb-6 border-b border-stone-200">
+<h3 class="font-black text-lg text-stone-900 mb-2">¿Cuánto cuesta PresuFactura?</h3>
+<p class="text-sm sm:text-base text-stone-600 leading-relaxed font-normal">Nada. PresuFactura es completamente gratis: documentos ilimitados, clientes ilimitados, recordatorios automáticos, botón «He pagado» y Veri*Factu opcional. No hay planes de pago ni tarjeta.</p>
+</div>
+<div class="pb-6 border-b border-stone-200">
+<h3 class="font-black text-lg text-stone-900 mb-2">¿Puedo empezar sin tarjeta?</h3>
+<p class="text-sm sm:text-base text-stone-600 leading-relaxed font-normal">Sí. Regístrate sin tarjeta y tienes acceso inmediato a todas las funciones.</p>
+</div>
+<div class="pb-6 border-b border-stone-200">
+<h3 class="font-black text-lg text-stone-900 mb-2">¿Hay límites de documentos?</h3>
+<p class="text-sm sm:text-base text-stone-600 leading-relaxed font-normal">No. Puedes crear tantos presupuestos y facturas como necesites.</p>
+</div>
+<p class="text-sm font-semibold"><a class="underline" href="https://presufactura.es/ayuda">Ver todas las preguntas</a> · <a class="underline" href="https://presufactura.es/guias">Guías para autónomos</a></p>
 </div>
 </section>
 <!-- 9) Cierre potente -->
@@ -543,8 +557,8 @@
           Registro gratuito. Sin tarjeta. Sin permanencia.
         </p>
 <div>
-<a class="inline-flex justify-center items-center bg-[#0A3D22] text-white hover:bg-[#072d19] px-8 py-4 rounded-xl font-black text-base transition-all shadow-md active:scale-95 text-center" href="{{ $loggedIn ? route('dashboard') : route('register') }}">
-            {{ $loggedIn ? 'Ir al panel' : 'Crear cuenta gratis' }}
+<a class="inline-flex justify-center items-center bg-[#0A3D22] text-white hover:bg-[#072d19] px-8 py-4 rounded-xl font-black text-base transition-all shadow-md active:scale-95 text-center" href="https://presufactura.es/registro">
+            Crear cuenta gratis
           </a>
 </div>
 </div>
@@ -557,12 +571,50 @@
         PresuFactura — Presupuestos y facturas para autónomos con Veri*Factu opcional
       </p>
 <div class="flex items-center gap-6 font-medium">
-<a class="hover:text-stone-900 transition-colors" href="{{ route('legal.terminos') }}">Términos</a>
-<a class="hover:text-stone-900 transition-colors" href="{{ route('legal.privacidad') }}">Privacidad</a>
-<a class="hover:text-stone-900 transition-colors" href="{{ route('legal.cookies') }}">Cookies</a>
+<a class="hover:text-stone-900 transition-colors" href="https://presufactura.es/terminos">Términos</a>
+<a class="hover:text-stone-900 transition-colors" href="https://presufactura.es/privacidad">Privacidad</a>
+<a class="hover:text-stone-900 transition-colors" href="https://presufactura.es/cookies">Cookies</a>
 </div>
 </div>
 </footer>
-@include('layouts.partials.cookie-banner')
-@include('layouts.partials.theme-toggle-script')
+<div class="cookie-banner" id="cookie-banner" hidden>
+<div class="cookie-banner-inner"><p>Usamos cookies técnicas necesarias. Consulta la <a href="https://presufactura.es/cookies">política de cookies</a>.</p>
+<div class="cookie-banner-actions"><button type="button" class="btn btn-secondary" data-cookie-consent="essential">Solo necesarias</button><button type="button" class="btn btn-primary" data-cookie-consent="accepted">Aceptar</button></div></div></div>
+<script>(function(){var k="cookie_consent";if(localStorage.getItem(k))return;var b=document.getElementById("cookie-banner");if(!b)return;b.hidden=false;b.querySelectorAll("[data-cookie-consent]").forEach(function(btn){btn.addEventListener("click",function(){localStorage.setItem(k,btn.getAttribute("data-cookie-consent"));b.hidden=true;});});})();</script>
+<script>
+(function () {
+    document.documentElement.classList.add('js');
+    var key = 'pf-theme';
+    function apply(dark) {
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
+            b.setAttribute('aria-pressed', dark ? 'true' : 'false');
+        });
+    }
+    document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var dark = document.documentElement.getAttribute('data-theme') !== 'dark';
+            try { localStorage.setItem(key, dark ? 'dark' : 'light'); } catch (e) {}
+            apply(dark);
+        });
+    });
+    apply(document.documentElement.getAttribute('data-theme') === 'dark');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+                if (en.isIntersecting) {
+                    en.target.classList.add('is-in');
+                    io.unobserve(en.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('main > section').forEach(function (s) {
+            s.classList.add('gesto');
+            io.observe(s);
+        });
+    }
+})();
+</script>
+
 </body></html>

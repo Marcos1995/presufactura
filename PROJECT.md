@@ -71,5 +71,5 @@ Cron obligatorio:
 -
 
 ## Estado
-- UI: sistema Stitch (papel `#F4F1EA`, tinta `#1C1917`, acento `#0F6E56`, Newsreader + Plus Jakarta Sans) en `public/css/app.css`, claro y oscuro. Ids en `DESIGN.md`.
+- UI: sistema Stitch expresivo (Public Sans, cifra sobre `#18E667`, botón `#0A3D22`). Landing en `resources/views/landing/index.blade.php` y `index.html`. Entrar/registro en layout partido. Claro y oscuro con interruptor. Ids en `DESIGN.md`.
 

@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
+    @include('layouts.partials.theme-boot')
     @include('layouts.partials.fonts')
     <meta name="description" content="@yield('meta_description', 'PresuFactura: presupuestos y facturas para autónomos en España. Veri*Factu opcional, PDF con QR, envío a AEAT. Empieza gratis.')">
     <meta name="robots" content="@yield('robots', 'index, follow')">
@@ -38,8 +39,10 @@
                 <a href="{{ route('pricing') }}">Precios</a>
                 <a href="{{ route('help') }}">Ayuda</a>
                 @if (auth()->check())
+                    @include('layouts.partials.theme-switch')
                     <a href="{{ route('dashboard') }}" class="btn btn-secondary">Panel</a>
                 @else
+                    @include('layouts.partials.theme-switch')
                     <a href="{{ route('login') }}">Entrar</a>
                     <a href="{{ route('register') }}" class="btn btn-primary">Registrarse</a>
                 @endif
@@ -62,6 +65,7 @@
     @include('layouts.partials.cookie-banner')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     @include('layouts.partials.app-js')
+    @include('layouts.partials.theme-toggle-script')
     @stack('scripts')
 </body>
 </html>

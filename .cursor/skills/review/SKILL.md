@@ -17,7 +17,7 @@ Review the current git diff against the default branch. Do not re-read the whole
 
 ## Do
 
-1. Look at `git diff` / `git log` for the change set only
+1. Look at the change set only: `git diff <base> -- . ':!graphify-out'` / `git log`
 2. Fix Critical issues in place
 3. Do not expand scope
 4. Reply max 5 lines: `HECHO` or `FALLO` + what you found/fixed

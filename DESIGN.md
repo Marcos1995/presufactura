@@ -1,21 +1,12 @@
 # PresuFactura — diseño
 
-Minimal y moderno, estilo estudio actual. Mucho aire, jerarquía clara, un acento verde tinta sobre papel cálido. Titulares Newsreader, texto Plus Jakarta Sans. Claro y oscuro. Sin degradados morados, sin emojis como iconos, sin plantilla centrada genérica.
-
-## Tokens
-
-- Papel `#F4F1EA`, superficie `#FFFCF7`, tinta `#1C1917`, acento `#0F6E56` (hover `#0c5945`)
-- Oscuro: papel `#161412`, superficie `#221F1C`, tinta `#F4F1EA`, acento de texto `#8ED9C0`, botón `#0F6E56`
-- Radio 8px
-- Titulares: Newsreader. UI: Plus Jakarta Sans
+Expresivo y verde. Titular display grande (Public Sans, muy negro). La cifra principal va sobre un bloque sólido #18E667 con texto #032612; el botón de la acción principal es #0A3D22 con texto claro. Tarjetas claras, esquinas amplias. Cada sección cambia de gesto: tamaño de tipo, bloque de color o imagen a sangre. Entre una y la siguiente hay transición (el bloque entra, el titular escala). Una imagen o un motivo decorativo por sección. La fila se lee: nombre, una descripción y miniatura. Sin objeto 3D ni WebGL. Una sola acción principal. El mismo layout nace a 360px y escala a 768 y 1280. Interruptor sol/luna (el punto marca el lado activo). Sin mapa: no es una página de lugares.
 
 ## Stitch
 
 - Proyecto: `15934169418603313547`
 - Sistema: `assets/18201670061494888966`
-- Landing: `40073a04f5eb4be9b47ce47611fac7b0`
-- Panel: `6e485d83d55d4181bdb3381a5b025746`
-- Entrar: `866cc3ac8fd349febae33f5395453e3a`
-- Factura pública: `0057413360584a428c6a4efd7ae53d6a`
-
-El CSS de `public/css/app.css` aplica este sistema a todas las vistas Blade (marketing, auth, panel, documento público, legal, guías, ayuda).
+- Landing: `4c5df3b0fdee4c6ca9174ee09c9b334f`
+- Panel: `873b5353d5e049eca7dbd904698338d6`
+- Entrar: `e05722a773284c4b92e5e34e52f26f32`
+- Factura pública: `6e2018b1e7324e5490761fab67daa677`

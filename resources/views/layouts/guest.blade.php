@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.partials.favicon')
     <title>@yield('title', config('app.name'))</title>
+    @include('layouts.partials.theme-boot')
     @include('layouts.partials.fonts')
     <meta name="description" content="@yield('meta_description', '')">
     <meta name="robots" content="@yield('robots', 'noindex, nofollow')">
@@ -16,6 +17,7 @@
     <div class="guest-container">
         <header class="guest-header">
             @include('layouts.partials.logo')
+            @include('layouts.partials.theme-switch')
         </header>
         <main class="guest-main {{ $mainClass ?? '' }}">
             @if (session('status'))
@@ -36,5 +38,6 @@
     @include('layouts.partials.cookie-banner')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     @include('layouts.partials.app-js')
+    @include('layouts.partials.theme-toggle-script')
 </body>
 </html>

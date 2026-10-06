@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('layouts.partials.favicon')
     <title>Factura {{ $invoice->number }}</title>
+    @include('layouts.partials.theme-boot')
     @include('layouts.partials.fonts')
     @include('layouts.partials.app-css')
 </head>
@@ -12,7 +13,12 @@
     <div class="guest-container public-quote-page">
         <header class="guest-header">
             <span class="public-issuer">{{ $invoice->issuerName() }}</span>
+            @include('layouts.partials.theme-switch')
         </header>
+        <section class="public-hero">
+            <p class="public-hero__label">Total a pagar</p>
+            <p class="public-hero__sum">{{ number_format($invoice->total, 2, ',', '.') }} €</p>
+        </section>
 
         <main class="guest-main public-quote-main">
             @if (session('status'))
@@ -119,5 +125,6 @@
             @include('layouts.partials.legal-footer')
         </footer>
     </div>
+    @include('layouts.partials.theme-toggle-script')
 </body>
 </html>
