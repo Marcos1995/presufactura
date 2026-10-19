@@ -1,17 +1,17 @@
-# Graph Report - presufactura  (2026-10-06)
+# Graph Report - presufactura  (2026-10-19)
 
 ## Corpus Check
-- 283 files · ~78,959 words
+- 284 files · ~78,964 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 25 file(s) not represented in the graph (top: (none) 16, .mdc 3, .css 2)
 
 ## Summary
-- 1568 nodes · 3102 edges · 202 communities (86 shown, 116 thin omitted)
+- 1569 nodes · 3102 edges · 203 communities (86 shown, 117 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 77 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `75aca099`
+- Built from commit: `cdac619a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -172,7 +172,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (202 total, 116 thin omitted)
+## Communities (203 total, 117 thin omitted)
 
 ### Community 0 - "TestCase"
 Cohesion: 0.06
@@ -520,18 +520,18 @@ Nodes (3): Build judgments with Laya, Call, Design
 
 ## Knowledge Gaps
 - **265 isolated node(s):** `$schema`, `name`, `type`, `description`, `keywords` (+260 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 561 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **116 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 562 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **117 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `User` connect `User` to `TestCase`, `Illuminate\Console\Command`, `StripeService`, `AnalyticsService`, `Illuminate\Http\RedirectResponse`, `SubmitBillingRecordJob`, `Illuminate\Database\Eloquent\Factories\Factory`, `Company`, `Document`, `Illuminate\Database\Eloquent\Relations\BelongsTo`, `BugReportMail`, `AeatSoapClient`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Eloquent\Relations\HasMany`, `VerifactuExportCommand.php`, `BillingRecordService`, `User.php`, `Client`, `VerifactuProveTest.php`, `VerifactuSchema`, `DocumentNumberService`, `DataExportService`, `Prerrequisitos (F1–F8)`, `Illuminate\Support\Str`, `QrServiceTest`, `AdminOverviewService`, `AuthTest`, `DemoCatalogTest`, `EmailService`, `AnalyticsTest`, `VerifactuProductionCheck`, `PanelPagesTest`, `AdminOverviewService.php`, `VerifactuProveCommand.php`, `PanelPagesWithoutVerifactuTablesTest`, `InstallVerifactuDevCertCommand.php`, `SecurityHardeningTest.php`, `DatabaseSeeder.php`?**
-  _High betweenness centrality (0.185) - this node is a cross-community bridge._
+  _High betweenness centrality (0.188) - this node is a cross-community bridge._
 - **Why does `Document` connect `Document` to `TestCase`, `Illuminate\View\View`, `User`, `AnalyticsService`, `InvoiceController`, `SubmitBillingRecordJob`, `QuoteController`, `Company`, `Illuminate\Database\Eloquent\Relations\BelongsTo`, `QrService`, `AeatSoapClient`, `ProcessRemindersCommand`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Eloquent\Relations\HasMany`, `BillingRecordService`, `Client`, `VerifactuProveTest.php`, `DocumentNumberService`, `Prerrequisitos (F1–F8)`, `Illuminate\Support\Str`, `XmlBuilderService`, `QrServiceTest`, `AdminOverviewService`, `PdfGeneratorService`, `DemoCatalogTest`, `EmailService`, `VerifactuProductionCheck`, `AdminOverviewService.php`, `VerifactuProveCommand.php`, `QrService.php`?**
-  _High betweenness centrality (0.148) - this node is a cross-community bridge._
+  _High betweenness centrality (0.146) - this node is a cross-community bridge._
 - **Why does `Prerrequisitos (F1–F8)` connect `Prerrequisitos (F1–F8)` to `DocumentNumberService`, `DocumentCalculatorService`, `Illuminate\View\View`, `User`, `Illuminate\Http\RedirectResponse`, `InvoiceController`, `SubmitBillingRecordJob`, `QuoteController`, `Document`, `PdfGeneratorService`, `QrService`, `Illuminate\Database\Eloquent\Model`, `Client`?**
-  _High betweenness centrality (0.056) - this node is a cross-community bridge._
+  _High betweenness centrality (0.055) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `User` (e.g. with `{closure#1}()` and `Prerrequisitos (F1–F8)`) actually correct?**
   _`User` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `Document` (e.g. with `{closure#1}()` and `Prerrequisitos (F1–F8)`) actually correct?**

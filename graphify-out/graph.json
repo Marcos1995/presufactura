@@ -13140,6 +13140,18 @@
       "source_location": null
     },
     {
+      "id": "start",
+      "label": "START.md",
+      "_origin": "ast",
+      "community": 202,
+      "community_name": "START.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "start.md",
+      "source_file": "START.md",
+      "source_location": "L1"
+    },
+    {
       "id": "app_console_commands_verifactuaeatpreprodcommand",
       "label": "VerifactuAeatPreprodCommand.php",
       "_origin": "ast",
@@ -54331,5 +54343,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "75aca099c278f2bb0838d613f4aa65dfddaa6093"
+  "built_at_commit": "cdac619ab09ee64746e0ce250fe42c77a445c9f1"
 }
