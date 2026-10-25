@@ -5,6 +5,9 @@
     },
     "hostinger-cursor-plugin": {
       "enabled": true
+    },
+    "github": {
+      "enabled": true
     }
   }
 }
