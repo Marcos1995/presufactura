@@ -1,11 +1,11 @@
 # Dashboard brief (for the Stitch prompt)
 
-Read when the page shows numbers that change (prices, stats, rankings, metrics). Put this anatomy in the `generate_screen_from_text` / `edit_screens` prompt. Stitch designs it; you integrate. A ranking is a sequence, not one dense table: a hero gesture, then each case as a row with name, one description and a thumbnail, then the map or chart at another scale and color. Each section changes gesture. Do not repeat the same card. Drop a chart that only repeats the finding. If the reader needs to see where something is (a route, stops, cities), one map with those points, OpenStreetMap, no paid key. Every time a place with a real website is named, the name links to that site; do not invent a URL. A name that is only a website links to that site. A place with no website keeps a plain name that scrolls to the map. Each ranking row has Ver mapa (scrolls to the map, highlights that point, opens the popup) and Ruta (Google Maps directions, destination = that point; the traveler picks the origin). The popup name links to the website when there is one, and repeats Ruta. Ver mapa and Ruta (row and popup) are solid `#18E667` with text `#032612` in light and dark; override a gray fill or white label. Otherwise no map. Reference result: `tarifas-espana` (`build.py`, `dashboard()`).
+Read when the page shows numbers that change (prices, stats, rankings, metrics). Put this anatomy in the Stitch prompt next to the `DESIGN.md` paragraph. Do not restate that paragraph. Drop a chart that only repeats the finding. Reference result: `tarifas-espana` (`build.py`, `dashboard()`).
 
 ## Anatomy (always)
 
 1. **Header**: kicker (scope · date) + h1 that states the finding, not the topic ("La luz sale más barata de 14 a 16 h", not "Precios de la luz") + chip with source/update.
-2. **KPI row, 3-4 cards**: first one is `hero` (solid `#18E667`, big number, ink `#032612`). The main button is `#0A3D22` with light text. Each card: icon, label, number with small unit, and one comparison pill (`▲ +0,034 frente a la media` / `▼`). Arrow + words, never color alone.
+2. **KPI row, 3-4 cards**: first one is `hero` (the accent block from the `DESIGN.md` paragraph, big number). The main button uses the primary action color from that paragraph. Each card: icon, label, number with small unit, and one comparison pill (`▲ +0,034 frente a la media` / `▼`). Arrow + words, never color alone.
 3. **Two charts minimum**: one distribution (bars by hour/category, colored by level) and one comparison (line today vs reference, ranking, cost curve). Each card has a title that says what to read, a one-line caption, a legend.
 4. **Controls** that change the numbers (slider, select, segmented Hoy/7 días). Update KPIs and charts together.
 5. **Footer line**: source, date, what is NOT included.
@@ -46,7 +46,7 @@ Layout: sidebar tabs on desktop (Resumen, then sections), top scrollable tabs < 
 .rk i{display:block;height:.8rem;border-radius:99px;background:color-mix(in srgb,var(--accent) 55%,var(--line))}
 .rk b{text-align:right;font-variant-numeric:tabular-nums}
 .rk .acts{grid-column:1/-1;display:flex;gap:.35rem}
-a.go,button.go{padding:.15rem .55rem;border-radius:99px;border:0;background:#18E667;color:#032612;font:inherit;font-size:.75rem;font-weight:650;text-decoration:none;cursor:pointer}
+a.go,button.go{padding:.15rem .55rem;border-radius:99px;border:0;background:var(--accent);color:var(--ink);font:inherit;font-size:.75rem;font-weight:650;text-decoration:none;cursor:pointer}
 ```
 
 ## Charts without libraries (inline SVG, no CDN)
@@ -67,7 +67,7 @@ function lines(el,labels,main,ref){ // two series, same scale
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de líneas">${o}</svg>`}
 ```
 
-Ranking list: sort ascending, one `.rk` row per item (`<a class="nm" href="URL">name</a><i style="width:N%"></i><b>value</b><span class="acts"><button type="button" class="go" data-map="id">Ver mapa</button><a class="go" href="https://www.google.com/maps/dir/?api=1&destination=LAT,LNG" target="_blank" rel="noopener noreferrer">Ruta</a></span>`). Omit the name `href` when there is no real URL (the name then scrolls to the map). Omit Ver mapa and Ruta when the row is not a place. Highlight the selected row with `box-shadow:inset 0 0 0 1px var(--accent)`.
+Ranking list: sort ascending, one `.rk` row per item (`<a class="nm" href="URL">name</a><i style="width:N%"></i><b>value</b><span class="acts"><button type="button" class="go" data-map="id"></button><a class="go" href="DEST" target="_blank" rel="noopener noreferrer"></a></span>`). The two controls are the ones named in the `DESIGN.md` paragraph; `DEST` is the URL written there. Omit the name `href` when there is no real URL. Omit both controls when the row is not a place. Highlight the selected row with `box-shadow:inset 0 0 0 1px var(--accent)`.
 
 ## Data honesty (non-negotiable)
 

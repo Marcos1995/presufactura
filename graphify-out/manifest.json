@@ -1530,51 +1530,51 @@
     "semantic_hash": ""
   },
   ".cursor/agents/explorar.md": {
-    "mtime": 1790620881.7641876,
-    "seen": 1790622114.307459,
+    "mtime": 1790518723.185153,
+    "seen": 1792943303.1842194,
     "ast_hash": "6e208cfe0f5f10ed1c52eca68a3e5a5f",
     "semantic_hash": ""
   },
   ".cursor/agents/implementar.md": {
-    "mtime": 1790620881.7641876,
-    "seen": 1790622114.307459,
+    "mtime": 1790518725.757512,
+    "seen": 1792943303.1842194,
     "ast_hash": "6e3d9911e1261b8a72f5b380803cc22d",
     "semantic_hash": ""
   },
   ".cursor/skills/debug/SKILL.md": {
-    "mtime": 1790620881.7641876,
-    "seen": 1790622114.307459,
+    "mtime": 1790518232.811173,
+    "seen": 1792943303.1842194,
     "ast_hash": "31fbb3729bb6c43bb61f8ab136ad9854",
     "semantic_hash": ""
   },
   ".cursor/skills/laya/SKILL.md": {
-    "mtime": 1790620881.7600863,
-    "seen": 1790622114.307459,
+    "mtime": 1790614074.823067,
+    "seen": 1792943303.1842194,
     "ast_hash": "1bc4782d5ba49d165ab91392a9a917b7",
     "semantic_hash": ""
   },
   ".cursor/skills/review/SKILL.md": {
-    "mtime": 1790620881.7600863,
-    "seen": 1790622114.307459,
+    "mtime": 1790518232.812677,
+    "seen": 1792943303.1842194,
     "ast_hash": "d8fa8d4e21e3307fdd7d92d161d38bce",
     "semantic_hash": ""
   },
   ".cursor/skills/verify/SKILL.md": {
-    "mtime": 1790620881.7600863,
-    "seen": 1790622114.307459,
+    "mtime": 1790518232.8136823,
+    "seen": 1792943303.1842194,
     "ast_hash": "3ebb042e1baf3773e53ac9a5a0c77574",
     "semantic_hash": ""
   },
   ".cursor/skills/web-design/SKILL.md": {
-    "mtime": 1791312099.1802773,
-    "seen": 1791313373.5910273,
-    "ast_hash": "39e26a48ce021f51964569ca1533e119",
+    "mtime": 1792433763.3497882,
+    "seen": 1792943303.1842194,
+    "ast_hash": "d2802f0036d1d4d8ac69cbab6ac1e6e4",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1791312099.2189102,
-    "seen": 1791313373.5910273,
-    "ast_hash": "de8a30e72dd30604bd7408146c465b4e",
+    "mtime": 1792433763.3507895,
+    "seen": 1792943303.1842194,
+    "ast_hash": "799e0fc97841b18f1bab39ae083c4726",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -1728,15 +1728,15 @@
     "semantic_hash": ""
   },
   ".cursor/skills/jev/SKILL.md": {
-    "mtime": 1791312099.1731186,
-    "seen": 1791313373.5910273,
+    "mtime": 1790765141.5736172,
+    "seen": 1792943303.1842194,
     "ast_hash": "c3316b3a3660cc86f81c89e6e583c440",
     "semantic_hash": ""
   },
   ".cursor/skills/web-design/dashboard.md": {
-    "mtime": 1791312099.1802773,
-    "seen": 1791313373.5910273,
-    "ast_hash": "bc383d52ff798c162c0ca3ac1775776f",
+    "mtime": 1792248736.2176166,
+    "seen": 1792943303.1842194,
+    "ast_hash": "9018e55f141fc57e29363fa030dcf904",
     "semantic_hash": ""
   },
   "index.html": {
@@ -1917,6 +1917,12 @@
     "mtime": 1792942885.8572986,
     "seen": 1792942957.0398684,
     "ast_hash": "77bb1f7096b9d5e66ac8a72082d1615a",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/tablas/SKILL.md": {
+    "mtime": 1791542302.2923527,
+    "seen": 1792943303.1842194,
+    "ast_hash": "0213fecac7b24fa349260bd3416068c8",
     "semantic_hash": ""
   }
 }
