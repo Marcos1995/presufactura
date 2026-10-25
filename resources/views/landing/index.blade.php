@@ -14,9 +14,8 @@
 <meta property="og:url" content="{{ url('/') }}"/>
 <meta property="og:image" content="{{ asset('images/og-presufactura.svg') }}"/>
 @include('layouts.partials.theme-boot')
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+@include('layouts.partials.fonts')
+@include('layouts.partials.app-css')
 <!-- Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
@@ -89,55 +88,8 @@
 </script>
 @include('partials.faq-jsonld', ['faqs' => $landingFaqs])
 </head>
-<body class="bg-[#F6F8F5] text-stone-900 antialiased selection:bg-[#18E667] selection:text-[#032612] w-full max-w-full overflow-x-hidden">
-<!-- 1) Cabecera fija / sticky -->
-<header class="sticky top-0 z-50 bg-[#F6F8F5] border-b border-stone-200">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-2 flex items-center justify-between gap-2">
-<!-- Wordmark -->
-<a class="flex items-center gap-2.5 group shrink-0" href="{{ route('landing') }}">
-<div class="w-9 h-9 rounded-xl bg-brand-dark flex items-center justify-center text-brand-green shadow-sm group-hover:scale-105 transition-transform">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
-<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-<path class="text-white" d="M8 12.5l2 2 3.5-3.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-</div>
-<span class="font-black text-xl tracking-tight text-stone-900">Presu<span class="text-brand-dark">Factura</span></span>
-</a>
-<!-- Navegación desktop -->
-<nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-stone-600">
-<a class="hover:text-brand-dark transition-colors" href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a>
-<a class="hover:text-brand-dark transition-colors" href="{{ route('tools.cartas') }}">Cartas Hacienda</a>
-<a class="hover:text-brand-dark transition-colors" href="{{ route('guides.index') }}">Guías</a>
-<a class="hover:text-brand-dark transition-colors" href="#precios">Precios</a>
-<a class="hover:text-brand-dark transition-colors" href="{{ route('help') }}">Ayuda</a>
-</nav>
-<div class="flex items-center gap-2 sm:gap-3">
-<button type="button" class="theme-switch" data-theme-toggle aria-label="Cambiar tema claro u oscuro">
-<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-<svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>
-<span class="theme-switch__thumb"></span>
-</button>
-@if ($loggedIn)
-<a class="text-sm font-bold text-stone-700 hover:text-brand-dark px-2 py-2" href="{{ route('dashboard') }}">Panel</a>
-<a class="bg-brand-dark hover:bg-brand-darkHover text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl" href="{{ route('dashboard') }}">Ir al panel</a>
-@else
-<a class="hidden sm:inline text-sm font-bold text-stone-700 hover:text-brand-dark px-2 py-2 whitespace-nowrap" href="{{ route('login') }}">Entrar</a>
-<a class="bg-brand-dark hover:bg-brand-darkHover text-white text-xs sm:text-sm font-bold px-3 sm:px-4 py-2.5 rounded-xl whitespace-nowrap" href="{{ route('register') }}">Empezar gratis</a>
-@endif
-</div>
-</div>
-<nav class="lg:hidden flex gap-4 overflow-x-auto px-4 pb-3 text-sm font-semibold text-stone-600 whitespace-nowrap" aria-label="Secciones">
-@unless ($loggedIn)
-<a class="sm:hidden" href="{{ route('login') }}">Entrar</a>
-@endunless
-<a href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a>
-<a href="{{ route('tools.cartas') }}">Cartas</a>
-<a href="{{ route('guides.index') }}">Guías</a>
-<a href="#precios">Precios</a>
-<a href="{{ route('help') }}">Ayuda</a>
-<a href="#faq">Preguntas</a>
-</nav>
-</header>
+<body class="landing-body bg-[#F6F8F5] text-stone-900 antialiased selection:bg-[#18E667] selection:text-[#032612] w-full max-w-full overflow-x-hidden">
+@include('layouts.partials.public-header')
 <main class="w-full">
 <!-- 2) Hero editorial -->
 <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pt-16 sm:pb-16 text-left">
@@ -589,7 +541,7 @@
       </p>
 <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-medium">
 <a class="hover:text-stone-900 transition-colors" href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a>
-<a class="hover:text-stone-900 transition-colors" href="{{ route('tools.cartas') }}">Cartas</a>
+<a class="hover:text-stone-900 transition-colors" href="{{ route('tools.cartas') }}">Cartas Hacienda</a>
 <a class="hover:text-stone-900 transition-colors" href="{{ route('fiscal.calendar') }}">Calendario fiscal</a>
 <a class="hover:text-stone-900 transition-colors" href="{{ route('legal.terminos') }}">Términos</a>
 <a class="hover:text-stone-900 transition-colors" href="{{ route('legal.privacidad') }}">Privacidad</a>
@@ -598,5 +550,6 @@
 </div>
 </footer>
 @include('layouts.partials.cookie-banner')
+@include('layouts.partials.app-js')
 @include('layouts.partials.theme-toggle-script')
 </body></html>

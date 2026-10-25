@@ -1,8 +1,8 @@
 {
   ".cursor/settings.json": {
-    "mtime": 1792941446.05846,
-    "seen": 1792942313.2086792,
-    "ast_hash": "68ffe987ef5454a06028338f2742f04f",
+    "mtime": 1792942786.2436154,
+    "seen": 1792942957.038833,
+    "ast_hash": "b0f40bc8d2b4ec5c52563c2a508a16aa",
     "semantic_hash": ""
   },
   "app/Console/Commands/FunnelReportCommand.php": {
@@ -1050,9 +1050,9 @@
     "semantic_hash": ""
   },
   "resources/views/landing/index.blade.php": {
-    "mtime": 1792942660.4301524,
-    "seen": 1792942707.9220307,
-    "ast_hash": "b1d7254c58e295a0e91141cd96b56b94",
+    "mtime": 1792942939.1991997,
+    "seen": 1792942957.038833,
+    "ast_hash": "5c46bd3e76b0ef13ba631ddd9114bff0",
     "semantic_hash": ""
   },
   "resources/views/layouts/guest.blade.php": {
@@ -1062,9 +1062,9 @@
     "semantic_hash": ""
   },
   "resources/views/layouts/marketing.blade.php": {
-    "mtime": 1792942666.3211443,
-    "seen": 1792942707.9220307,
-    "ast_hash": "9a6f29430afc1790380f0fc6e1d51b88",
+    "mtime": 1792942889.4198866,
+    "seen": 1792942957.0398684,
+    "ast_hash": "4cfcb5c25092c03e77cd7de66192412f",
     "semantic_hash": ""
   },
   "resources/views/layouts/panel.blade.php": {
@@ -1740,9 +1740,9 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1792942702.7563062,
-    "seen": 1792942707.9220307,
-    "ast_hash": "c148466330c77e39c49ee046d701ec24",
+    "mtime": 1792942938.303659,
+    "seen": 1792942957.0398684,
+    "ast_hash": "3a5c9a5a13a41c7842229639a239245d",
     "semantic_hash": ""
   },
   "START.md": {
@@ -1752,9 +1752,9 @@
     "semantic_hash": ""
   },
   ".cursor/mcp.json": {
-    "mtime": 1792941715.3682506,
-    "seen": 1792942313.2086792,
-    "ast_hash": "cf0c85c89f7f6d3a15724b56fb348b60",
+    "mtime": 1792942784.927309,
+    "seen": 1792942957.038833,
+    "ast_hash": "c9b683ee2ecc297f0be998226195d87f",
     "semantic_hash": ""
   },
   "app/Console/Commands/ProcessFiscalRemindersCommand.php": {
@@ -1911,6 +1911,12 @@
     "mtime": 1792942137.2941008,
     "seen": 1792942313.2086792,
     "ast_hash": "f32d39044719b8e5d349cf4a5e6b3633",
+    "semantic_hash": ""
+  },
+  "resources/views/layouts/partials/public-header.blade.php": {
+    "mtime": 1792942885.8572986,
+    "seen": 1792942957.0398684,
+    "ast_hash": "77bb1f7096b9d5e66ac8a72082d1615a",
     "semantic_hash": ""
   }
 }

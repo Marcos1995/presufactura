@@ -29,27 +29,7 @@
     @stack('head')
 </head>
 <body class="landing-body">
-    <header class="landing-header">
-        <div class="landing-header-inner">
-            @include('layouts.partials.logo', ['href' => route('landing')])
-            <button type="button" class="nav-toggle" aria-label="Menú" aria-expanded="false">☰</button>
-            <nav class="landing-nav">
-                <a href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a>
-                <a href="{{ route('tools.cartas') }}">Cartas</a>
-                <a href="{{ route('guides.index') }}">Guías</a>
-                <a href="{{ route('pricing') }}">Precios</a>
-                <a href="{{ route('help') }}">Ayuda</a>
-                @if (auth()->check())
-                    @include('layouts.partials.theme-switch')
-                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">Panel</a>
-                @else
-                    @include('layouts.partials.theme-switch')
-                    <a href="{{ route('login') }}">Entrar</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary">Registrarse</a>
-                @endif
-            </nav>
-        </div>
-    </header>
+    @include('layouts.partials.public-header')
 
     @if (session('status'))
         <div class="landing-flash">
