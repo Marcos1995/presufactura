@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 
 Schedule::command('presufactura:process-reminders')->hourly();
 Schedule::command('presufactura:verifactu-retry-failed')->everyFifteenMinutes();
+Schedule::command('presufactura:process-fiscal-reminders')->dailyAt('08:15');

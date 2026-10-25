@@ -1,8 +1,8 @@
 {
   ".cursor/settings.json": {
-    "mtime": 1785789714.9064803,
-    "seen": 1790622114.307459,
-    "ast_hash": "42390debd18d44741d7f00caafc78064",
+    "mtime": 1792941446.05846,
+    "seen": 1792942313.2086792,
+    "ast_hash": "68ffe987ef5454a06028338f2742f04f",
     "semantic_hash": ""
   },
   "app/Console/Commands/FunnelReportCommand.php": {
@@ -324,9 +324,9 @@
     "semantic_hash": ""
   },
   "app/Models/Company.php": {
-    "mtime": 1788638417.878023,
-    "seen": 1790622114.307459,
-    "ast_hash": "fa64af73f50702fe014d4326b12b2196",
+    "mtime": 1792942108.4449573,
+    "seen": 1792942313.2086792,
+    "ast_hash": "0233509be40e9cee6ca7e7f4137df39e",
     "semantic_hash": ""
   },
   "app/Models/Document.php": {
@@ -426,9 +426,9 @@
     "semantic_hash": ""
   },
   "app/Providers/AppServiceProvider.php": {
-    "mtime": 1788375748.863403,
-    "seen": 1790622114.307459,
-    "ast_hash": "2e64a3bd986fc8453bec3c613c15be49",
+    "mtime": 1792942128.2360785,
+    "seen": 1792942313.2086792,
+    "ast_hash": "b1b6324eb7470074a30fecad00811ce5",
     "semantic_hash": ""
   },
   "app/Services/AdminOverviewService.php": {
@@ -1314,15 +1314,15 @@
     "semantic_hash": ""
   },
   "routes/console.php": {
-    "mtime": 1787747573.3641696,
-    "seen": 1790622114.307459,
-    "ast_hash": "f666e79addfa7d4f0a7219707ff74b08",
+    "mtime": 1792942124.2959816,
+    "seen": 1792942313.2086792,
+    "ast_hash": "99f5ee6b0f43718488e5990426fdf092",
     "semantic_hash": ""
   },
   "routes/web.php": {
-    "mtime": 1788639406.772587,
-    "seen": 1790622114.307459,
-    "ast_hash": "6652af283e645e378cf18e8b4099fbf0",
+    "mtime": 1792942122.9084258,
+    "seen": 1792942313.2086792,
+    "ast_hash": "716f39e10fba51d049562cd73cfd9315",
     "semantic_hash": ""
   },
   "tailwind.config.js": {
@@ -1746,9 +1746,171 @@
     "semantic_hash": ""
   },
   "START.md": {
-    "mtime": 1792431678.5737154,
-    "seen": 1792432061.3964531,
-    "ast_hash": "13aeb6b9145a35d252e0f8e1065b4e8e",
+    "mtime": 1792887176.2850792,
+    "seen": 1792942313.2086792,
+    "ast_hash": "85c525c2babb3a186b61a188049face0",
+    "semantic_hash": ""
+  },
+  ".cursor/mcp.json": {
+    "mtime": 1792941715.3682506,
+    "seen": 1792942313.2086792,
+    "ast_hash": "cf0c85c89f7f6d3a15724b56fb348b60",
+    "semantic_hash": ""
+  },
+  "app/Console/Commands/ProcessFiscalRemindersCommand.php": {
+    "mtime": 1792888222.3522449,
+    "seen": 1792942313.2086792,
+    "ast_hash": "26cab4d4b20e43533b6a5830d49776a8",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/FiscalCalendarController.php": {
+    "mtime": 1792888213.9119365,
+    "seen": 1792942313.2086792,
+    "ast_hash": "4e3fca3b37dd367b66dc4506fce795e5",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/LetterExplainerController.php": {
+    "mtime": 1792888203.4794471,
+    "seen": 1792942313.2086792,
+    "ast_hash": "8aac296b6131e684cd39820831cb9ece",
+    "semantic_hash": ""
+  },
+  "app/Http/Controllers/VerifactuAssistantController.php": {
+    "mtime": 1792888194.2990754,
+    "seen": 1792942313.2086792,
+    "ast_hash": "eb2c6cbb9ef8a857986b1a00126ef5c5",
+    "semantic_hash": ""
+  },
+  "app/Mail/FiscalReminderMail.php": {
+    "mtime": 1792888216.582221,
+    "seen": 1792942313.2086792,
+    "ast_hash": "78e1121d05e560f331f38912d31c5a15",
+    "semantic_hash": ""
+  },
+  "app/Services/Ai/AiTextService.php": {
+    "mtime": 1792888360.9515586,
+    "seen": 1792942313.2086792,
+    "ast_hash": "ad6e3d8341d3e71b370a39ebae2b4a4a",
+    "semantic_hash": ""
+  },
+  "app/Services/Fiscal/FiscalEstimateService.php": {
+    "mtime": 1792888165.4456913,
+    "seen": 1792942313.2086792,
+    "ast_hash": "adba0c98bbf4ea14f660cf5817e02256",
+    "semantic_hash": ""
+  },
+  "app/Services/Fiscal/FiscalObligationEngine.php": {
+    "mtime": 1792888156.288953,
+    "seen": 1792942313.2086792,
+    "ast_hash": "ed0213e0ff8ae9afdc48d40ea8934409",
+    "semantic_hash": ""
+  },
+  "app/Services/Fiscal/IcalBuilder.php": {
+    "mtime": 1792888173.454937,
+    "seen": 1792942313.2086792,
+    "ast_hash": "ac2f72dc6565e7099791aa42da1f0dd6",
+    "semantic_hash": ""
+  },
+  "app/Services/LetterExplainer/LetterExplainerService.php": {
+    "mtime": 1792888150.0000055,
+    "seen": 1792942313.2086792,
+    "ast_hash": "50d29c3d1d31422b9ef7fcef679dc606",
+    "semantic_hash": ""
+  },
+  "app/Services/VerifactuAssistant/InvoiceFieldChecker.php": {
+    "mtime": 1792888133.6601927,
+    "seen": 1792942313.2086792,
+    "ast_hash": "cd424c82d05010574d29dae1091fb6c9",
+    "semantic_hash": ""
+  },
+  "app/Services/VerifactuAssistant/VerifactuQuizEvaluator.php": {
+    "mtime": 1792888121.3499076,
+    "seen": 1792942313.2086792,
+    "ast_hash": "1197b037acc2cdf07ba591c92a39bde4",
+    "semantic_hash": ""
+  },
+  "app/Support/PdfTextExtractor.php": {
+    "mtime": 1792888179.7877645,
+    "seen": 1792942313.2086792,
+    "ast_hash": "57a8883248e29f4ac20c96937d7286f0",
+    "semantic_hash": ""
+  },
+  "config/ai.php": {
+    "mtime": 1792888359.5247357,
+    "seen": 1792942313.2086792,
+    "ast_hash": "aa0000deb213e05a3650e7ce3bb714db",
+    "semantic_hash": ""
+  },
+  "config/fiscal.php": {
+    "mtime": 1792888096.8988528,
+    "seen": 1792942313.2086792,
+    "ast_hash": "4333849f96b9ae2301f4cc338b9137df",
+    "semantic_hash": ""
+  },
+  "config/letter_types.php": {
+    "mtime": 1792888062.9254847,
+    "seen": 1792942313.2086792,
+    "ast_hash": "4a0875cfdc1ac54105761ee31efec7f5",
+    "semantic_hash": ""
+  },
+  "config/verifactu_quiz.php": {
+    "mtime": 1792888075.6743126,
+    "seen": 1792942313.2086792,
+    "ast_hash": "1a46d4870b1b0a760f18876b2938c947",
+    "semantic_hash": ""
+  },
+  "database/migrations/2026_10_25_000001_add_fiscal_profile_to_companies_table.php": {
+    "mtime": 1792888186.0521019,
+    "seen": 1792942313.2086792,
+    "ast_hash": "741b68973a8f231ca0196e1bf3a681a6",
+    "semantic_hash": ""
+  },
+  "resources/views/emails/fiscal-reminder.blade.php": {
+    "mtime": 1792942170.3908498,
+    "seen": 1792942313.2086792,
+    "ast_hash": "5d283a2b4f9e91126ea92c74f803c004",
+    "semantic_hash": ""
+  },
+  "resources/views/fiscal/calendar.blade.php": {
+    "mtime": 1792942167.2209053,
+    "seen": 1792942313.2086792,
+    "ast_hash": "1327c77ddc99346d4b000a998b75c760",
+    "semantic_hash": ""
+  },
+  "resources/views/tools/cartas/index.blade.php": {
+    "mtime": 1792942150.5070221,
+    "seen": 1792942313.2086792,
+    "ast_hash": "da629a42e8b8d8b4db668d8c12b0d9bc",
+    "semantic_hash": ""
+  },
+  "resources/views/tools/cartas/result.blade.php": {
+    "mtime": 1792942154.8028667,
+    "seen": 1792942313.2086792,
+    "ast_hash": "5b7064d141b7cb307d47d8a3ed5e96e1",
+    "semantic_hash": ""
+  },
+  "resources/views/tools/verifactu/checker-result.blade.php": {
+    "mtime": 1792942145.3362832,
+    "seen": 1792942313.2086792,
+    "ast_hash": "c4fe1d8eb9d3cf23159ecbeb1c01fcfd",
+    "semantic_hash": ""
+  },
+  "resources/views/tools/verifactu/checker.blade.php": {
+    "mtime": 1792942141.796888,
+    "seen": 1792942313.2086792,
+    "ast_hash": "e51676bf2571ecb3af6bf2310e20e345",
+    "semantic_hash": ""
+  },
+  "resources/views/tools/verifactu/index.blade.php": {
+    "mtime": 1792942134.2373276,
+    "seen": 1792942313.2086792,
+    "ast_hash": "ae471ae808542bbdf2c0b87d0d57c3ff",
+    "semantic_hash": ""
+  },
+  "resources/views/tools/verifactu/result.blade.php": {
+    "mtime": 1792942137.2941008,
+    "seen": 1792942313.2086792,
+    "ast_hash": "f32d39044719b8e5d349cf4a5e6b3633",
     "semantic_hash": ""
   }
 }

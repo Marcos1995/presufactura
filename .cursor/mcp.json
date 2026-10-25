@@ -1,0 +1,47 @@
+{
+  "mcpServers": {
+    "hostinger-hosting": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "--yes",
+        "--package=@hostinger/mcp@latest",
+        "hostinger-hosting-mcp"
+      ],
+      "env": {
+        "USER_AGENT": "presufactura;cursor;mcp"
+      }
+    },
+    "hostinger-dns": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "--yes",
+        "--package=@hostinger/mcp@latest",
+        "hostinger-dns-mcp"
+      ],
+      "env": {
+        "USER_AGENT": "presufactura;cursor;mcp"
+      }
+    },
+    "hostinger-domains": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "--yes",
+        "--package=@hostinger/mcp@latest",
+        "hostinger-domains-mcp"
+      ],
+      "env": {
+        "USER_AGENT": "presufactura;cursor;mcp"
+      }
+    },
+    "ssh": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@yawlabs/ssh-mcp@latest"]
+    }
+  }
+}

@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentActionController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\FiscalCalendarController;
 use App\Http\Controllers\FunnelController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuideController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\LetterExplainerController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ProfileController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\VerifactuAssistantController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -32,6 +35,18 @@ Route::get('/precios', [PricingController::class, 'index'])->name('pricing');
 Route::get('/ayuda', [HelpController::class, 'index'])->name('help');
 Route::get('/guias', [GuideController::class, 'index'])->name('guides.index');
 Route::get('/guias/{slug}', [GuideController::class, 'show'])->name('guides.show');
+
+Route::get('/verifactu', [VerifactuAssistantController::class, 'index'])->name('tools.verifactu');
+Route::post('/verifactu/test', [VerifactuAssistantController::class, 'quiz'])->middleware('throttle:tools-ai')->name('tools.verifactu.quiz');
+Route::get('/verifactu/comprobar', [VerifactuAssistantController::class, 'checkerForm'])->name('tools.verifactu.checker');
+Route::post('/verifactu/comprobar', [VerifactuAssistantController::class, 'checker'])->middleware('throttle:tools-ai')->name('tools.verifactu.checker.run');
+
+Route::get('/cartas', [LetterExplainerController::class, 'index'])->name('tools.cartas');
+Route::post('/cartas', [LetterExplainerController::class, 'explain'])->middleware('throttle:tools-ai')->name('tools.cartas.explain');
+Route::get('/cartas/ics', [LetterExplainerController::class, 'ics'])->middleware('throttle:tools-ai')->name('tools.cartas.ics');
+
+Route::get('/calendario-fiscal/ical/{token}', [FiscalCalendarController::class, 'ics'])->name('fiscal.ical');
+
 Route::get('/robots.txt', function () {
     return response(file_get_contents(public_path('robots.txt')), 200, [
         'Content-Type' => 'text/plain; charset=UTF-8',
@@ -91,6 +106,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/aviso-fallo', [BugReportController::class, 'store'])->middleware('throttle:bug-report')->name('bug-reports.store');
         Route::get('/admin', [FunnelController::class, 'index'])->name('admin.index');
         Route::get('/embudo', [FunnelController::class, 'index'])->name('funnel.index');
+        Route::get('/calendario-fiscal', [FiscalCalendarController::class, 'show'])->name('fiscal.calendar');
+        Route::post('/calendario-fiscal', [FiscalCalendarController::class, 'storeProfile'])->name('fiscal.calendar.store');
         Route::get('/configuracion', [ProfileController::class, 'edit'])->name('settings.index');
         Route::put('/configuracion', [ProfileController::class, 'update'])->name('settings.update');
         Route::put('/configuracion/verifactu', [ProfileController::class, 'updateVerifactu'])->name('settings.verifactu.update');

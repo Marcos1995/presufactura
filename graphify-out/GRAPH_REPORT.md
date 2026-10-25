@@ -1,17 +1,17 @@
-# Graph Report - presufactura  (2026-10-19)
+# Graph Report - presufactura  (2026-10-25)
 
 ## Corpus Check
-- 284 files · ~78,964 words
+- 311 files · ~84,519 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 25 file(s) not represented in the graph (top: (none) 16, .mdc 3, .css 2)
 
 ## Summary
-- 1569 nodes · 3102 edges · 203 communities (86 shown, 117 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 77 edges (avg confidence: 0.89)
+- 1662 nodes · 3301 edges · 219 communities (81 shown, 138 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 78 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cdac619a`
+- Built from commit: `eb9972ec`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -22,7 +22,7 @@
 - Illuminate\View\View
 - User
 - Deploy — Hostinger Business (presufactura.es)
-- StripeService
+- StripeService.php
 - AnalyticsService
 - Illuminate\Http\RedirectResponse
 - Illuminate\Http\Request
@@ -42,30 +42,30 @@
 - Closure
 - Illuminate\Database\Eloquent\Model
 - Illuminate\Database\Eloquent\Relations\HasMany
-- VerifactuExportCommand.php
-- BillingRecordService
-- User.php
-- Client
+- SmokeTestCommand.php
 - BillingRecord
-- VerifactuProveTest.php
+- User.php
+- FiscalCalendarController.php
+- .currentCompany
+- StripeService
 - VerifactuSchema
 - DocumentNumberService
 - DataExportService
-- Prerrequisitos (F1–F8)
+- EmailService.php
 - Veri*Factu en Presufactura — Análisis y plan de implementación
-- Illuminate\Support\Str
-- XmlBuilderService
+- Illuminate\Http\Response
+- VerifactuEnv
 - Illuminate\Database\Migrations\Migration
 - QrServiceTest
 - AdminOverviewService
 - UserSifConfig
-- Illuminate\Support\Facades\Schema
-- ProfileController.php
+- 2026_08_26_000004_create_user_feedback_table.php
+- StripeController
 - Prompts — PresuFactura v1.1
 - README.md
 - Prompts — PresuFactura Fase Veri*Factu (F9+)
 - PresuFactura
-- AuthTest
+- AiTextService
 - PdfGeneratorService
 - PresuFactura — PROJECT
 - DemoCatalogTest
@@ -84,7 +84,7 @@
 - config
 - Debug
 - Checklist de prueba (preprod)
-- VerifactuProveCommand.php
+- mcp.json
 - scripts
 - 0001_01_01_000000_create_users_table.php
 - 0001_01_01_000002_create_jobs_table.php
@@ -92,7 +92,7 @@
 - invoice-lines.js
 - action-result.blade.php
 - public/invoice.blade.php
-- PanelPagesWithoutVerifactuTablesTest
+- .billingRecord
 - InstallVerifactuDevCertCommand.php
 - psr-4
 - logging.php
@@ -103,13 +103,13 @@
 - 2026_08_26_000002_add_is_dev_cert_to_user_sif_config.php
 - 2026_08_29_000001_add_google_id_to_users_table.php
 - Verify, complete, motion — PresuFactura
-- SecurityHardeningTest.php
+- ClientController
 - invoices/show.blade.php
 - public/quote.blade.php
 - Laya
 - Review
-- 2024_01_01_000002_create_documents_table.php
-- 2024_01_01_000005_create_document_events_table.php
+- BillingRecordServiceTest
+- Illuminate\Support\Facades\Schema
 - 2026_09_02_000001_create_bug_reports_table.php
 - DatabaseSeeder.php
 - deploy.sh script
@@ -134,28 +134,32 @@
 - pdf/invoice.blade.php
 - pdf/quote.blade.php
 - AnalyticsTest
-- VerifactuProductionCheck
+- LegalConsent
 - Dashboard brief (for the Stitch prompt)
 - auth-split.blade.php
-- PanelPagesTest
+- LetterExplainerService
 - HealthCheckCommand
-- .update
-- AdminOverviewService.php
+- DocumentEvent
+- UserFeedback
 - QrService.php
 - Reminder
 - Build judgments with Laya
+- IcalBuilder
+- 2026_10_25_000001_add_fiscal_profile_to_companies_table.php
+- LineItem
+- 2024_01_01_000004_create_reminders_table.php
 
 ## God Nodes (most connected - your core abstractions)
-1. `User` - 191 edges
-2. `Document` - 170 edges
+1. `User` - 194 edges
+2. `Document` - 172 edges
 3. `BillingRecord` - 77 edges
 4. `TestCase` - 66 edges
-5. `Client` - 53 edges
-6. `Company` - 45 edges
+5. `Company` - 57 edges
+6. `Client` - 53 edges
 7. `VerifactuSchema` - 41 edges
-8. `AnalyticsService` - 35 edges
-9. `InvoiceController` - 31 edges
-10. `UserSifConfig` - 31 edges
+8. `AnalyticsService` - 39 edges
+9. `Controller` - 31 edges
+10. `InvoiceController` - 31 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Cola` --references--> `SubmitBillingRecordJob`  [INFERRED]
@@ -172,55 +176,55 @@
 ## Import Cycles
 - None detected.
 
-## Communities (203 total, 117 thin omitted)
+## Communities (219 total, 138 thin omitted)
 
 ### Community 0 - "TestCase"
-Cohesion: 0.06
-Nodes (17): Illuminate\Foundation\Testing\RefreshDatabase, Illuminate\Foundation\Testing\TestCase, Illuminate\Support\Facades\Artisan, Illuminate\Support\Facades\Cache, PHPUnit\Framework\Attributes\Group, AuthorizationTest, ClientInvoiceTest, CompanyIsolationTest (+9 more)
+Cohesion: 0.05
+Nodes (20): Illuminate\Foundation\Testing\RefreshDatabase, Illuminate\Foundation\Testing\TestCase, Illuminate\Support\Facades\Cache, Illuminate\Support\Facades\Mail, Illuminate\Support\Facades\Notification, AuthorizationTest, BugReportTest, ClientInvoiceTest (+12 more)
 
 ### Community 1 - "Illuminate\Console\Command"
-Cohesion: 0.28
-Nodes (3): FunnelReportCommand, SetUserPlanCommand, Illuminate\Console\Command
+Cohesion: 0.15
+Nodes (6): FunnelReportCommand, SetUserPlanCommand, VerifactuCheckCommand, VerifactuProveCommand, VerifactuProductionCheck, Illuminate\Console\Command
 
 ### Community 2 - "DocumentCalculatorService"
-Cohesion: 0.06
-Nodes (12): DocumentCalculatorService, HashChainService, Money, Carbon\Carbon, Criterio de done, Decisión previa, Fases, Orden de ejecución (+4 more)
+Cohesion: 0.05
+Nodes (18): DocumentCalculatorService, HashChainService, XmlBuilderService, Money, Carbon\Carbon, Criterio de done, Decisión previa, Fases (+10 more)
 
 ### Community 3 - "Illuminate\View\View"
-Cohesion: 0.07
-Nodes (15): Controller, DashboardController, DocumentActionController, FunnelController, GoogleAuthController, GuideController, HelpController, LandingController (+7 more)
+Cohesion: 0.06
+Nodes (15): Controller, DashboardController, DocumentActionController, FunnelController, GuideController, HelpController, LandingController, LegalController (+7 more)
 
 ### Community 4 - "User"
-Cohesion: 0.10
-Nodes (6): {closure#1}(), HasOne, User, ClientPolicy, DocumentPolicy, Legado (no expuesto como producto de pago)
+Cohesion: 0.08
+Nodes (8): HasOne, User, ClientPolicy, DocumentPolicy, AuthTest, CompanyIsolationTest, PublicQuoteTest, SecurityHardeningTest
 
 ### Community 5 - "Deploy — Hostinger Business (presufactura.es)"
-Cohesion: 0.06
-Nodes (33): AppServiceProvider, 1. Clonar / actualizar código, 2. Assets (CSS/JS), 3. Composer y Laravel, 4. Variables `.env` producción, 5. Cron (recordatorios), 6. Stripe (legado, opcional), 6b. Login con Google (+25 more)
+Cohesion: 0.05
+Nodes (34): AppServiceProvider, 1. Clonar / actualizar código, 2. Assets (CSS/JS), 3. Composer y Laravel, 4. Variables `.env` producción, 5. Cron (recordatorios), 6. Stripe (legado, opcional), 6b. Login con Google (+26 more)
 
-### Community 6 - "StripeService"
-Cohesion: 0.11
-Nodes (11): SitemapController, StripeController, StripeService, Illuminate\Http\Response, RuntimeException, Stripe\BillingPortal\Session, Stripe\Checkout\Session, Stripe\Exception\ApiErrorException (+3 more)
+### Community 6 - "StripeService.php"
+Cohesion: 0.20
+Nodes (7): RuntimeException, Stripe\BillingPortal\Session, Stripe\Checkout\Session, Stripe\Exception\ApiErrorException, Stripe\Stripe, Stripe\Subscription, Stripe\Webhook
 
 ### Community 7 - "AnalyticsService"
-Cohesion: 0.10
-Nodes (11): AnalyticsEventController, {closure#1}(), QuickStartController, RecordHttpErrors, AnalyticsEvent, AnalyticsService, DateTimeInterface, Illuminate\Auth\Events\PasswordReset (+3 more)
+Cohesion: 0.08
+Nodes (16): AnalyticsEventController, {closure#1}(), {closure#1}(), QuickStartController, AnalyticsEvent, AnalyticsService, VerifactuQuizEvaluator, DateTimeInterface (+8 more)
 
 ### Community 8 - "Illuminate\Http\RedirectResponse"
 Cohesion: 0.14
-Nodes (7): AuthController, ClientController, EmailVerificationController, ProfileController, Illuminate\Foundation\Auth\EmailVerificationRequest, Illuminate\Http\RedirectResponse, Illuminate\Validation\Rule
+Nodes (7): AuthController, CompanyController, EmailVerificationController, GoogleAuthController, ProfileController, Illuminate\Foundation\Auth\EmailVerificationRequest, Illuminate\Http\RedirectResponse
 
 ### Community 9 - "Illuminate\Http\Request"
-Cohesion: 0.14
-Nodes (16): FeedbackController, OnboardingController, {closure#1}(), {closure#10}(), {closure#2}(), {closure#3}(), {closure#4}(), {closure#5}() (+8 more)
+Cohesion: 0.13
+Nodes (18): FeedbackController, OnboardingController, {closure#1}(), {closure#10}(), {closure#11}(), {closure#2}(), {closure#3}(), {closure#4}() (+10 more)
 
 ### Community 10 - "InvoiceController"
 Cohesion: 0.18
 Nodes (5): {closure#1}(), {closure#2}(), {closure#3}(), {closure#4}(), InvoiceController
 
 ### Community 11 - "SubmitBillingRecordJob"
-Cohesion: 0.16
-Nodes (8): Throwable, SubmitBillingRecordJob, VerifactuTransportFactory, VerifactuTransportInterface, Illuminate\Contracts\Queue\ShouldBeUnique, Illuminate\Contracts\Queue\ShouldQueue, Illuminate\Foundation\Queue\Queueable, SubmitBillingRecordJobTest
+Cohesion: 0.10
+Nodes (11): VerifactuRetryFailedCommand, Throwable, SubmitBillingRecordJob, DisabledVerifactuTransport, SandboxVerifactuTransport, VerifactuTransportFactory, VerifactuTransportInterface, Illuminate\Contracts\Queue\ShouldBeUnique (+3 more)
 
 ### Community 12 - "Illuminate\Database\Eloquent\Factories\Factory"
 Cohesion: 0.10
@@ -239,95 +243,71 @@ Cohesion: 0.18
 Nodes (5): {closure#1}(), {closure#2}(), {closure#3}(), {closure#4}(), QuoteController
 
 ### Community 16 - "Company"
-Cohesion: 0.10
-Nodes (5): {closure#1}(), {closure#1}(), Company, CompanyPolicy, Illuminate\Database\Eloquent\Relations\HasOne
+Cohesion: 0.13
+Nodes (4): {closure#1}(), Company, CompanyPolicy, Illuminate\Database\Eloquent\Relations\HasOne
 
 ### Community 17 - "Document"
-Cohesion: 0.10
-Nodes (4): Document, HasOne, {closure#1}(), QuoteInvoiceFlowTest
-
-### Community 18 - "Illuminate\Database\Eloquent\Relations\BelongsTo"
-Cohesion: 0.09
-Nodes (4): BillingSubmissionAttempt, LegalConsent, Payment, Illuminate\Database\Eloquent\Relations\BelongsTo
-
-### Community 19 - "QrService"
-Cohesion: 0.23
-Nodes (4): QrService, Estado actual en PresuFactura — verificado en código (F9–F14), Módulo SIF implementado, Puntos de enganche (implementados)
+Cohesion: 0.07
+Nodes (7): Client, {closure#1}(), Document, Illuminate\Support\Facades\View, {closure#1}(), QuoteInvoiceFlowTest, VerifactuTest
 
 ### Community 20 - "BugReportMail"
-Cohesion: 0.16
-Nodes (11): AccountDeletedMail, BugReportMail, WelcomeMail, Illuminate\Bus\Queueable, Illuminate\Mail\Mailable, Illuminate\Mail\Mailables\Address, Illuminate\Mail\Mailables\Content, Illuminate\Mail\Mailables\Envelope (+3 more)
+Cohesion: 0.14
+Nodes (13): BugReportController, AccountDeletedMail, BugReportMail, FiscalReminderMail, WelcomeMail, BugReport, Illuminate\Bus\Queueable, Illuminate\Mail\Mailable (+5 more)
 
 ### Community 21 - "AeatSoapClient"
-Cohesion: 0.09
-Nodes (7): VerifactuAeatPreprodCommand, AeatSoapClient, Closure, VerifactuEnv, SoapClient, AeatSoapClientTest, VerifactuEnvTest
+Cohesion: 0.17
+Nodes (5): VerifactuAeatPreprodCommand, AeatSoapClient, Closure, SoapClient, AeatSoapClientTest
 
 ### Community 23 - "Closure"
-Cohesion: 0.25
-Nodes (6): CheckDocumentLimit, CheckOnboarding, ForceHttps, ShareCurrentCompany, Closure, Symfony\Component\HttpFoundation\Response
+Cohesion: 0.20
+Nodes (7): CheckDocumentLimit, CheckOnboarding, ForceHttps, RecordHttpErrors, ShareCurrentCompany, Closure, Symfony\Component\HttpFoundation\Response
 
 ### Community 24 - "Illuminate\Database\Eloquent\Model"
-Cohesion: 0.14
-Nodes (7): {closure#1}(), BugReport, {closure#1}(), LineItem, SifEvent, Illuminate\Database\Eloquent\Factories\HasFactory, Illuminate\Database\Eloquent\Model
+Cohesion: 0.19
+Nodes (4): BillingSubmissionAttempt, {closure#1}(), Illuminate\Database\Eloquent\Factories\HasFactory, Illuminate\Database\Eloquent\Model
 
-### Community 26 - "VerifactuExportCommand.php"
-Cohesion: 0.15
-Nodes (5): VerifactuExportCommand, Illuminate\Foundation\Inspiring, Illuminate\Support\Facades\File, Illuminate\Support\Facades\Schedule, ZipArchive
+### Community 26 - "SmokeTestCommand.php"
+Cohesion: 0.25
+Nodes (4): Illuminate\Foundation\Inspiring, Illuminate\Support\Facades\Artisan, Illuminate\Support\Facades\File, Illuminate\Support\Facades\Schedule
 
-### Community 27 - "BillingRecordService"
-Cohesion: 0.15
-Nodes (5): BillingRecordService, {closure#1}(), {closure#2}(), Illuminate\Support\Facades\Storage, BillingRecordServiceTest
+### Community 27 - "BillingRecord"
+Cohesion: 0.07
+Nodes (15): SeedDemoCatalogCommand, VerifactuExportCommand, BillingRecord, {closure#1}(), SifEvent, BillingRecordService, {closure#1}(), {closure#2}() (+7 more)
 
 ### Community 28 - "User.php"
-Cohesion: 0.12
-Nodes (11): ResetPasswordNotification, VerifyEmailNotification, Illuminate\Auth\Notifications\ResetPassword, Illuminate\Auth\Notifications\VerifyEmail, Illuminate\Contracts\Auth\MustVerifyEmail, Illuminate\Foundation\Auth\User, Illuminate\Notifications\Messages\MailMessage, Illuminate\Notifications\Notifiable (+3 more)
-
-### Community 30 - "BillingRecord"
-Cohesion: 0.13
-Nodes (4): VerifactuRetryFailedCommand, BillingRecord, DisabledVerifactuTransport, SandboxVerifactuTransport
-
-### Community 31 - "VerifactuProveTest.php"
 Cohesion: 0.18
-Nodes (3): Illuminate\Support\Facades\Mail, PublicQuoteTest, VerifactuProveTest
+Nodes (8): ResetPasswordNotification, VerifyEmailNotification, Illuminate\Auth\Notifications\ResetPassword, Illuminate\Auth\Notifications\VerifyEmail, Illuminate\Contracts\Auth\MustVerifyEmail, Illuminate\Foundation\Auth\User, Illuminate\Notifications\Messages\MailMessage, Illuminate\Notifications\Notifiable
+
+### Community 29 - "FiscalCalendarController.php"
+Cohesion: 0.18
+Nodes (5): {closure#1}(), ProcessFiscalRemindersCommand, FiscalCalendarController, FiscalEstimateService, FiscalObligationEngine
 
 ### Community 32 - "VerifactuSchema"
-Cohesion: 0.20
+Cohesion: 0.16
 Nodes (4): PrepareTestUserCommand, VerifactuSchema, {closure#1}(), up()
-
-### Community 35 - "Prerrequisitos (F1–F8)"
-Cohesion: 0.15
-Nodes (3): DocumentEvent, Prerrequisitos (F1–F8), Illuminate\Support\Facades\URL
 
 ### Community 36 - "Veri*Factu en Presufactura — Análisis y plan de implementación"
 Cohesion: 0.18
 Nodes (11): Arquitectura recomendada para Presufactura, Decisiones que hay que tomar antes de codificar, ¿Es viable implementarlo en Presufactura?, Orden de implementación sugerido, Pendiente / fuera de alcance v1, Plazos (actualizados con RD-ley 15/2025), Próximo paso concreto, ¿Qué es Veri*Factu? (+3 more)
 
-### Community 38 - "XmlBuilderService"
-Cohesion: 0.30
-Nodes (4): XmlBuilderService, DOMDocument, DOMElement, DOMXPath
+### Community 37 - "Illuminate\Http\Response"
+Cohesion: 0.21
+Nodes (4): LetterExplainerController, SitemapController, PdfTextExtractor, Illuminate\Http\Response
 
 ### Community 39 - "Illuminate\Database\Migrations\Migration"
 Cohesion: 0.15
 Nodes (4): {closure#1}(), {closure#1}(), {closure#1}(), Illuminate\Database\Migrations\Migration
 
-### Community 40 - "QrServiceTest"
-Cohesion: 0.12
-Nodes (5): Dompdf\Dompdf, Dompdf\Options, Illuminate\Support\Facades\Http, Illuminate\Support\Facades\View, QrServiceTest
-
-### Community 43 - "Illuminate\Support\Facades\Schema"
-Cohesion: 0.17
-Nodes (4): {closure#1}(), {closure#1}(), {closure#1}(), Illuminate\Support\Facades\Schema
-
-### Community 44 - "ProfileController.php"
-Cohesion: 0.18
-Nodes (5): BugReportController, {closure#1}(), Illuminate\Support\Facades\Log, Symfony\Component\HttpFoundation\BinaryFileResponse, Throwable
+### Community 44 - "StripeController"
+Cohesion: 0.25
+Nodes (3): StripeController, Illuminate\Support\Facades\Log, Throwable
 
 ### Community 45 - "Prompts — PresuFactura v1.1"
 Cohesion: 0.17
 Nodes (11): 1. Recuperar contraseña, 2. Baja de cuenta (RGPD), 3. Banner de cookies, 4. Verificación de email al registrarse, 5. Tests automáticos (Feature), 6. Monitorización producción (logs + alertas), 7. Favicon, 8. Exportar datos (RGPD) (+3 more)
 
 ### Community 46 - "README.md"
-Cohesion: 0.24
+Cohesion: 0.20
 Nodes (3): Agent rules, Flujo, Think → Simple → Surgical → Verify (Karpathy)
 
 ### Community 47 - "Prompts — PresuFactura Fase Veri*Factu (F9+)"
@@ -338,6 +318,10 @@ Nodes (11): Composer previsto (todas las fases), Criterio de «aplicación compl
 Cohesion: 0.18
 Nodes (11): Checklist tests manuales, Cron producción, Fases completadas, Modelo gratuito, Notas, PresuFactura, Producción, Requisitos (+3 more)
 
+### Community 50 - "PdfGeneratorService"
+Cohesion: 0.27
+Nodes (3): PdfGeneratorService, Dompdf\Dompdf, Dompdf\Options
+
 ### Community 51 - "PresuFactura — PROJECT"
 Cohesion: 0.20
 Nodes (10): Comandos utiles, Convenciones, Documentación del repo, Estado, Modelo de producto, Notas de producción, Notas para el agente, PresuFactura — PROJECT (+2 more)
@@ -346,17 +330,13 @@ Nodes (10): Comandos utiles, Convenciones, Documentación del repo, Estado, Mode
 Cohesion: 0.20
 Nodes (3): {closure#1}(), DemoCatalogTest, Blueprint
 
-### Community 54 - "EmailService"
-Cohesion: 0.14
-Nodes (3): PublicQuoteController, EmailService, Checklist hPanel (no automatizar a ciegas)
-
 ### Community 55 - "composer.json"
 Cohesion: 0.22
 Nodes (8): description, keywords, license, minimum-stability, name, prefer-stable, $schema, type
 
 ### Community 56 - "FEATURES.md — PresuFactura"
-Cohesion: 0.20
-Nodes (9): Acceso y cuenta, Analítica (sin datos personales), Clientes, Cobros y recordatorios, Facturas, FEATURES.md — PresuFactura, Marketing y legal, Presupuestos (+1 more)
+Cohesion: 0.17
+Nodes (10): Acceso y cuenta, Analítica (sin datos personales), Clientes, Cobros y recordatorios, Facturas, FEATURES.md — PresuFactura, Legado (no expuesto como producto de pago), Marketing y legal (+2 more)
 
 ### Community 57 - "guest.blade.php"
 Cohesion: 0.17
@@ -402,9 +382,9 @@ Nodes (6): 1. Root cause, 2. Compare, 3. Hypothesis, 4. Fix, Debug, Red flags �
 Cohesion: 0.29
 Nodes (7): 1. Configurar tenant, 2. Emitir factura de prueba, 3. Validar QR, 4. Probar anulación, 5. Comandos útiles, 6. Test de integración opcional (CI/local con cert), Checklist de prueba (preprod)
 
-### Community 68 - "VerifactuProveCommand.php"
-Cohesion: 0.36
-Nodes (3): VerifactuProveCommand, Illuminate\Support\Facades\DB, Illuminate\Support\Facades\Queue
+### Community 68 - "mcp.json"
+Cohesion: 0.27
+Nodes (10): hostinger-dns, hostinger-domains, hostinger-hosting, ssh, USER_AGENT, cmd, hostinger-dns-mcp, hostinger-domains-mcp (+2 more)
 
 ### Community 69 - "scripts"
 Cohesion: 0.33
@@ -470,6 +450,10 @@ Nodes (3): Laya, Reply (decision-only requests), Steps
 Cohesion: 0.50
 Nodes (3): Check, Do, Review
 
+### Community 93 - "Illuminate\Support\Facades\Schema"
+Cohesion: 0.18
+Nodes (4): {closure#1}(), {closure#1}(), {closure#1}(), Illuminate\Support\Facades\Schema
+
 ### Community 96 - "deploy.sh script"
 Cohesion: 0.83
 Nodes (3): php_bin(), run_composer(), deploy.sh script
@@ -511,32 +495,32 @@ Cohesion: 0.33
 Nodes (5): layouts.partials.cookie-banner, layouts.partials.favicon, layouts.partials.theme-boot, layouts.partials.theme-switch, layouts.partials.theme-toggle-script
 
 ### Community 196 - "QrService.php"
-Cohesion: 0.40
-Nodes (4): Endroid\QrCode\Builder\Builder, Endroid\QrCode\Encoding\Encoding, Endroid\QrCode\ErrorCorrectionLevel, Endroid\QrCode\Writer\PngWriter
+Cohesion: 0.33
+Nodes (5): Endroid\QrCode\Builder\Builder, Endroid\QrCode\Encoding\Encoding, Endroid\QrCode\ErrorCorrectionLevel, Endroid\QrCode\Writer\PngWriter, Illuminate\Support\Facades\Http
 
 ### Community 198 - "Build judgments with Laya"
 Cohesion: 0.50
 Nodes (3): Build judgments with Laya, Call, Design
 
 ## Knowledge Gaps
-- **265 isolated node(s):** `$schema`, `name`, `type`, `description`, `keywords` (+260 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 562 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **117 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **269 isolated node(s):** `hostinger-hosting-mcp`, `hostinger-dns-mcp`, `hostinger-domains-mcp`, `@yawlabs/ssh-mcp`, `$schema` (+264 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 586 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **138 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `User` connect `User` to `TestCase`, `Illuminate\Console\Command`, `StripeService`, `AnalyticsService`, `Illuminate\Http\RedirectResponse`, `SubmitBillingRecordJob`, `Illuminate\Database\Eloquent\Factories\Factory`, `Company`, `Document`, `Illuminate\Database\Eloquent\Relations\BelongsTo`, `BugReportMail`, `AeatSoapClient`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Eloquent\Relations\HasMany`, `VerifactuExportCommand.php`, `BillingRecordService`, `User.php`, `Client`, `VerifactuProveTest.php`, `VerifactuSchema`, `DocumentNumberService`, `DataExportService`, `Prerrequisitos (F1–F8)`, `Illuminate\Support\Str`, `QrServiceTest`, `AdminOverviewService`, `AuthTest`, `DemoCatalogTest`, `EmailService`, `AnalyticsTest`, `VerifactuProductionCheck`, `PanelPagesTest`, `AdminOverviewService.php`, `VerifactuProveCommand.php`, `PanelPagesWithoutVerifactuTablesTest`, `InstallVerifactuDevCertCommand.php`, `SecurityHardeningTest.php`, `DatabaseSeeder.php`?**
-  _High betweenness centrality (0.188) - this node is a cross-community bridge._
-- **Why does `Document` connect `Document` to `TestCase`, `Illuminate\View\View`, `User`, `AnalyticsService`, `InvoiceController`, `SubmitBillingRecordJob`, `QuoteController`, `Company`, `Illuminate\Database\Eloquent\Relations\BelongsTo`, `QrService`, `AeatSoapClient`, `ProcessRemindersCommand`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Eloquent\Relations\HasMany`, `BillingRecordService`, `Client`, `VerifactuProveTest.php`, `DocumentNumberService`, `Prerrequisitos (F1–F8)`, `Illuminate\Support\Str`, `XmlBuilderService`, `QrServiceTest`, `AdminOverviewService`, `PdfGeneratorService`, `DemoCatalogTest`, `EmailService`, `VerifactuProductionCheck`, `AdminOverviewService.php`, `VerifactuProveCommand.php`, `QrService.php`?**
-  _High betweenness centrality (0.146) - this node is a cross-community bridge._
-- **Why does `Prerrequisitos (F1–F8)` connect `Prerrequisitos (F1–F8)` to `DocumentNumberService`, `DocumentCalculatorService`, `Illuminate\View\View`, `User`, `Illuminate\Http\RedirectResponse`, `InvoiceController`, `SubmitBillingRecordJob`, `QuoteController`, `Document`, `PdfGeneratorService`, `QrService`, `Illuminate\Database\Eloquent\Model`, `Client`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+- **Why does `User` connect `User` to `TestCase`, `Illuminate\Console\Command`, `StripeService.php`, `AnalyticsService`, `Illuminate\Http\RedirectResponse`, `SubmitBillingRecordJob`, `Illuminate\Database\Eloquent\Factories\Factory`, `Company`, `Document`, `BugReportMail`, `AeatSoapClient`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Eloquent\Relations\HasMany`, `BillingRecord`, `User.php`, `.currentCompany`, `StripeService`, `VerifactuSchema`, `DocumentNumberService`, `DataExportService`, `QrServiceTest`, `AdminOverviewService`, `DemoCatalogTest`, `EmailService`, `FEATURES.md — PresuFactura`, `AnalyticsTest`, `InstallVerifactuDevCertCommand.php`, `BillingRecordServiceTest`, `DatabaseSeeder.php`?**
+  _High betweenness centrality (0.201) - this node is a cross-community bridge._
+- **Why does `Document` connect `Document` to `TestCase`, `DocumentCalculatorService`, `Illuminate\View\View`, `User`, `Deploy — Hostinger Business (presufactura.es)`, `AnalyticsService`, `InvoiceController`, `SubmitBillingRecordJob`, `QuoteController`, `Illuminate\Database\Eloquent\Relations\BelongsTo`, `QrService`, `AeatSoapClient`, `ProcessRemindersCommand`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Eloquent\Relations\HasMany`, `BillingRecord`, `FiscalCalendarController.php`, `DocumentNumberService`, `EmailService.php`, `QrServiceTest`, `AdminOverviewService`, `PdfGeneratorService`, `DemoCatalogTest`, `EmailService`, `DocumentEvent`, `QrService.php`, `.billingRecord`, `BillingRecordServiceTest`?**
+  _High betweenness centrality (0.137) - this node is a cross-community bridge._
+- **Why does `BillingRecord` connect `BillingRecord` to `TestCase`, `DocumentCalculatorService`, `QrService.php`, `QrServiceTest`, `SubmitBillingRecordJob`, `Illuminate\Database\Eloquent\Factories\Factory`, `Document`, `Illuminate\Database\Eloquent\Relations\BelongsTo`, `QrService`, `DemoCatalogTest`, `AeatSoapClient`, `Illuminate\Database\Eloquent\Model`, `Illuminate\Database\Eloquent\Relations\HasMany`?**
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `User` (e.g. with `{closure#1}()` and `Prerrequisitos (F1–F8)`) actually correct?**
   _`User` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `Document` (e.g. with `{closure#1}()` and `Prerrequisitos (F1–F8)`) actually correct?**
   _`Document` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `$schema`, `name`, `type` to the rest of the system?**
-  _265 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `hostinger-hosting-mcp`, `hostinger-dns-mcp`, `hostinger-domains-mcp` to the rest of the system?**
+  _269 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `TestCase` be split into smaller, more focused modules?**
-  _Cohesion score 0.055051421657592255 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.046486486486486484 - nodes in this community are weakly interconnected._

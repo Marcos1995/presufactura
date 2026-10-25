@@ -37,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('analytics', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
         RateLimiter::for('export', fn (Request $request) => Limit::perMinute(3)->by(optional($request->user())->id ?: $request->ip()));
         RateLimiter::for('bug-report', fn (Request $request) => Limit::perHour(8)->by(optional($request->user())->id ?: $request->ip()));
+        RateLimiter::for('tools-ai', fn (Request $request) => Limit::perMinute(8)->by($request->ip()));
 
         try {
             if (config('verifactu.software.name') && Cache::add('verifactu:startup_logged', true, now()->addDay())) {
