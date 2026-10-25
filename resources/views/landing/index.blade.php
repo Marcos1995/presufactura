@@ -105,7 +105,8 @@
 </a>
 <!-- Navegación desktop -->
 <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-stone-600">
-<a class="hover:text-brand-dark transition-colors" href="#verifactu">Veri*Factu</a>
+<a class="hover:text-brand-dark transition-colors" href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a>
+<a class="hover:text-brand-dark transition-colors" href="{{ route('tools.cartas') }}">Cartas Hacienda</a>
 <a class="hover:text-brand-dark transition-colors" href="{{ route('guides.index') }}">Guías</a>
 <a class="hover:text-brand-dark transition-colors" href="#precios">Precios</a>
 <a class="hover:text-brand-dark transition-colors" href="{{ route('help') }}">Ayuda</a>
@@ -129,7 +130,8 @@
 @unless ($loggedIn)
 <a class="sm:hidden" href="{{ route('login') }}">Entrar</a>
 @endunless
-<a href="#verifactu">Veri*Factu</a>
+<a href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a>
+<a href="{{ route('tools.cartas') }}">Cartas</a>
 <a href="{{ route('guides.index') }}">Guías</a>
 <a href="#precios">Precios</a>
 <a href="{{ route('help') }}">Ayuda</a>
@@ -511,11 +513,40 @@
 </div>
 <!-- Botón destacado -->
 <div class="pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-<p class="text-sm text-stone-300 font-medium">¿Prefieres facturar en modo estándar primero? Puedes activarlo cuando tu gestor te lo pida.</p>
-<a class="inline-flex justify-center items-center bg-[#18E667] text-[#032612] font-black px-7 py-3.5 rounded-xl hover:bg-[#15cf5c] transition-all shrink-0 active:scale-95 shadow-sm text-center" href="{{ $loggedIn ? route('settings.index') : route('register') }}">
-            {{ $loggedIn ? 'Activar en Configuración' : 'Crear cuenta y activarlo' }}
+<p class="text-sm text-stone-300 font-medium">¿Facturas con Word/Excel? Haz el test gratuito antes de 2027.</p>
+<div class="flex flex-col sm:flex-row gap-3 shrink-0">
+<a class="inline-flex justify-center items-center bg-[#18E667] text-[#032612] font-black px-7 py-3.5 rounded-xl hover:bg-[#15cf5c] transition-all active:scale-95 shadow-sm text-center" href="{{ route('tools.verifactu') }}">
+            Abrir asistente Veri*Factu
+          </a>
+<a class="inline-flex justify-center items-center bg-white/10 text-white font-bold px-6 py-3.5 rounded-xl hover:bg-white/15 transition-all text-center" href="{{ $loggedIn ? route('settings.index') : route('register') }}">
+            {{ $loggedIn ? 'Activar en la app' : 'Crear cuenta' }}
           </a>
 </div>
+</div>
+</div>
+</section>
+<!-- Herramientas gratis -->
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 my-14" id="herramientas">
+<div class="mb-8 max-w-2xl">
+<h2 class="font-black text-3xl sm:text-4xl text-stone-900 tracking-tight mb-3">Herramientas gratis</h2>
+<p class="text-stone-600 text-base sm:text-lg leading-relaxed">Sin cuenta para entender una carta o prepararte para Veri*Factu. El calendario fiscal va con tu panel.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<a class="block rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 hover:border-[#18E667] transition-colors" href="{{ route('tools.verifactu') }}">
+<span class="inline-block mb-3 px-3 py-1 rounded-full bg-[#18E667] text-[#032612] text-xs font-black uppercase tracking-wider">Veri*Factu</span>
+<strong class="block font-black text-xl text-stone-900 mb-2">Asistente Word/Excel → 2027</strong>
+<span class="block text-sm text-stone-600 leading-relaxed">Test guiado y comprobador de PDF. Orientativo, sin certificación oficial.</span>
+</a>
+<a class="block rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 hover:border-[#18E667] transition-colors" href="{{ route('tools.cartas') }}">
+<span class="inline-block mb-3 px-3 py-1 rounded-full bg-emerald-100 text-stone-800 text-xs font-black uppercase tracking-wider">AEAT / SS</span>
+<strong class="block font-black text-xl text-stone-900 mb-2">¿Qué me pide Hacienda?</strong>
+<span class="block text-sm text-stone-600 leading-relaxed">Explica una notificación en claro. No guardamos la carta.</span>
+</a>
+<a class="block rounded-3xl border border-stone-200 bg-white p-6 sm:p-8 hover:border-[#18E667] transition-colors" href="{{ route('fiscal.calendar') }}">
+<span class="inline-block mb-3 px-3 py-1 rounded-full bg-stone-100 text-stone-800 text-xs font-black uppercase tracking-wider">Con cuenta</span>
+<strong class="block font-black text-xl text-stone-900 mb-2">Calendario fiscal</strong>
+<span class="block text-sm text-stone-600 leading-relaxed">Modelos y fechas según tu perfil, con estimación desde tus facturas.</span>
+</a>
 </div>
 </section>
 <!-- 8) FAQ en columna estrecha y tipografía afinada -->
@@ -556,7 +587,10 @@
 <p class="font-semibold text-stone-700 text-center md:text-left">
         PresuFactura — Presupuestos y facturas para autónomos con Veri*Factu opcional
       </p>
-<div class="flex items-center gap-6 font-medium">
+<div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-medium">
+<a class="hover:text-stone-900 transition-colors" href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a>
+<a class="hover:text-stone-900 transition-colors" href="{{ route('tools.cartas') }}">Cartas</a>
+<a class="hover:text-stone-900 transition-colors" href="{{ route('fiscal.calendar') }}">Calendario fiscal</a>
 <a class="hover:text-stone-900 transition-colors" href="{{ route('legal.terminos') }}">Términos</a>
 <a class="hover:text-stone-900 transition-colors" href="{{ route('legal.privacidad') }}">Privacidad</a>
 <a class="hover:text-stone-900 transition-colors" href="{{ route('legal.cookies') }}">Cookies</a>

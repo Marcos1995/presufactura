@@ -1050,9 +1050,9 @@
     "semantic_hash": ""
   },
   "resources/views/landing/index.blade.php": {
-    "mtime": 1791313274.8658426,
-    "seen": 1791313373.5910273,
-    "ast_hash": "e76f3ffb6eff5fd520647dda8ab81741",
+    "mtime": 1792942660.4301524,
+    "seen": 1792942707.9220307,
+    "ast_hash": "b1d7254c58e295a0e91141cd96b56b94",
     "semantic_hash": ""
   },
   "resources/views/layouts/guest.blade.php": {
@@ -1062,15 +1062,15 @@
     "semantic_hash": ""
   },
   "resources/views/layouts/marketing.blade.php": {
-    "mtime": 1791312928.2270477,
-    "seen": 1791313373.5910273,
-    "ast_hash": "162d99a554d43a23768933e229e26253",
+    "mtime": 1792942666.3211443,
+    "seen": 1792942707.9220307,
+    "ast_hash": "9a6f29430afc1790380f0fc6e1d51b88",
     "semantic_hash": ""
   },
   "resources/views/layouts/panel.blade.php": {
-    "mtime": 1791312934.398962,
-    "seen": 1791313373.5910273,
-    "ast_hash": "6f3c4abc5b2744807d1ae8a51a5bb295",
+    "mtime": 1792942673.3860233,
+    "seen": 1792942707.9220307,
+    "ast_hash": "29d5fd33742269133be77a3e3d502e45",
     "semantic_hash": ""
   },
   "resources/views/layouts/partials/app-css.blade.php": {
@@ -1110,9 +1110,9 @@
     "semantic_hash": ""
   },
   "resources/views/layouts/partials/legal-footer.blade.php": {
-    "mtime": 1787765765.916572,
-    "seen": 1790622114.307459,
-    "ast_hash": "db2755394c8eabffd56f1c2db1b76e7b",
+    "mtime": 1792942663.883523,
+    "seen": 1792942707.9220307,
+    "ast_hash": "9325c819d436b96e5cb0179867b52f8a",
     "semantic_hash": ""
   },
   "resources/views/layouts/partials/logo.blade.php": {
@@ -1740,9 +1740,9 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1791313289.8217142,
-    "seen": 1791313373.5910273,
-    "ast_hash": "dc75c9c5bd29ad66d38ba57f74da73e0",
+    "mtime": 1792942702.7563062,
+    "seen": 1792942707.9220307,
+    "ast_hash": "c148466330c77e39c49ee046d701ec24",
     "semantic_hash": ""
   },
   "START.md": {

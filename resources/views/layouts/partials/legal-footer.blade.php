@@ -1,4 +1,7 @@
 <p>
+    <a href="{{ route('tools.verifactu') }}">Asistente Veri*Factu</a> ·
+    <a href="{{ route('tools.cartas') }}">Cartas Hacienda</a> ·
+    <a href="{{ route('fiscal.calendar') }}">Calendario fiscal</a> ·
     <a href="{{ route('guides.index') }}">Guías</a> ·
     <a href="{{ route('help') }}">Ayuda</a> ·
     <a href="{{ route('legal.terminos') }}">Términos</a> ·
