@@ -6,19 +6,13 @@ Leer `PROJECT.md`, `AGENTS.md` y `FEATURES.md` antes de cambios grandes.
 
 ## Skill routing
 
-When the user's request matches an available skill, invoke it via the Skill tool. When in doubt, invoke the skill.
+When the user's request matches an available skill in `.cursor/skills`, read and follow that skill. When in doubt, invoke the skill.
 
-Key routing rules:
-- Product ideas/brainstorming → invoke /office-hours
-- Strategy/scope → invoke /plan-ceo-review
-- Architecture → invoke /plan-eng-review
-- Design system/plan review → invoke /design-consultation or /plan-design-review
-- Full review pipeline → invoke /autoplan
-- Bugs/errors → invoke /investigate
-- QA/testing site behavior → invoke /qa or /qa-only
-- Code review/diff check → invoke /review
-- Visual polish → invoke /design-review
-- Ship/deploy/PR → invoke /ship or /land-and-deploy
-- Save progress → invoke /context-save
-- Resume context → invoke /context-restore
-- Author a backlog-ready spec/issue → invoke /spec
+Key routing (skills that exist in this repo):
+- Non-trivial choice → `laya`
+- Product judgments (route, score, extract, verify) → `jev`
+- New page or explicit redesign → `web-design`
+- Any HTML table / data grid → `tablas`
+- Bug or failing test → `debug`
+- Visual check after UI change → `verify`
+- Code review of a change → `review`
